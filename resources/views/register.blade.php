@@ -72,12 +72,34 @@
                                             </div>
                                         </div>
                                         <div class="form-outline mb-4 d-none" id="schoolNameField">
-                                            <input type="text" id="schoolName" name="schoolName" class="form-control" placeholder="School Name" value="{{ old('schoolName') }}" required/>
+                                            <input type="text" id="schoolName" name="SchoolName" class="form-control" placeholder="School Name" value="{{ old('schoolName') }}" required/>
                                             <label class="form-label" for="schoolName">School Name</label>
-                                            @error('schoolName')
+                                            @error('SchoolName')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                       <div class="form-outline mb-4 d-none" id="childNameField">
+    <input type="text" id="childName" name="childName" class="form-control" placeholder="Child's Name" value="{{ old('childName') }}" />
+    <label class="form-label" for="childName">Child's Name</label>
+    @error('childName')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+
+<div class="form-outline mb-4 d-none" id="schoolDropdownField">
+    <select id="schoolName" name="schoolName" class="form-select"> <!-- Mise à jour ici -->
+        <option value="">Select a School</option>
+        <option value="School A" {{ old('schoolName') == 'School A' ? 'selected' : '' }}>School A</option>
+        <option value="School B" {{ old('schoolName') == 'School B' ? 'selected' : '' }}>School B</option>
+        <option value="School C" {{ old('schoolName') == 'School C' ? 'selected' : '' }}>School C</option>
+    </select>
+    <label class="form-label" for="schoolName">School</label> <!-- Mise à jour ici -->
+    @error('schoolName')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+
+                                        
                                         
                                         <div class="mb-4">
                                             <p class="mb-1">Select Account Type:</p>
@@ -132,31 +154,33 @@
     </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
-      function toggleFields(accountType) {
-        document.querySelector('form').addEventListener('submit', function (e) {
-    const accountType = document.querySelector('input[name="accountType"]:checked');
-    const schoolName = document.getElementById('schoolName').value;
-
-    if (accountType && accountType.value === 'school' && !schoolName) {
-        e.preventDefault();
-        alert('Veuillez remplir le nom de l\'école.');
-    }
-});
-
+    function toggleFields(accountType) {
     const nameFields = document.getElementById('nameFields');
     const schoolNameField = document.getElementById('schoolNameField');
+    const childNameField = document.getElementById('childNameField');
+    const schoolDropdownField = document.getElementById('schoolDropdownField');
 
     if (accountType === 'school') {
+        // School account: Hide parent-specific fields
         nameFields.querySelectorAll('input').forEach(input => input.required = false);
-        schoolNameField.querySelector('input').required = true;
+        childNameField.querySelector('input').required = false;
+        schoolDropdownField.querySelector('select').required = false;
 
         nameFields.classList.add('d-none');
+        childNameField.classList.add('d-none');
+        schoolDropdownField.classList.add('d-none');
+        schoolNameField.querySelector('input').required = true;
         schoolNameField.classList.remove('d-none');
     } else {
+        // Parent account: Show parent-specific fields
         nameFields.querySelectorAll('input').forEach(input => input.required = true);
-        schoolNameField.querySelector('input').required = false;
+        childNameField.querySelector('input').required = true;
+        schoolDropdownField.querySelector('select').required = true;
 
         nameFields.classList.remove('d-none');
+        childNameField.classList.remove('d-none');
+        schoolDropdownField.classList.remove('d-none');
+        schoolNameField.querySelector('input').required = false;
         schoolNameField.classList.add('d-none');
     }
 }

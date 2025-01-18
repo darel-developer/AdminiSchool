@@ -18,6 +18,7 @@ Route::get('/', function () {
 
 
 Route::post('/register/traitement', [ActeurController::class, 'register_utilisateur_traitement'])->name('register_utilisateur_traitement');
+Route::get('/register', [ActeurController::class, 'showRegisterForm'])->name('register');
 
 
 Route::get('/parent', function(){
@@ -43,5 +44,4 @@ Route::get('/login', function(){
 })->name('login');
 
 Route::post('/login/traitement', [ActeurController::class, 'login_connexion'])->name('login_connexion');
-
 
