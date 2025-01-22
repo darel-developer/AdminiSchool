@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\ActeurController;
+
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\AccountController;
+
+Route::post('/register/traitement', [AccountController::class, 'register']);
+Route::get('/schools', [AccountController::class, 'getSchools']);
 
 
-Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
 
 
@@ -17,13 +18,22 @@ Route::get('/', function () {
 
 
 
-Route::post('/register/traitement', [ActeurController::class, 'register_utilisateur_traitement'])->name('register_utilisateur_traitement');
-Route::get('/register', [ActeurController::class, 'showRegisterForm'])->name('register');
 
+
+;
 
 Route::get('/parent', function(){
     return view ('parent');
 })->name('parent');
+
+Route::get('/schoolevenement', function(){
+    return view ('schoolevenement');
+})->name('schoolevenement');
+
+Route::get('/parentpaiement', function(){
+    return view ('parentpaiement');
+})->name('parentpaiement');
+
 
 Route::get('/school', function(){
     return view ('school');
@@ -43,5 +53,7 @@ Route::get('/login', function(){
     return view ('login');
 })->name('login');
 
-Route::post('/login/traitement', [ActeurController::class, 'login_connexion'])->name('login_connexion');
+
+
+
 

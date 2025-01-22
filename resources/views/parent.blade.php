@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface avec barre de navigation</title>
+    <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         body {
@@ -134,6 +134,54 @@
                 padding-bottom: 80px; /* Espace pour la barre de navigation */
             }
         }
+
+         /* Nouveau conteneur pour le profil */
+         .profile-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            background-color: 
+        }
+        .profile-container img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .profile-container .profile-info {
+            text-align: right;
+        }
+
+        /* Styles pour les petits écrans */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 60px;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0;
+                border-right: none;
+                border-top: 1px solid #ddd;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+            }
+            .sidebar-item {
+                flex-direction: column;
+                align-items: center;
+                padding: 5px;
+                font-size: 12px;
+            }
+            .sidebar-item img {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            .content {
+                margin: 0;
+                padding-bottom: 80px; /* Espace pour la barre de navigation */
+            }
+        }
     </style>
 </head>
 <body>
@@ -147,7 +195,7 @@
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('parentpaiement')}}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
@@ -168,7 +216,15 @@
     <div class="content">
         <h1 id="main-title">Enfant Static</h1>
         <div id="main-content">
-            <p>Contenu principal ici...</p>
+            <div class="profile-container">
+                <!-- Photo de profil -->
+                <img src="" alt="Photo">
+                <div class="profile-info">
+                    <!-- Nom de l'utilisateur et type de compte -->
+                    <h5>{{ Auth::user()->firstName }} {{ Auth::user()->secondName }}</h5>
+                    <p> {{ Auth::user()->accountType }}</p>
+                </div>
+            </div>
         </div>
         <div class="mt-4">
             <button class="btn btn-outline-primary" onclick="showContent('information')">Information</button>
@@ -207,18 +263,45 @@
     </div>
 
     <script>
-        function showContent(sectionId) {
-            // Masquer tous les contenus
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
+         function showContent(sectionId) {
+        // Masquer tous les contenus
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+        });
 
-            // Afficher le contenu spécifique
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.classList.add('active');
-            }
+        // Afficher le contenu spécifique
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.classList.add('active');
         }
+
+        // Charger les informations si la section est "information"
+        if (sectionId === 'information') {
+            fetch("{{ route('student.info') }}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const student = data.data;
+                        const infoContent = `
+                            <h2>Informations</h2>
+                            <p><strong>Nom:</strong> ${student.name}</p>
+                            <p><strong>Classe:</strong> ${student.class}</p>
+                            <p><strong>Date d'inscription:</strong> ${student.enrollment_date}</p>
+                            <p><strong>Absences:</strong> ${student.absences}</p>
+                            <p><strong>Convocations:</strong> ${student.convocations}</p>
+                            <p><strong>Avertissements:</strong> ${student.warnings}</p>
+                        `;
+                        section.innerHTML = infoContent;
+                    } else {
+                        section.innerHTML = `<p>${data.message}</p>`;
+                    }
+                })
+                .catch(error => {
+                    section.innerHTML = `<p>Erreur lors du chargement des données.</p>`;
+                    console.error('Erreur:', error);
+                });
+        }
+    }
     </script>
 </body>
 </html>

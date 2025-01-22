@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Register</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .gradient-custom-2 {
@@ -24,7 +24,7 @@
     </style>
 </head>
 <body>
-    <section class="h-300 gradient-form" style="background-color:    ">
+    <section class="h-300 gradient-form">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-xl-10">
@@ -50,7 +50,7 @@
                                     </ul>
                                     <form method="POST" action="/register/traitement">
                                         @csrf
-                                        <p>Please Sing In to your account</p>
+                                        <p>Please Sign In to your account</p>
                                         <div class="row mb-4" id="nameFields">
                                             <div class="col">
                                                 <div class="form-outline">
@@ -71,36 +71,26 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <!-- School-specific fields -->
                                         <div class="form-outline mb-4 d-none" id="schoolNameField">
-                                            <input type="text" id="schoolName" name="SchoolName" class="form-control" placeholder="School Name" value="{{ old('schoolName') }}" required/>
+                                            <input type="text" id="schoolName" name="schoolName" class="form-control" placeholder="School Name" value="{{ old('schoolName') }}" required />
                                             <label class="form-label" for="schoolName">School Name</label>
-                                            @error('SchoolName')
+                                            @error('schoolName')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                       <div class="form-outline mb-4 d-none" id="childNameField">
-    <input type="text" id="childName" name="childName" class="form-control" placeholder="Child's Name" value="{{ old('childName') }}" />
-    <label class="form-label" for="childName">Child's Name</label>
-    @error('childName')
-        <div class="text-danger">{{ $message }}</div>
-    @enderror
-</div>
 
-<div class="form-outline mb-4 d-none" id="schoolDropdownField">
-    <select id="schoolName" name="schoolName" class="form-select"> <!-- Mise à jour ici -->
-        <option value="">Select a School</option>
-        <option value="School A" {{ old('schoolName') == 'School A' ? 'selected' : '' }}>School A</option>
-        <option value="School B" {{ old('schoolName') == 'School B' ? 'selected' : '' }}>School B</option>
-        <option value="School C" {{ old('schoolName') == 'School C' ? 'selected' : '' }}>School C</option>
-    </select>
-    <label class="form-label" for="schoolName">School</label> <!-- Mise à jour ici -->
-    @error('schoolName')
-        <div class="text-danger">{{ $message }}</div>
-    @enderror
-</div>
+                                        <!-- Parent-specific fields -->
+                                        <div class="form-outline mb-4 d-none" id="childNameField">
+                                            <input type="text" id="childName" name="childName" class="form-control" placeholder="Child's Name" value="{{ old('childName') }}" />
+                                            <label class="form-label" for="childName">Child's Name</label>
+                                            @error('childName')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
 
-                                        
-                                        
+                                        <!-- Account type selection -->
                                         <div class="mb-4">
                                             <p class="mb-1">Select Account Type:</p>
                                             <div class="form-check form-check-inline">
@@ -112,6 +102,8 @@
                                                 <label class="form-check-label" for="school">School</label>
                                             </div>
                                         </div>
+
+                                        <!-- Username and password -->
                                         <div class="form-outline mb-4">
                                             <input type="email" id="username" name="username" class="form-control" placeholder="Phone number or email address" value="{{ old('username') }}" required/>
                                             <label class="form-label" for="username">Username</label>
@@ -133,10 +125,10 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
+
                                         <div class="text-center pt-1 mb-5 pb-1">
                                             <button type="submit" class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3">Sign up</button>
                                         </div>
-                                        
                                     </form>
                                 </div>
                             </div>
@@ -152,41 +144,29 @@
             </div>
         </div>
     </section>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
     <script>
-    function toggleFields(accountType) {
-    const nameFields = document.getElementById('nameFields');
-    const schoolNameField = document.getElementById('schoolNameField');
-    const childNameField = document.getElementById('childNameField');
-    const schoolDropdownField = document.getElementById('schoolDropdownField');
-
-    if (accountType === 'school') {
-        // School account: Hide parent-specific fields
-        nameFields.querySelectorAll('input').forEach(input => input.required = false);
-        childNameField.querySelector('input').required = false;
-        schoolDropdownField.querySelector('select').required = false;
-
-        nameFields.classList.add('d-none');
-        childNameField.classList.add('d-none');
-        schoolDropdownField.classList.add('d-none');
-        schoolNameField.querySelector('input').required = true;
-        schoolNameField.classList.remove('d-none');
-    } else {
-        // Parent account: Show parent-specific fields
-        nameFields.querySelectorAll('input').forEach(input => input.required = true);
-        childNameField.querySelector('input').required = true;
-        schoolDropdownField.querySelector('select').required = true;
-
-        nameFields.classList.remove('d-none');
-        childNameField.classList.remove('d-none');
-        schoolDropdownField.classList.remove('d-none');
-        schoolNameField.querySelector('input').required = false;
-        schoolNameField.classList.add('d-none');
-    }
-}
-
-
-</script>
+        function toggleFields(accountType) {
+            const nameFields = document.getElementById('nameFields');
+            const schoolNameField = document.getElementById('schoolNameField');
+            const childNameField = document.getElementById('childNameField');
+    
+            if (accountType === 'school') {
+                // School account: Hide parent-specific fields and name fields
+                nameFields.classList.add('d-none');
+                childNameField.classList.add('d-none');
+                schoolNameField.classList.remove('d-none');
+            } else if (accountType === 'parent') {
+                // Parent account: Show parent-specific fields and the school name field
+                nameFields.classList.remove('d-none');
+                childNameField.classList.remove('d-none');
+                schoolNameField.classList.remove('d-none');
+            }
+        }
+    </script>
+    
 
 </body>
 </html>

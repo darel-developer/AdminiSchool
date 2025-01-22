@@ -139,7 +139,7 @@
 <body>
      <!-- Barre de navigation -->
      <div class="sidebar">
-        <a href="{{ route('schoolevenement') }}" class="sidebar-item">
+        <a href="#" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
@@ -156,14 +156,6 @@
             Chat
         </a>
         <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/event.png') }}" alt="chat">
-            Event
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/book.png') }}" alt="chat">
-           Book
-        </a>
-        <a href="#" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
             Settings
         </a>
@@ -174,18 +166,46 @@
     </div>
 
     <div class="content">
-        <h1 id="main-title">Téléversement des données des élèves</h1>
+        <h1 id="main-title">Ajouter un événement</h1>
         <div class="mt-4">
-            <form id="uploadForm" method="POST" action="/upload-students" enctype="multipart/form-data">
-                @csrf <!-- Token de sécurité pour Laravel -->
+            <form id="eventForm" method="POST" action="/events" enctype="multipart/form-data">
+                @csrf
                 <div class="mb-3">
-                    <label for="studentFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                    <input type="file" name="studentFile" id="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                    <label for="title" class="form-label">Titre de l'événement</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Téléverser</button>
+    
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" required></textarea>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="event_date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="event_date" name="event_date" required>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="event_time" class="form-label">Heure</label>
+                    <input type="time" class="form-control" id="event_time" name="event_time" required>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="class" class="form-label">Classe</label>
+                    <select class="form-control" id="class" name="class" required>
+                        <!-- Liste déroulante des classes -->
+                       <option value="classe 1">classe 1</option>
+                       <option value="classe 1">classe 1</option>
+                       <option value="classe 1">classe 1</option>
+                       <option value="classe 1">classe 1</option>
+                    </select>
+                </div>
+    
+                <button type="submit" class="btn btn-primary">Soumettre</button>
             </form>
         </div>
     </div>
+    
     
 
     

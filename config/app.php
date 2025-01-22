@@ -1,6 +1,18 @@
 <?php
 
 return [
+//'providers' => [
+    /*
+    | Autres fournisseurs ici
+    */
+   // Maatwebsite\Excel\ExcelServiceProvider::class,
+//],
+
+
+   // 'aliases' => [
+        // Autres alias ici
+     //   'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+ //   ],
 
     /*
     |--------------------------------------------------------------------------
@@ -104,6 +116,7 @@ return [
             explode(',', env('APP_PREVIOUS_KEYS', ''))
         ),
     ],
+
 
     /*
     |--------------------------------------------------------------------------
