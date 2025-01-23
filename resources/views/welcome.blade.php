@@ -213,29 +213,45 @@
 
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid">
+ <!-- Navbar -->
+ <nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container-fluid">
       <a class="navbar-brand" href="#">Logo</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
-          </li>
-        </ul>
+          <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                  <a class="nav-link active" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Contact</a>
+              </li>
+          </ul>
+          <!-- Dropdown Account (aligné à droite avec ms-auto) -->
+          <ul class="navbar-nav ms-auto">
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Account
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{{ route('ParentRegister') }}"> Parent</a></li>
+                      <li><a class="dropdown-item" href="{{ route('SchoolRegister') }}"> École</a></li>
+                  </ul>
+              </li>
+          </ul>
+          <!-- Bouton Login -->
+          <button class="btn btn-primary ms-3" onclick="window.location.href='{{ route('login') }}'">Login</button>
       </div>
-      <a href="{{ route('login') }}" class="btn btn-primary">Account</a>
-    </div>
-  </nav>
+  </div>
+</nav>
+
+
+
 
   <!-- Image avec Texte -->
   <div class="image-section">

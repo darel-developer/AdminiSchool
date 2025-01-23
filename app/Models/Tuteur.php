@@ -3,12 +3,29 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Tuteur extends Model
+
+class Tuteur extends Authenticatable
 {
-    protected $table = 'tuteurs';  // Spécifier la table
+    use HasFactory, Notifiable;
 
     protected $fillable = [
-        'firstName', 'lastName', 'childName', 'schoolName', 'username', 'password'
+        'nom',
+        'prenom',
+        'email',
+        'type',
+        'password',
+        'childName',
+        'schoolName',
     ];
+
+    public function student()
+    {
+        return $this->hasOne(Student::class, 'name', 'childname');
+    }
+
+    protected $guard = 'tuteur';
 }

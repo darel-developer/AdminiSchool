@@ -34,17 +34,17 @@ return [
     | Supported: "session"
     |
     */
-
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-        'school' => [
+'guards' => [
+    'web' => [
         'driver' => 'session',
-        'provider' => 'schools',
+        'provider' => 'users',
     ],
+    'tuteur' => [
+        'driver' => 'session',
+        'provider' => 'tuteurs',
     ],
+],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -63,17 +63,19 @@ return [
     |
     */
 
-    'providers' => [
-    'users' => [
+   'providers' => [
+    'tuteurs' => [
         'driver' => 'eloquent',
-        'model' => App\Models\User::class,
-    ],
-    'schools' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\School::class,
+        'model' => App\Models\Tuteur::class,
     ],
 ],
 
+
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
+    
 
     /*
     |--------------------------------------------------------------------------

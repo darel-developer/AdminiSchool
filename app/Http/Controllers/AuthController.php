@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Tuteur;
+use App\Models\School;
+
+class AuthController extends Controller
+{
+    public function loginTraitement(Request $request)
+    {
+        // Validation des champs
+        $request->validate([
+            'username' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        // Vérification dans la table Tuteurs
+        $tuteur = Tuteur::where('email', $request->username)->first();
+        if ($tuteur && password_verify($request->password, $tuteur->password)) {
+            // Authentification réussie pour un Tuteur
+            Auth::loginUsingId($tuteur->id);
+            return redirect('parent')->with('success', 'Bienvenue, parent!');
+        }
+
+        // Vérification dans la table Schools
+        $school = School::where('email', $request->username)->first();
+        if ($school && password_verify($request->password, $school->password)) {
+            // Authentification réussie pour une École
+            Auth::loginUsingId($school->id);
+            return redirect('school')->with('success', 'Bienvenue, école!');
+        }
+
+        // Si aucune correspondance
+        return back('welcome')->withErrors(['error' => 'Identifiants incorrects.'])->withInput();
+    }
+
+    public function dashboard()
+{
+    $tuteur = Auth::user(); // Utilisateur actuellement connecté
+    return view('dashboard', compact('tuteur'));
+}
+
+}
