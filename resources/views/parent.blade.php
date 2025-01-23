@@ -53,7 +53,7 @@
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('parentpaiement')}}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>

@@ -8,9 +8,12 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tuteur;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\StudentsImport;
 
 class StudentController extends Controller
-{
+{   
+
     public function getChildData($section)
     {
         // Récupérer le tuteur connecté
@@ -83,6 +86,6 @@ class StudentController extends Controller
         ]);
     }
     
-
+    
     
 }

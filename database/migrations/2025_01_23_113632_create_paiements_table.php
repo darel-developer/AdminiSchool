@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tuteurs', function (Blueprint $table) {
+        Schema::create('paiements', function (Blueprint $table) {
             $table->id();
-            $table->string('firstName');
-            $table->string('lastName');
-            $table->string('childName');
-            $table->string('schoolName');
-            $table->string('username')->unique();
-            $table->string('password');
+            $table->string('nom');
+            $table->string('prenom');
+            $table->string('typepaiement');
+            $table->decimal('montant', 8, 2);
+            $table->string('num_facture');
+            $table->string('etat')->default('en attente');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tuteurs');
+        Schema::dropIfExists('paiements');
     }
 };

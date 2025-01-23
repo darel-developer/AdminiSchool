@@ -90,51 +90,62 @@
     <div class="content">
         <h1 id="main-title">Ajouter un événement</h1>
         <div class="mt-4">
-            <form id="eventForm" method="POST" action="/events" enctype="multipart/form-data">
-                @csrf
+           <!-- filepath: /c:/xampp/htdocs/Adminischool/resources/views/parentpaiement.blade.php -->
+<form id="paiementForm" method="POST" action="{{ route('paiement.store') }}" enctype="multipart/form-data">
+    @csrf
 
-                <div class="row mb-4" id="nameFields">
-                    <div class="col">
-                        <div class="form-outline">
-                            <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First Name" value="{{ old('firstName') }}" required />
-                            <label class="form-label" for="firstName">First Name</label>
-                            @error('firstName')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-outline">
-                            <input type="text" id="secondName" name="secondName" class="form-control" placeholder="Second Name" value="{{ old('secondName') }}" required />
-                            <label class="form-label" for="secondName">Second Name</label>
-                            @error('secondName')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
+    <div class="row mb-4" id="nameFields">
+        <div class="col">
+            <div class="form-outline">
+                <input type="text" id="firstName" name="nom" class="form-control" placeholder="First Name" value="{{ old('nom') }}" required />
+                <label class="form-label" for="firstName">First Name</label>
+                @error('nom')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-outline">
+                <input type="text" id="secondName" name="prenom" class="form-control" placeholder="Second Name" value="{{ old('prenom') }}" required />
+                <label class="form-label" for="secondName">Second Name</label>
+                @error('prenom')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+    </div>
 
-                <div class="mb-4">
-                    <p class="mb-1">Select Pzyment Type:</p>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="accountType" id="parent" value="parent" {{ old('accountType') == 'parent' ? 'checked' : '' }} onclick="toggleFields('parent')" />
-                        <label class="form-check-label" for="parent">Pension</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="accountType" id="school" value="school" {{ old('accountType') == 'school' ? 'checked' : '' }} onclick="toggleFields('school')" />
-                        <label class="form-check-label" for="school">Other</label>
-                    </div>
-                </div>
-                <div class="form-outline mb-4">
-                    <input type="email" id="username" name="username" class="form-control" placeholder="Enter the montant" required/>
-                    <label class="form-label" for="username">Montant</label>
-                    @error('username')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary">Soumettre</button>
-            </form>
+    <div class="mb-4">
+        <p class="mb-1">Select Payment Type:</p>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="typepaiement" id="pension" value="pension" {{ old('typepaiement') == 'pension' ? 'checked' : '' }} />
+            <label class="form-check-label" for="pension">Pension</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="typepaiement" id="other" value="other" {{ old('typepaiement') == 'other' ? 'checked' : '' }} />
+            <label class="form-check-label" for="other">Other</label>
+        </div>
+    </div>
+
+    <div class="form-outline mb-4">
+        <input type="number" id="montant" name="montant" class="form-control" placeholder="Enter the montant" value="{{ old('montant') }}" required/>
+        <label class="form-label" for="montant">Montant</label>
+        @error('montant')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="form-outline mb-4">
+        <input type="text" id="factureNumber" name="num_facture" class="form-control" placeholder="Enter the facture number" value="{{ old('num_facture') }}" required/>
+        <label class="form-label" for="factureNumber">Facture Number</label>
+        @error('num_facture')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Soumettre</button>
+</form>
         </div>
     </div>
 </body>

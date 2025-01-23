@@ -147,7 +147,7 @@
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{ route('schoolpaiement') }}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
@@ -173,20 +173,19 @@
         </a>
     </div>
 
-    <div class="content">
+    <div class="container mt-5">
         <h1 id="main-title">Téléversement des données des élèves</h1>
         <div class="mt-4">
-            <form id="uploadForm" method="POST" action="/upload-students" enctype="multipart/form-data">
+            <form id="uploadForm" method="POST" action="{{ route('students.upload') }}" enctype="multipart/form-data">
                 @csrf <!-- Token de sécurité pour Laravel -->
                 <div class="mb-3">
-                    <label for="studentFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                    <input type="file" name="studentFile" id="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                    <label  class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
+                    <input type="file" name="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Téléverser</button>
             </form>
         </div>
     </div>
-    
 
     
 </body>
