@@ -7,6 +7,17 @@ use App\Http\Controllers\TuteurController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ChatController;
+
+
+//Route pour l'envoi et reception des messages
+Route::post('/api/send-message', [ChatController::class, 'sendMessage']);
+Route::get('/api/fetch-messages', [ChatController::class, 'fetchMessages']);
+Route::post('/api/school/send-message', [ChatController::class, 'sendMessageFromSchool']);
+Route::get('/api/school/fetch-messages/{tuteurId}', [ChatController::class, 'fetchMessages']);
+Route::post('/api/school/send-message', [ChatController::class, 'sendMessage']);
+
+
 
 //Route pour récuperer les informations des enfants pour leurs parents
 Route::get('/child/{section}', [StudentController::class, 'getChildData'])->middleware('auth');
@@ -52,6 +63,12 @@ Route::get('/ParenRegistert', function(){
     return view ('ParentRegister');
 })->name('ParentRegister');
 
+Route::get('/parentchat', function(){
+    return view ('parentchat');
+})->name('parentchat');
+
+
+
 Route::get('/parentpaiement', function(){
     return view ('parentpaiement');
 })->name('parentpaiement');
@@ -65,6 +82,10 @@ Route::get('SchoolRegister', function(){
 Route::get('/school', function(){
     return view ('school');
 })->name('school');
+
+Route::get('/schoolchat', function(){
+    return view ('schoolchat');
+})->name('schoolchat');
 
 Route::get('/schoolevenement', function(){
     return view ('schoolevenement');

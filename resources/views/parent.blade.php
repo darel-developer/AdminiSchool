@@ -57,7 +57,7 @@
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('parentchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
