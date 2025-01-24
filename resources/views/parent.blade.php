@@ -112,6 +112,9 @@
                             <p>Nom : ${data.data.name}</p>
                             <p>Classe : ${data.data.class}</p>
                             <p>Date d'inscription : ${data.data.enrollment_date}</p>
+                            <p>Absences : ${data.data.absences}</p>
+                            <p>Convocations : ${data.data.convocations}</p>
+                            <p>Warings : ${data.data.warnings}</p>
                         `;
                         break;
                     case 'absence':

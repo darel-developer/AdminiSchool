@@ -142,7 +142,7 @@
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
-        <a href="" class="sidebar-item">
+        <a href="#" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>

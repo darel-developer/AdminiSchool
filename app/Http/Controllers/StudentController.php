@@ -45,6 +45,9 @@ class StudentController extends Controller
                             'name' => $student->name,
                             'class' => $student->class,
                             'enrollment_date' => $student->enrollment_date,
+                            'absences' => $student->absences,
+                            'convocations' => $student->convocations,
+                            'warnings' => $student->warnings,
                         ];
                         break;
                     case 'absence':
