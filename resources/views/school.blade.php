@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface avec barre de navigation</title>
+    <title>Téléversement des données des élèves</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         body {
@@ -15,153 +15,49 @@
         }
         .sidebar {
             width: 250px;
-            background: linear-gradient(135deg, #ee7724, #d8363a, #dd3675, #b44593);
-            color: #fff;
-            padding: 20px 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-        }
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .sidebar-item img {
-            width: 30px;
-            height: 30px;
-            margin-right: 15px;
-        }
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-            flex-grow: 1;
-            background: #fff;
-        }
-        .content-section {
-            display: none;
-        }
-        .content-section.active {
-            display: block;
-        }
-
-           /* Styles personnalisés */
-           body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
+            background-color: #343a40;
+            color: white;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(135deg, #ee7724, #d8363a, #dd3675, #b44593);
-            border-right: 1px solid #ddd;
-            color: #fff;
-            padding: 20px 0;
             position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
+            height: 100%;
         }
         .sidebar-item {
+            margin-bottom: 15px;
+            text-decoration: none;
+            color: white;
             display: flex;
             align-items: center;
-            padding: 10px 20px;
-            margin: 5px 0;
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
         }
         .sidebar-item img {
-            width: 30px;
-            height: 30px;
-            margin-right: 15px;
+            margin-right: 10px;
+        }
+        .sidebar-item:hover {
+            background-color: #495057;
+            border-radius: 5px;
+            padding: 10px;
         }
         .content {
-            margin-left: 250px;
-            flex-grow: 1;
+            margin-left: 250px; /* Adjust this value to match the sidebar width */
             padding: 20px;
-            background: #fff;
+            flex-grow: 1;
         }
-        .content h1 {
-            color: #333;
-        }
-
-        /* Styles pour les petits écrans */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: 60px;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 0;
-                border-right: none;
-                border-top: 1px solid #ddd;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-            }
-            .sidebar-item {
-                flex-direction: column;
-                align-items: center;
-                padding: 5px;
-                font-size: 12px;
-            }
-            .sidebar-item img {
-                margin-right: 0;
-                margin-bottom: 5px;
-            }
-            .content {
-                margin: 0;
-                padding-bottom: 80px; /* Espace pour la barre de navigation */
-            }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
-     <!-- Barre de navigation -->
-     <div class="sidebar">
-        <a href="{{ route('schoolevenement') }}" class="sidebar-item">
-            <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
-            Dashboard
-        </a>
+    <div class="sidebar">
         <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/Add_Document.png') }}" alt="document">
-            Document
-        </a>
-        <a href="{{ route('schoolpaiement') }}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="{{ route('schoolchat') }}" class="sidebar-item">
+        <a href="{{route('parentchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/event.png') }}" alt="chat">
-            Event
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/book.png') }}" alt="chat">
-           Book
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
@@ -173,20 +69,20 @@
         </a>
     </div>
 
-    <div class="container mt-5">
-        <h1 id="main-title">Téléversement des données des élèves</h1>
-        <div class="mt-4">
-            <form id="uploadForm" method="POST" action="{{ route('students.upload') }}" enctype="multipart/form-data">
-                @csrf <!-- Token de sécurité pour Laravel -->
-                <div class="mb-3">
-                    <label  class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                    <input type="file" name="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Téléverser</button>
-            </form>
+    <div class="content">
+        <div class="container mt-5">
+            <h1 id="main-title">Téléversement des données des élèves</h1>
+            <div class="mt-4">
+                <form id="uploadForm" method="POST" action="{{ route('import.upload') }}" enctype="multipart/form-data">
+                    @csrf <!-- Token de sécurité pour Laravel -->
+                    <div class="mb-3">
+                        <label for="studentFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
+                        <input type="file" name="studentFile" id="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Téléverser</button>
+                </form>
+            </div>
         </div>
     </div>
-
-    
 </body>
 </html>

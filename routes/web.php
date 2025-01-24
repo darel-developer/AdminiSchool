@@ -9,13 +9,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\ImportController;
 
 
-Route::post('/upload-students', [StudentController::class, 'upload'])->name('students.upload');
+Route::post('/upload-students', [ImportController::class, 'upload'])->name('import.upload');
 
 //Route pour mettre à jour les informations des paiements
-
-
 Route::get('/paiements', [PaiementController::class, 'liste_paiement'])->name('paiement.index');
 Route::get('/paiement/{id}', [PaiementController::class, 'show'])->name('paiement.show');
 Route::put('/paiement/{id}', [PaiementController::class, 'update'])->name('paiement.update');
