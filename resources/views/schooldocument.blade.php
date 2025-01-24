@@ -11,56 +11,6 @@
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
-            background: linear-gradient(135deg, #ee7724, #d8363a, #dd3675, #b44593);
-            color: #fff;
-            padding: 20px 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-        }
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .sidebar-item img {
-            width: 30px;
-            height: 30px;
-            margin-right: 15px;
-        }
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-            flex-grow: 1;
-            background: #fff;
-        }
-        .content-section {
-            display: none;
-        }
-        .content-section.active {
-            display: block;
-        }
-
-           /* Styles personnalisés */
-           body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            display: flex;
-            min-height: 100vh;
         }
         .sidebar {
             width: 250px;
@@ -82,27 +32,25 @@
             margin: 5px 0;
             text-decoration: none;
             color: #fff;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
         }
         .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-        .sidebar-item img {
-            width: 30px;
-            height: 30px;
-            margin-right: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
         }
         .content {
             margin-left: 250px;
-            flex-grow: 1;
             padding: 20px;
-            background: #fff;
+            width: 100%;
         }
-        .content h1 {
-            color: #333;
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
         }
 
         /* Styles pour les petits écrans */
@@ -138,46 +86,69 @@
 </head>
 <body>
     <div class="sidebar">
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
-            Dashboard
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/Add_Document.png') }}" alt="document">
-            Document
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/paiement.png') }}" alt="paiement">
-            Paiement
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/chat.png') }}" alt="chat">
-            Chat
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/chatbot.png') }}" alt="help support">
-            Help Support
-        </a>
+        <a href="#" class="sidebar-item">Absences</a>
+        <a href="#" class="sidebar-item">Convocations</a>
     </div>
 
     <div class="content">
         <div class="container mt-5">
             <h1 id="main-title">Téléversement des données des élèves</h1>
             <div class="mt-4">
-                <form id="uploadForm" method="POST" action="student/upload" enctype="multipart/form-data">
-                    @csrf <!-- Token de sécurité pour Laravel -->
-                    <div class="mb-3">
-                        <label for="studentFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                        <input type="file" name="studentFile" id="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Téléverser</button>
-                </form>
+                <div id="form-absences" class="form-section active">
+                    <form id="uploadFormAbsences" method="POST" action="student/upload/absences" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="studentFileAbsences" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
+                            <input type="file" name="studentFile" id="studentFileAbsences" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Téléverser</button>
+                    </form>
+                </div>
+                <div id="form-convocations" class="form-section">
+                    <form id="uploadFormConvocations" method="POST" action="student/upload/convocations" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="studentFileConvocations" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
+                            <input type="file" name="studentFile" id="studentFileConvocations" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Téléverser</button>
+                    </form>
+                </div>
+                <div class="navigation-buttons">
+                    <button id="prevButton" class="btn btn-secondary">&larr; Précédent</button>
+                    <button id="nextButton" class="btn btn-secondary">Suivant &rarr;</button>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sections = document.querySelectorAll('.form-section');
+            let currentSectionIndex = 0;
+
+            function showSection(index) {
+                sections.forEach((section, i) => {
+                    section.classList.toggle('active', i === index);
+                });
+            }
+
+            document.getElementById('prevButton').addEventListener('click', function () {
+                if (currentSectionIndex > 0) {
+                    currentSectionIndex--;
+                    showSection(currentSectionIndex);
+                }
+            });
+
+            document.getElementById('nextButton').addEventListener('click', function () {
+                if (currentSectionIndex < sections.length - 1) {
+                    currentSectionIndex++;
+                    showSection(currentSectionIndex);
+                }
+            });
+
+            showSection(currentSectionIndex);
+        });
+    </script>
 </body>
 </html>

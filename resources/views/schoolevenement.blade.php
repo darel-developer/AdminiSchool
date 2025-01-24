@@ -168,7 +168,7 @@
     <div class="content">
         <h1 id="main-title">Ajouter un événement</h1>
         <div class="mt-4">
-            <form id="eventForm" method="POST" action="/events" enctype="multipart/form-data">
+            <form id="eventForm" method="POST" action="{{ route('events.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     <label for="title" class="form-label">Titre de l'événement</label>

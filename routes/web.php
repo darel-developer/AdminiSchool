@@ -9,9 +9,23 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\EventController;
 
+
+Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
+Route::get('/notifications', function () {
+    return view('notifications');
+})->name('notifications');
+
+Route::get('/documentschool', function () {
+    return view('Schooldocument');
+})->name('Schooldocument');
 
 Route::post('student/upload', [StudentController::class, 'upload'])->name('student.upload');
+Route::post('student/upload/absences', [StudentController::class, 'uploadAbsences'])->name('student.upload.absences');
+Route::post('student/upload/convocations', [StudentController::class, 'uploadConvocations'])->name('student.upload.convocations');
 
 
 //Route pour mettre à jour les informations des paiements
@@ -62,13 +76,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-
-
-
-;
-
 Route::get('/parent', function(){
     return view ('parent');
 })->name('parent');
@@ -99,9 +106,13 @@ Route::get('/schoolchat', function(){
     return view ('schoolchat');
 })->name('schoolchat');
 
+
+
 Route::get('/schoolevenement', function(){
     return view ('schoolevenement');
 })->name('schoolevenement');
+
+
 
 Route::get('/schoolpaiement', function(){
     return view ('schoolpaiement');
@@ -110,6 +121,8 @@ Route::get('/schoolpaiement', function(){
 Route::get('/showpaiement', function(){
     return view ('showpaiement');
 })->name('showpaiement');
+
+
 
 
 

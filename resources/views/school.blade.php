@@ -146,11 +146,15 @@
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
+        <a href="{{route('schoolevenement')}}" class="sidebar-item">
+            <img src="{{ asset('images/Event.png') }}" alt="document">
+            Evenement
+        </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('schoolchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
