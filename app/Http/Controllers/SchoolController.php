@@ -12,14 +12,14 @@ class SchoolController extends Controller
             
             'schoolName' => 'required',
             'username' => 'required|email',
-            'password' => 'required|confirmed', // Utilise le champ `password_confirmation`
+            'password' => 'required|confirmed', 
         ]);
     
         $school = new School();
         $school->name = $request->schoolName;
         $school->email = $request->username;
-        $school->password = bcrypt($request->password); // Chiffrez le mot de passe
-        $school->type = 'school'; // Ajoutez un type par défaut si nécessaire
+        $school->password = bcrypt($request->password); 
+        $school->type = 'school'; 
         $school->save();
     
         return redirect('login')->with('success', 'Parent ajouté avec succès');

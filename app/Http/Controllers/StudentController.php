@@ -13,6 +13,18 @@ use App\Imports\StudentsImport;
 
 class StudentController extends Controller
 {   
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'studentFile' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        $file = $request->file('studentFile');
+
+        Excel::import(new StudentsImport, $file);
+
+        return back()->with('success', 'Les données des élèves ont été importées avec succès.');
+    }
 
     public function getChildData($section)
     {

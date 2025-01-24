@@ -14,8 +14,8 @@ class TuteurController extends Controller
             'firstName' => 'required|string|max:255',
             'secondName' => 'required|string|max:255',
             'username' => 'required|email|unique:tuteurs,email',
-            'password' => 'required|min:8|confirmed', // Vérifie la confirmation
-            'childName' => 'required|string|max:255', // "schoolName" n'est pas présent ici
+            'password' => 'required|min:8|confirmed', 
+            'childName' => 'required|string|max:255', 
             'schoolName' => 'nullable|string|max:255', 
         ]);
 
@@ -33,7 +33,6 @@ class TuteurController extends Controller
         
             return redirect('login')->with('success', 'Parent ajouté avec succès !');
         } catch (\Exception $e) {
-            // Affichez les détails de l'exception pour mieux comprendre l'erreur
             return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
         
