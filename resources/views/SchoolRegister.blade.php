@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Register School</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .gradient-custom-2 {
@@ -24,7 +24,7 @@
     </style>
 </head>
 <body>
-    <section class="h-300 gradient-form" style="background-color:    ">
+    <section class="h-300 gradient-form" style="background-color: #eee;">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-xl-10">
@@ -48,42 +48,42 @@
                                             <li class="alert alert-danger"> {{$error}}</li>
                                         @endforeach
                                     </ul>
-                                    <form method="POST" action="/register/traitement">
+                                    <form method="POST" action="/register/traitement/school">
                                         @csrf
-                                        <p>Please Sing In to your account</p>
+                                        <p>Please Sign Up to your account</p>
                                         <div class="form-outline mb-4" id="schoolNameField">
-                                            <input type="text" id="schoolName" name="schoolName" class="form-control" placeholder="School Name" value="{{ old('schoolName') }}" required/>
-                                            <label class="form-label" for="schoolName">School Name</label>
-                                            @error('schoolName')
+                                            <input type="text" id="name" name="schoolName" class="form-control" placeholder="School Name" value="{{ old('name') }}" required/>
+                                            <label class="form-label" for="name">School Name</label>
+                                            @error('name')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         
                                         <div class="form-outline mb-4">
-                                            <input type="email" id="username" name="username" class="form-control" placeholder="Phone number or email address" value="{{ old('username') }}" required/>
-                                            <label class="form-label" for="username">Username</label>
-                                            @error('username')
+                                            <input type="email" id="email" name="username" class="form-control" placeholder="Email address" value="{{ old('email') }}" required/>
+                                            <label class="form-label" for="email">Email</label>
+                                            @error('email')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
+
                                         <div class="form-outline mb-4">
-                                            <input type="password" id="password" name="password" class="form-control" placeholder="********" required/>
+                                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required/>
                                             <label class="form-label" for="password">Password</label>
                                             @error('password')
-                                                 <div class="text-danger">{{ $message }}</div>
-                                             @enderror
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
+
                                         <div class="form-outline mb-4">
-                                            <input type="password" id="password_confirmation"  name="password_confirmation" class="form-control" placeholder="********" required />
-                                            <label class="form-label" for="password">Repeat Password</label>
+                                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirm Password" required/>
+                                            <label class="form-label" for="password_confirmation">Confirm Password</label>
                                             @error('password_confirmation')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="text-center pt-1 mb-5 pb-1">
-                                            <button type="submit" class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3">Sign up</button>
-                                        </div>
-                                        
+
+                                        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
                                     </form>
                                 </div>
                             </div>
@@ -100,7 +100,5 @@
         </div>
     </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    
-
 </body>
 </html>

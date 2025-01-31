@@ -54,8 +54,8 @@
             display: block;
         }
 
-           /* Styles personnalisés */
-           body {
+        /* Styles personnalisés */
+        body {
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
@@ -142,7 +142,7 @@
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
-        <a href="" class="sidebar-item">
+        <a href="{{route('schooldocument')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
@@ -150,7 +150,7 @@
             <img src="{{ asset('images/Event.png') }}" alt="document">
             Evenement
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('schoolpaiement')}}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
@@ -172,7 +172,7 @@
         <div class="container mt-5">
             <h1 id="main-title">Téléversement des données des élèves</h1>
             <div class="mt-4">
-                <form id="uploadForm" method="POST" action="student/upload" enctype="multipart/form-data">
+                <form id="uploadForm" method="POST" action="{{ route('student.upload') }}" enctype="multipart/form-data">
                     @csrf <!-- Token de sécurité pour Laravel -->
                     <div class="mb-3">
                         <label for="studentFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>

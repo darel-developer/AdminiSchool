@@ -94,22 +94,14 @@
         <div class="container mt-5">
             <h1 id="main-title">Téléversement des données des élèves</h1>
             <div class="mt-4">
-                <div id="form-absences" class="form-section active">
-                    <form id="uploadFormAbsences" method="POST" action="student/upload/absences" enctype="multipart/form-data">
+               
+                
+                <div id="form-classes" class="form-section">
+                    <form id="uploadFormClasses" method="POST" action="{{ route('classes.upload') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
-                            <label for="studentFileAbsences" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                            <input type="file" name="studentFile" id="studentFileAbsences" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Téléverser</button>
-                    </form>
-                </div>
-                <div id="form-convocations" class="form-section">
-                    <form id="uploadFormConvocations" method="POST" action="student/upload/convocations" enctype="multipart/form-data">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="studentFileConvocations" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                            <input type="file" name="studentFile" id="studentFileConvocations" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                            <label for="classFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV) classe</label>
+                            <input type="file" name="classFile" id="classFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Téléverser</button>
                     </form>

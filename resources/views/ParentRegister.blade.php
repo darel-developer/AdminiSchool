@@ -82,23 +82,6 @@
                                         </div>
 
                                         <div class="form-outline mb-4">
-                                            <input type="text" id="childName" name="childName" class="form-control" placeholder="Child's Name" value="{{ old('childName') }}" required />
-                                            <label class="form-label" for="childName">Child's Name</label>
-                                            @error('childName')
-                                            <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="form-outline mb-4">
-                                            <input type="text" id="schoolName" name="schoolName" class="form-control" placeholder="School Name" value="{{ old('schoolName') }}" />
-                                            <label class="form-label" for="schoolName">School Name</label>
-                                            @error('schoolName')
-                                            <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        
-
-                                        <div class="form-outline mb-4">
                                             <input type="password" id="password" name="password" class="form-control" placeholder="Password" required />
                                             <label class="form-label" for="password">Password</label>
                                             @error('password')

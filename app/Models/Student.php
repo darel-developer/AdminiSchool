@@ -17,4 +17,14 @@ class Student extends Model
         'convocations',
         'warnings',
     ];
+
+    public function tuteur()
+    {
+        return $this->belongsTo(Tuteur::class);
+    }
+
+    public function classe()
+    {
+        return $this->belongsTo(Classe::class, 'class_id');
+    }
 }

@@ -49,6 +49,6 @@ class PaiementController extends Controller
         $paiement->etat = $request->get('etat');
         $paiement->save();
 
-        return redirect()->route('paiement.index')->with('success', 'État du paiement mis à jour avec succès!');
+        return redirect()->route('schoolpaiement')->with('success', 'État du paiement mis à jour avec succès!');
     }
 }

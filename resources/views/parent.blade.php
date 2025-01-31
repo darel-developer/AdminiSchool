@@ -65,6 +65,10 @@
             <img src="{{ asset('images/notification.png') }}" alt="help support">
             notification
         </a>
+        <a href="{{route('parentchild')}}" class="sidebar-item">
+            <img src="{{ asset('images/notification.png') }}" alt="help support">
+            add enfant
+        </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
             Settings

@@ -14,12 +14,15 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('class');
-            $table->date('enrollment_date');
+            $table->unsignedBigInteger('class_id');
+            $table->date('enrollment_date')->nullable();
             $table->integer('absences')->default(0);
             $table->integer('convocations')->default(0);
             $table->integer('warnings')->default(0);
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
         });
     }
 

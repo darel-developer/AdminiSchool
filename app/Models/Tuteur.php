@@ -18,8 +18,7 @@ class Tuteur extends Authenticatable
         'email',
         'type',
         'password',
-        'childName',
-        'schoolName',
+        'child_name',
     ];
 
     public function student()

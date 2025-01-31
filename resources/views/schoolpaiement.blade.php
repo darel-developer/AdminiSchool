@@ -37,7 +37,7 @@
                         <td>{{ $paiement->num_facture }}</td>
                         <td>{{ $paiement->etat }}</td>
                         <td>
-                            <a href="{{ route('paiement.show', $paiement->id) }}" class="btn btn-primary">Verifier</a>
+                            <a href="{{ route('showpaiement', $paiement->id) }}" class="btn btn-primary">Verifier</a>
                         </td>
                     </tr>
                 @endforeach
