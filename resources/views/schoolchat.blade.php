@@ -112,19 +112,15 @@
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
 
-        // Récupérer l'ID du tuteur (vous pouvez l'ajouter dynamiquement)
-        const tuteurId = 1; // Exemple d'ID de tuteur
-
         // Fonction pour récupérer les messages
         async function fetchMessages() {
-            const response = await fetch(`/api/school/fetch-messages/${tuteurId}`, {
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    },
-    credentials: 'same-origin',
-});
-
+            const response = await fetch('/api/fetch-messages', {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+            });
 
             const data = await response.json();
             if (response.ok) {
@@ -150,14 +146,14 @@
         async function sendMessage() {
             const messageText = messageInput.value.trim();
             if (messageText !== '') {
-                const response = await fetch('/api/school/send-message', {
+                const response = await fetch('/api/send-message', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     },
-                    body: JSON.stringify({ message: messageText, tuteur_id: tuteurId }),
+                    body: JSON.stringify({ message: messageText }),
                     credentials: 'same-origin',
                 });
 

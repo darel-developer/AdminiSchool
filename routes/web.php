@@ -1,7 +1,5 @@
 <?php
 
-
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TuteurController;
 use App\Http\Controllers\SchoolController;
@@ -10,11 +8,19 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\ClasseController;
+use App\Http\Controllers\FichierController;
 
 Route::get('/documentschool', function () {
     return view('Schooldocument');
 })->name('Schooldocument');
 
+Route::middleware(['auth:school'])->group(function () {
+    Route::get('/school/documents', [FichierController::class, 'list_Documents'])->name('filedocument');
+    Route::get('/school/documents/view/{id}', [FichierController::class, 'viewDocument'])->name('school.viewDocument');
+    Route::get('/school/documents/download/{id}', [FichierController::class, 'downloadDocument'])->name('school.downloadDocument');
+});
+
+//Route pour gérer les élèves
 Route::post('student/upload', [StudentController::class, 'upload'])->name('student.upload');
 Route::post('student/upload/absences', [StudentController::class, 'uploadAbsences'])->name('student.upload.absences');
 Route::post('student/upload/convocations', [StudentController::class, 'uploadConvocations'])->name('student.upload.convocations');
@@ -35,19 +41,22 @@ Route::get('/api/school/fetch-messages/{tuteurId}', [ChatController::class, 'fet
 Route::post('/api/school/send-message', [ChatController::class, 'sendMessage']);
 
 // Route pour récuperer les informations des enfants pour leurs parents
-Route::get('/child/{section}', [StudentController::class, 'getChildData'])->middleware('auth');
+
 Route::middleware(['auth:tuteur'])->group(function () {
     // Routes qui nécessitent l'authentification du tuteur
+    Route::get('/child/{section}', [StudentController::class, 'getChildData'])->middleware('auth:tuteur');
     Route::get('/dashboard', [TuteurController::class, 'dashboard'])->name('tuteur.dashboard');
     Route::get('/parentpaiement', [TuteurController::class, 'paiement'])->name('parentpaiement');
     Route::get('/profile', [TuteurController::class, 'profile'])->name('tuteur.profile');
     Route::get('/addchild', [TuteurController::class, 'showAddChildForm'])->name('addchild');
     Route::post('/register/traitement/enfant', [TuteurController::class, 'addChild'])->name('parent.addChild');
+    Route::post('/upload/document', [FichierController::class, 'uploadDocument'])->name('parent.uploadDocument');
 });
 
 // Route pour traiter la connexion
 Route::Post('/login/traitement', [AuthController::class, 'loginTraitement']);
 
+//Route pour avoir les informations des élèves
 Route::get('/student/info', [StudentController::class, 'fetchStudentInfo'])->name('student.info');
 
 // Route pour traiter la sauvegarde des parents
@@ -56,6 +65,7 @@ Route::Post('/register/traitement/parent', [TuteurController::class, 'ajouter_pa
 // Route pour traiter la sauvegarde des écoles
 Route::Post('/register/traitement/school', [SchoolController::class, 'ajouter_school_traitement']);
 
+//Route pour ajouter des classes
 Route::post('/register/traitement/classe', [ClasseController::class, 'ajouter_classe'])->name('classes.upload');
 
 Route::get('/', function () {
@@ -74,6 +84,10 @@ Route::get('/parentchat', function(){
     return view ('parentchat');
 })->name('parentchat');
 
+Route::get('/parentdocument', function(){
+    return view ('parentdocument');
+})->name('parentdocument');
+
 Route::get('/parentpaiement', function(){
     return view ('parentpaiement');
 })->name('parentpaiement');
@@ -91,6 +105,10 @@ Route::get('/school', function(){
 Route::get('/schoolchat', function(){
     return view ('schoolchat');
 })->name('schoolchat');
+
+Route::get('/filedocument', function(){
+    return view ('filedocument');
+})->name('filedocument');
 
 Route::get('/schoolevenement', function(){
     return view ('schoolevenement');

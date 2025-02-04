@@ -13,7 +13,7 @@ class StudentsImport implements ToModel, WithHeadingRow
         return Student::updateOrCreate(
             ['name' => $row['name']], // Condition to check if the student exists
             [
-                'class_id' => $row['class_id'],
+                'class' => $row['class'],
                 'enrollment_date' => $row['enrollment_date'],
                 'absences' => $row['absences'],
                 'convocations' => $row['convocations'],

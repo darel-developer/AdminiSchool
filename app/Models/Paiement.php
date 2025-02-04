@@ -13,5 +13,6 @@ class Paiement extends Model
         'montant',
         'num_facture',
         'etat',
+        
     ];
 }

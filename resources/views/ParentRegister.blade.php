@@ -55,18 +55,18 @@
                                         <div class="row mb-4">
                                             <div class="col">
                                                 <div class="form-outline">
-                                                    <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First Name" value="{{ old('firstName') }}" required />
+                                                    <input type="text" id="firstName" name="prenom" class="form-control" placeholder="First Name" value="{{ old('prenom') }}" required />
                                                     <label class="form-label" for="firstName">First Name</label>
-                                                    @error('firstName')
+                                                    @error('prenom')
                                                     <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
                                             </div>
                                             <div class="col">
                                                 <div class="form-outline">
-                                                    <input type="text" id="secondName" name="secondName" class="form-control" placeholder="Second Name" value="{{ old('secondName') }}" required />
+                                                    <input type="text" id="secondName" name="nom" class="form-control" placeholder="Second Name" value="{{ old('nom') }}" required />
                                                     <label class="form-label" for="secondName">Second Name</label>
-                                                    @error('secondName')
+                                                    @error('nom')
                                                     <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
@@ -74,9 +74,17 @@
                                         </div>
 
                                         <div class="form-outline mb-4">
-                                            <input type="email" id="username" name="username" class="form-control" placeholder="Email" value="{{ old('username') }}" required />
+                                            <input type="number" id="phone_number" name="phone_number" class="form-control" placeholder="number" value="{{ old('phone_number') }}" required />
+                                            <label class="form-label" for="username">Number</label>
+                                            @error('phone_number')
+                                            <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-outline mb-4">
+                                            <input type="email" id="username" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required />
                                             <label class="form-label" for="username">Email</label>
-                                            @error('username')
+                                            @error('email')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>

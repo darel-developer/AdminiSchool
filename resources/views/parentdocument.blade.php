@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Téléversement des données des élèves</title>
+    <title>Téléversement des documents</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         body {
@@ -138,25 +138,29 @@
 </head>
 <body>
     <div class="sidebar">
-        <a href="#" class="sidebar-item">
+        <a href="{{route('parent')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
-        <a href="{{route('filedocument')}}" class="sidebar-item">
+        <a href="#" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
-        <a href="{{route('schoolevenement')}}" class="sidebar-item">
-            <img src="{{ asset('images/Event.png') }}" alt="document">
-            Evenement
-        </a>
-        <a href="{{route('schoolpaiement')}}" class="sidebar-item">
+        <a href="{{route('parentpaiement')}}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="{{route('schoolchat')}}" class="sidebar-item">
+        <a href="{{route('parentchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
+        </a>
+        <a href="#" class="sidebar-item">
+            <img src="{{ asset('images/notification.png') }}" alt="help support">
+            notification
+        </a>
+        <a href="{{route('parentchild')}}" class="sidebar-item">
+            <img src="{{ asset('images/notification.png') }}" alt="help support">
+            add enfant
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
@@ -170,13 +174,13 @@
 
     <div class="content">
         <div class="container mt-5">
-            <h1 id="main-title">Téléversement des données des élèves</h1>
+            <h1 id="main-title">Téléversement des documents</h1>
             <div class="mt-4">
-                <form id="uploadForm" method="POST" action="{{ route('student.upload') }}" enctype="multipart/form-data">
+                <form id="uploadForm" method="POST" action="{{ route('parent.uploadDocument') }}" enctype="multipart/form-data">
                     @csrf <!-- Token de sécurité pour Laravel -->
                     <div class="mb-3">
-                        <label for="studentFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                        <input type="file" name="studentFile" id="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                        <label for="documentFile" class="form-label">Sélectionnez un fichier (pdf)</label>
+                        <input type="file" name="documentfile" id="documentFile" class="form-control" accept=".pdf" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Téléverser</button>
                 </form>

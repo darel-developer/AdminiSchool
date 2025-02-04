@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Parent Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -49,7 +49,7 @@
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('parentdocument')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
@@ -81,96 +81,67 @@
 
     <!-- Content -->
     <div class="content">
-        <h1>Données de l'enfant</h1>
-        <div id="main-content">
-            <!-- Les informations de l'enfant s'afficheront ici -->
+        <h1>Parent Dashboard</h1>
+        <div class="btn-group" role="group" aria-label="Sections">
+            <button type="button" class="btn btn-primary" onclick="loadSection('general')">Informations Générales</button>
+            <button type="button" class="btn btn-primary" onclick="loadSection('absences')">Absences</button>
+            <button type="button" class="btn btn-primary" onclick="loadSection('convocations')">Convocations</button>
+            <button type="button" class="btn btn-primary" onclick="loadSection('warnings')">Avertissements</button>
         </div>
-
-        <div class="mt-4">
-            <button class="btn btn-outline-primary" onclick="loadChildData('information')">Information</button>
-            <button class="btn btn-outline-primary" onclick="loadChildData('absence')">Absence</button>
-            <button class="btn btn-outline-primary" onclick="loadChildData('note')">Note</button>
-            <button class="btn btn-outline-primary" onclick="loadChildData('convocation')">Convocation</button>
-            <button class="btn btn-outline-primary" onclick="loadChildData('planning')">Planning</button>
-            <button class="btn btn-outline-primary" onclick="loadChildData('barbillard')">Barbillard</button>
+        <div id="content" class="mt-4">
+            <p>Sélectionnez une section pour afficher les données.</p>
         </div>
     </div>
 
     <script>
-        function loadChildData(section) {
-    // Récupérer le nom de l'enfant associé au tuteur connecté
-    const childName = '{{ auth()->guard('tuteur')->user()->childName ?? '' }}'; 
+        function loadSection(section) {
+            fetch(`/child/${section}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let htmlContent = '';
+                        switch (section) {
+                            case 'general':
+                                htmlContent = `
+                                    <h2>Informations Générales</h2>
+                                    <p>Nom: ${data.data.name}</p>
+                                    <p>Classe: ${data.data.class_id}</p>
+                                    <p>Date d'inscription: ${data.data.enrollment_date}</p>
+                                `;
+                                break;
+                            case 'absences':
+                                htmlContent = `
+                                    <h2>Absences</h2>
+                                    <p>Nombre d'absences: ${data.data.absences}</p>
+                                `;
+                                break;
+                            case 'convocations':
+                                htmlContent = `
+                                    <h2>Convocations</h2>
+                                    <p>Nombre de convocations: ${data.data.convocations}</p>
+                                `;
+                                break;
+                            case 'warnings':
+                                htmlContent = `
+                                    <h2>Avertissements</h2>
+                                    <p>Nombre d'avertissements: ${data.data.warnings}</p>
+                                `;
+                                break;
+                            default:
+                                htmlContent = `<p>Section inconnue.</p>`;
+                                break;
+                        }
 
-    if (!childName) {
-        alert('Aucun enfant associé à cet utilisateur.');
-        return;
-    }
-
-    fetch(`/child/${section}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const content = document.getElementById('main-content');
-                let htmlContent = '';
-
-                switch (section) {
-                    case 'information':
-                        htmlContent = `
-                            <h2>Informations</h2>
-                            <p>Nom : ${data.data.name}</p>
-                            <p>Classe : ${data.data.class}</p>
-                            <p>Date d'inscription : ${data.data.enrollment_date}</p>
-                            <p>Absences : ${data.data.absences}</p>
-                            <p>Convocations : ${data.data.convocations}</p>
-                            <p>Warings : ${data.data.warnings}</p>
-                        `;
-                        break;
-                    case 'absence':
-                        htmlContent = `
-                            <h2>Absences</h2>
-                            <p>Nombre d'absences : ${data.data.absences}</p>
-                        `;
-                        break;
-                    case 'note':
-                        htmlContent = `
-                            <h2>Notes</h2>
-                            <p>Les notes seront affichées ici...</p>
-                        `;
-                        break;
-                    case 'convocation':
-                        htmlContent = `
-                            <h2>Convocations</h2>
-                            <p>${data.data.convocations}</p>
-                        `;
-                        break;
-                    case 'planning':
-                        htmlContent = `
-                            <h2>Planning</h2>
-                            <p>Le planning des activités sera affiché ici...</p>
-                        `;
-                        break;
-                    case 'barbillard':
-                        htmlContent = `
-                            <h2>Barbillard</h2>
-                            <p>${data.data.warnings}</p>
-                        `;
-                        break;
-                    default:
-                        htmlContent = `<p>Section inconnue.</p>`;
-                        break;
-                }
-
-                content.innerHTML = htmlContent;
-            } else {
-                alert(data.error || 'Une erreur est survenue.');
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors de la récupération des données :', error);
-            alert('Erreur lors de la récupération des données.');
-        });
-}
-
+                        document.getElementById('content').innerHTML = htmlContent;
+                    } else {
+                        alert(data.error || 'Une erreur est survenue.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données :', error);
+                    alert('Erreur lors de la récupération des données.');
+                });
+        }
     </script>
     
 </body>

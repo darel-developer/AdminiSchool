@@ -16,18 +16,22 @@ class TuteurController extends Controller
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'email' => 'required|email|unique:tuteurs,email',
+            'phone_number' => 'required|string|max:255',
             'password' => 'required|min:8|confirmed',
         ]);
 
         // Création du tuteur
-        $tuteur = Tuteur::create([
-            'nom' => $validatedData['nom'],
-            'prenom' => $validatedData['prenom'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']),
-        ]);
+        $tuteur = new Tuteur();
+        $tuteur->nom = $request->nom;
+        $tuteur->prenom = $request->prenom;
+        $tuteur->type = 'parent';
+        $tuteur->email = $request->email;
+        $tuteur->password = bcrypt($request->password);
+        $tuteur->phone_number = $request->phone_number;
+        $tuteur->save();
 
-        return redirect()->route('tuteur.dashboard')->with('success', 'Parent ajouté avec succès.');
+
+        return redirect()->route('login')->with('success', 'Parent ajouté avec succès.');
     }
 
     public function addChild(Request $request)
