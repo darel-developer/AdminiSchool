@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Reset password</title>
+    <title>Reset Password</title>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -29,23 +29,23 @@
                             <img src="{{ asset('images/logo.png') }}" alt="BootstrapBrain Logo" width="175" height="57">
                           </a>
                         </div>
-                        <h2 class="h4 text-center">Password Reset</h2>
+                        <h2 class="h4 text-center">Reset Password</h2>
                         <h3 class="fs-6 fw-normal text-secondary text-center m-0">Provide the email address associated with your account to recover your password.</h3>
                       </div>
                     </div>
                   </div>
-                  <form action="#!">
+                  <form action="\traitement\password" method="POST">
                     @csrf
                     <div class="row gy-3 overflow-hidden">
                       <div class="col-12">
                         <div class="form-floating mb-3">
                           <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
-                          <label for="email" class="form-label">Email</label>
+                          <label for="email" class="form-label">Email Address</label>
                         </div>
                       </div>
                       <div class="col-12">
                         <div class="d-grid">
-                          <button class="btn btn-dark btn-lg" type="submit">Reset Password</button>
+                          <button class="btn btn-primary w-100" type="submit">Send Password Reset Link</button>
                         </div>
                       </div>
                     </div>

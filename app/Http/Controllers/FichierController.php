@@ -26,7 +26,7 @@ class FichierController extends Controller
         return back()->with('success', 'Document téléversé avec succès.');
     }
 
-    public function list_Documents()
+    public function liste_document()
     {
         $documents = Document::with('tuteur')->get();
         return view('filedocument', compact('documents'));

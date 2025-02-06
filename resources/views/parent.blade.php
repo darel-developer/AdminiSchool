@@ -62,11 +62,11 @@
             Chat
         </a>
         <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/notification.png') }}" alt="help support">
+            <img src="{{ asset('images/notification.png') }}" alt="notification">
             notification
         </a>
         <a href="{{route('parentchild')}}" class="sidebar-item">
-            <img src="{{ asset('images/notification.png') }}" alt="help support">
+            <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
             add enfant
         </a>
         <a href="#" class="sidebar-item">

@@ -64,7 +64,7 @@ class PaiementController extends Controller
     {
         $tuteur = Tuteur::where('nom', $paiement->nom)->where('prenom', $paiement->prenom)->first();
         if (!$tuteur) {
-           \Log::error('Tuteur not found for paiement ID: ' . $paiement->id);
+           Log::error('Tuteur not found for paiement ID: ' . $paiement->id);
             return;
         }
 
@@ -90,7 +90,7 @@ class PaiementController extends Controller
                             'to' => $phoneNumber,
                         ],
                     ],
-                    'text' => 'Votre paiement a été mis à jour. État: ' . $paiement->etat,
+                    'text' => 'je t\'envoi un message depuis mon code : ' . $paiement->etat,
                 ],
             ],
         ]));
@@ -98,12 +98,12 @@ class PaiementController extends Controller
         try {
             $response = $request->send();
             if ($response->getStatus() == 200) {
-                \Log::info('SMS notification sent successfully: ' . $response->getBody());
+                Log::info('SMS envoyé avec succès: ' . $response->getBody());
             } else {
-                //\Log::error('Failed to send SMS notification: ' . $response->getStatus() . ' ' . $response->getReasonPhrase());
+                Log::error('Erreur lors de l\'envoi  SMS notification: ' . $response->getStatus() . ' ' . $response->getReasonPhrase());
             }
         } catch (HTTP_Request2_Exception $e) {
-            \Log::error('Error: ' . $e->getMessage());
+            Log::error('Error: ' . $e->getMessage());
         }
     }
 

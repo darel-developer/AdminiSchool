@@ -27,5 +27,10 @@ class Tuteur extends Authenticatable
         return $this->hasOne(Student::class, 'name', 'childname');
     }
 
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
     protected $guard = 'tuteur';
 }

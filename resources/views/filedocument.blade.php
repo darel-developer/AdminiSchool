@@ -1,4 +1,4 @@
-<!-- filepath: /c:/xampp/htdocs/Adminischool/resources/views/school/documents.blade.php -->
+<!-- filepath: /c:/xampp/htdocs/Adminischool/resources/views/school/filedocument.blade.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -10,6 +10,11 @@
 <body>
     <div class="container mt-5">
         <h1>Documents des Parents</h1>
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif    
         <table class="table table-bordered">
             <thead>
                 <tr>

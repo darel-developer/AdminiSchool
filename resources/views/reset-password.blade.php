@@ -13,7 +13,7 @@
             <h2 class="text-center mt-5">Reset Password</h2>
             <form action="{{ route('password.update') }}" method="POST">
                 @csrf
-                <input type="hidden" name="token" value="{{ $token }}">
+                <input type="hidden" name="token" value="{{ request()->token }}">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Address</label>
                     <input type="email" name="email" id="email" class="form-control" required>

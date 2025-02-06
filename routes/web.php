@@ -9,16 +9,19 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\FichierController;
+use App\Http\Controllers\PasswordResetController;
 
 Route::get('/documentschool', function () {
     return view('Schooldocument');
 })->name('Schooldocument');
 
 Route::middleware(['auth:school'])->group(function () {
-    Route::get('/school/documents', [FichierController::class, 'list_Documents'])->name('filedocument');
+    Route::get('/school/documents', [FichierController::class, 'liste_document'])->name('filedocument');
     Route::get('/school/documents/view/{id}', [FichierController::class, 'viewDocument'])->name('school.viewDocument');
     Route::get('/school/documents/download/{id}', [FichierController::class, 'downloadDocument'])->name('school.downloadDocument');
 });
+
+
 
 //Route pour gérer les élèves
 Route::post('student/upload', [StudentController::class, 'upload'])->name('student.upload');
@@ -41,10 +44,9 @@ Route::get('/api/school/fetch-messages/{tuteurId}', [ChatController::class, 'fet
 Route::post('/api/school/send-message', [ChatController::class, 'sendMessage']);
 
 // Route pour récuperer les informations des enfants pour leurs parents
-
+Route::get('/child/{section}', [StudentController::class, 'getChildData'])->middleware('auth:tuteur');
 Route::middleware(['auth:tuteur'])->group(function () {
     // Routes qui nécessitent l'authentification du tuteur
-    Route::get('/child/{section}', [StudentController::class, 'getChildData'])->middleware('auth:tuteur');
     Route::get('/dashboard', [TuteurController::class, 'dashboard'])->name('tuteur.dashboard');
     Route::get('/parentpaiement', [TuteurController::class, 'paiement'])->name('parentpaiement');
     Route::get('/profile', [TuteurController::class, 'profile'])->name('tuteur.profile');
@@ -137,3 +139,15 @@ Route::get('/pasword', function(){
 Route::get('/login', function(){
     return view ('login');
 })->name('login');
+
+Route::get('password/reset', function () {
+    return view('password');
+})->name('password.request');
+
+Route::post('\traitement\password', [PasswordResetController::class, 'sendResetLinkEmailWithInfobip'])->name('password');
+
+Route::get('reset-password', function () {
+    return view('reset-password');
+})->name('password.reset');
+
+Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
