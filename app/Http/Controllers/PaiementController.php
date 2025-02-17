@@ -90,7 +90,7 @@ class PaiementController extends Controller
                             'to' => $phoneNumber,
                         ],
                     ],
-                    'text' => 'je t\'envoi un message depuis mon code : ' . $paiement->etat,
+                    'text' => 'Votre paiement a été mis à jour. Etat: ' . $paiement->etat,
                 ],
             ],
         ]));
