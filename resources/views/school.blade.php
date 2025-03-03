@@ -166,6 +166,10 @@
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support
         </a>
+        <a href="{{route('users')}}" class="sidebar-item">
+            <img src="{{ asset('images/chatbot.png') }}" alt="user">
+            Users
+        </a>
     </div>
 
     <div class="content">

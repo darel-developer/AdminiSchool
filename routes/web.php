@@ -16,9 +16,14 @@ Route::get('/documentschool', function () {
 })->name('Schooldocument');
 
 Route::middleware(['auth:school'])->group(function () {
-    Route::get('/school/documents', [FichierController::class, 'liste_document'])->name('filedocument');
+    Route::get('/filedocument', [FichierController::class, 'liste_document'])->name('filedocument');
     Route::get('/school/documents/view/{id}', [FichierController::class, 'viewDocument'])->name('school.viewDocument');
     Route::get('/school/documents/download/{id}', [FichierController::class, 'downloadDocument'])->name('school.downloadDocument');
+    // Route pour gérer les utilisateurs
+    Route::get('/users', [TuteurController::class, 'liste_users'])->name('users');
+    Route::get('/users/edit/{id}', [TuteurController::class, 'edit'])->name('users.edit');
+    Route::post('/users/update/{id}', [TuteurController::class, 'update'])->name('users.update');
+    Route::delete('/users/delete/{id}', [TuteurController::class, 'destroy'])->name('users.delete');
 });
 
 
@@ -53,6 +58,7 @@ Route::middleware(['auth:tuteur'])->group(function () {
     Route::get('/addchild', [TuteurController::class, 'showAddChildForm'])->name('addchild');
     Route::post('/register/traitement/enfant', [TuteurController::class, 'addChild'])->name('parent.addChild');
     Route::post('/upload/document', [FichierController::class, 'uploadDocument'])->name('parent.uploadDocument');
+    Route::get('/parent', [TuteurController::class, 'dashboard'])->name('parent');
 });
 
 // Route pour traiter la connexion
@@ -127,6 +133,10 @@ Route::get('/paiement', function(){
 Route::get('/schooldocument', function(){
     return view ('schooldocument');
 })->name('schooldocument');
+
+Route::get('/users', function(){
+    return view('users');
+})->name('users');
 
 Route::get('/settingsparent', function () {
     return view('settingsparent');

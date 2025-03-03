@@ -22,10 +22,12 @@ class Tuteur extends Authenticatable
         'phone_number',
     ];
 
-    public function student()
+    public function students()
     {
-        return $this->hasOne(Student::class, 'name', 'childname');
+        return $this->hasMany(Student::class, 'name', 'childname');
     }
+    
+
 
     public function documents()
     {

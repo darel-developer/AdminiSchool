@@ -22,14 +22,12 @@ class TuteurController extends Controller
 
         // Création du tuteur
         $tuteur = new Tuteur();
-        $tuteur->nom = $request->nom;
-        $tuteur->prenom = $request->prenom;
-        $tuteur->type = 'parent';
-        $tuteur->email = $request->email;
-        $tuteur->password = bcrypt($request->password);
-        $tuteur->phone_number = $request->phone_number;
+        $tuteur->nom = $validatedData['nom'];
+        $tuteur->prenom = $validatedData['prenom'];
+        $tuteur->email = $validatedData['email'];
+        $tuteur->phone_number = '+237' . ltrim($validatedData['phone_number'], '0');
+        $tuteur->password = bcrypt($validatedData['password']);
         $tuteur->save();
-
 
         return redirect()->route('login')->with('success', 'Parent ajouté avec succès.');
     }
@@ -56,6 +54,7 @@ class TuteurController extends Controller
         // Update the tuteur with the child's name
         $tuteur = Tuteur::find($validatedData['tuteur_id']);
         $tuteur->child_name = $validatedData['name'];
+        $tuteur->students()->attach($student->id);
         $tuteur->save();
 
         return redirect()->back()->with('success', 'Enfant ajouté avec succès.');
@@ -65,5 +64,38 @@ class TuteurController extends Controller
     {
         $classes = Classe::all();
         return view('parentchild', compact('classes'));
+    }
+    
+    public function dashboard()
+    {
+        $tuteur = auth()->guard('tuteur')->user();
+        $students = $tuteur->students;
+        return view('parent', compact('students'));
+    }
+
+    public function liste_user()
+    {
+        $tuteurs = Tuteur::all();
+        return view('users', compact('tuteurs'));
+    }
+
+    public function edit($id)
+    {
+        $tuteur = Tuteur::findOrFail($id);
+        return view('edit-tuteur', compact('tuteur'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $tuteur = Tuteur::findOrFail($id);
+        $tuteur->update($request->all());
+        return redirect()->route('users')->with('success', 'Tuteur mis à jour avec succès.');
+    }
+
+    public function destroy($id)
+    {
+        $tuteur = Tuteur::findOrFail($id);
+        $tuteur->delete();
+        return redirect()->route('users')->with('success', 'Tuteur supprimé avec succès.');
     }
 }

@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class FichierController extends Controller
 {
+
+    public function liste_document()
+    {
+        $documents = Document::with('tuteur')->get();
+        return view('filedocument', compact('documents'));
+    }
+
+    
     public function uploadDocument(Request $request)
     {
         $request->validate([
@@ -26,11 +34,8 @@ class FichierController extends Controller
         return back()->with('success', 'Document téléversé avec succès.');
     }
 
-    public function liste_document()
-    {
-        $documents = Document::with('tuteur')->get();
-        return view('filedocument', compact('documents'));
-    }
+  
+
 
     public function viewDocument($id)
     {
