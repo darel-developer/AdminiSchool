@@ -142,7 +142,7 @@
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
-        <a href="{{route('filedocument')}}" class="sidebar-item">
+        <a href="{{route('documentschool')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
@@ -154,7 +154,7 @@
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="{{route('schoolchat')}}" class="sidebar-item">
+        <a href="#" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
@@ -166,7 +166,7 @@
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support
         </a>
-        <a href="{{route('users')}}" class="sidebar-item">
+        <a href="{{route('tuteurschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
             Users
         </a>

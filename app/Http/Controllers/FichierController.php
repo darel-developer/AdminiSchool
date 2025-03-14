@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Storage;
 class FichierController extends Controller
 {
 
-    public function liste_document()
+    public function index()
     {
-        $documents = Document::with('tuteur')->get();
-        return view('filedocument', compact('documents'));
+        $documents = Document::all();
+        return view('documentschool', compact('documents'));
     }
 
     

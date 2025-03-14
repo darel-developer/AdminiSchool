@@ -57,7 +57,7 @@
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="{{route('parentchat')}}" class="sidebar-item">
+        <a href="#" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
@@ -69,7 +69,7 @@
             <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
             add enfant
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('profile')}}" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
             Settings
         </a>

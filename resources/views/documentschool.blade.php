@@ -1,4 +1,3 @@
-<!-- filepath: /c:/xampp/htdocs/Adminischool/resources/views/school/filedocument.blade.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>

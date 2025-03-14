@@ -10,22 +10,24 @@ use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\FichierController;
 use App\Http\Controllers\PasswordResetController;
+use App\Models\Document;
 
 Route::get('/documentschool', function () {
     return view('Schooldocument');
 })->name('Schooldocument');
 
-Route::middleware(['auth:school'])->group(function () {
-    Route::get('/filedocument', [FichierController::class, 'liste_document'])->name('filedocument');
-    Route::get('/school/documents/view/{id}', [FichierController::class, 'viewDocument'])->name('school.viewDocument');
-    Route::get('/school/documents/download/{id}', [FichierController::class, 'downloadDocument'])->name('school.downloadDocument');
-    // Route pour gérer les utilisateurs
-    Route::get('/users', [TuteurController::class, 'liste_users'])->name('users');
-    Route::get('/users/edit/{id}', [TuteurController::class, 'edit'])->name('users.edit');
-    Route::post('/users/update/{id}', [TuteurController::class, 'update'])->name('users.update');
-    Route::delete('/users/delete/{id}', [TuteurController::class, 'destroy'])->name('users.delete');
-});
 
+    Route::get('/documentschool', [FichierController::class, 'index'])->name('documentschool');
+    Route::get('/documents/view/{id}', [FichierController::class, 'viewDocument'])->name('school.viewDocument');
+    Route::get('/documents/download/{id}', [FichierController::class, 'downloadDocument'])->name('school.downloadDocument');
+
+  
+    
+    // Route pour gérer les utilisateurs
+    Route::get('/tuteurschool', [TuteurController::class, 'index'])->name('tutueurschool');
+    Route::get('/tuteurschool/edit/{id}', [TuteurController::class, 'edit'])->name('users.edit');
+    Route::post('/tuteurschool/update/{id}', [TuteurController::class, 'update'])->name('users.update');
+    Route::delete('/tuteurschool/delete/{id}', [TuteurController::class, 'destroy'])->name('users.delete');
 
 
 //Route pour gérer les élèves
@@ -41,12 +43,7 @@ Route::put('/paiement/{id}', [PaiementController::class, 'update'])->name('paiem
 // Route pour stocker les paiements
 Route::post('/paiement', [PaiementController::class, 'store'])->name('paiement.store');
 
-// Route pour l'envoi et reception des messages
-Route::post('/api/send-message', [ChatController::class, 'sendMessage']);
-Route::get('/api/fetch-messages', [ChatController::class, 'fetchMessages']);
-Route::post('/api/school/send-message', [ChatController::class, 'sendMessageFromSchool']);
-Route::get('/api/school/fetch-messages/{tuteurId}', [ChatController::class, 'fetchMessages']);
-Route::post('/api/school/send-message', [ChatController::class, 'sendMessage']);
+
 
 // Route pour récuperer les informations des enfants pour leurs parents
 Route::get('/child/{section}', [StudentController::class, 'getChildData'])->middleware('auth:tuteur');
@@ -55,6 +52,7 @@ Route::middleware(['auth:tuteur'])->group(function () {
     Route::get('/dashboard', [TuteurController::class, 'dashboard'])->name('tuteur.dashboard');
     Route::get('/parentpaiement', [TuteurController::class, 'paiement'])->name('parentpaiement');
     Route::get('/profile', [TuteurController::class, 'profile'])->name('tuteur.profile');
+    Route::post('/profile/update', [TuteurController::class, 'updateProfile'])->name('tuteur.updateProfile');
     Route::get('/addchild', [TuteurController::class, 'showAddChildForm'])->name('addchild');
     Route::post('/register/traitement/enfant', [TuteurController::class, 'addChild'])->name('parent.addChild');
     Route::post('/upload/document', [FichierController::class, 'uploadDocument'])->name('parent.uploadDocument');
@@ -80,17 +78,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Route::get('/parent', function(){
     return view ('parent');
 })->name('parent');
+
+Route::get('/profile', function(){
+    return view('profile');
+})->name('profile');
 
 Route::get('/ParenRegistert', function(){
     return view ('ParentRegister');
 })->name('ParentRegister');
 
-Route::get('/parentchat', function(){
-    return view ('parentchat');
-})->name('parentchat');
+
 
 Route::get('/parentdocument', function(){
     return view ('parentdocument');
@@ -110,13 +111,11 @@ Route::get('/school', function(){
     return view ('school');
 })->name('school');
 
-Route::get('/schoolchat', function(){
-    return view ('schoolchat');
-})->name('schoolchat');
 
-Route::get('/filedocument', function(){
-    return view ('filedocument');
-})->name('filedocument');
+
+Route::get('/documents', function(){
+    return view ('documents');
+})->name('documents');
 
 Route::get('/schoolevenement', function(){
     return view ('schoolevenement');
@@ -134,9 +133,9 @@ Route::get('/schooldocument', function(){
     return view ('schooldocument');
 })->name('schooldocument');
 
-Route::get('/users', function(){
-    return view('users');
-})->name('users');
+Route::get('/tuteurschool', function(){
+    return view('tuteurschool');
+})->name('tuteurschool');
 
 Route::get('/settingsparent', function () {
     return view('settingsparent');

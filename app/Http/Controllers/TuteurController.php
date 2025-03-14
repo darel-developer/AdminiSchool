@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Tuteur;
 use App\Models\Student;
 use App\Models\Classe;
+use Illuminate\Support\Facades\Auth;
 
 class TuteurController extends Controller
 {
@@ -73,10 +74,10 @@ class TuteurController extends Controller
         return view('parent', compact('students'));
     }
 
-    public function liste_user()
+    public function index()
     {
         $tuteurs = Tuteur::all();
-        return view('users', compact('tuteurs'));
+        return view('tuteurschool', compact('tuteurs'));
     }
 
     public function edit($id)
@@ -88,7 +89,8 @@ class TuteurController extends Controller
     public function update(Request $request, $id)
     {
         $tuteur = Tuteur::findOrFail($id);
-        $tuteur->update($request->all());
+        $tuteur->fill($request->all());
+        $tuteur->save();
         return redirect()->route('users')->with('success', 'Tuteur mis à jour avec succès.');
     }
 
@@ -98,4 +100,27 @@ class TuteurController extends Controller
         $tuteur->delete();
         return redirect()->route('users')->with('success', 'Tuteur supprimé avec succès.');
     }
+
+    public function profile()
+    {
+        $tuteur = Auth::guard('tuteur')->user();
+        $students = $tuteur->students;
+        return view('profile', compact('tuteur', 'students'));
+    }
+
+   /* public function updateProfile(Request $request)
+    {
+        $tuteur = Auth::guard('tuteur')->user();
+
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'email' => 'required|email|unique:tuteurs,email,' . $tuteur->id,
+            'phone_number' => 'required|string|max:255',
+        ]);
+
+        $tuteur->update($request->all());
+
+        return redirect()->route('tuteur.profile')->with('success', 'Profil mis à jour avec succès.');
+    } */
 }
