@@ -162,7 +162,7 @@
             <img src="{{ asset('images/setting.png') }}" alt="settings">
             Settings
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('helpsupport')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support
         </a>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface avec barre de navigation</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Ajouter un événement</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -54,8 +54,8 @@
             display: block;
         }
 
-           /* Styles personnalisés */
-           body {
+        /* Styles personnalisés */
+        body {
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
@@ -134,11 +134,22 @@
                 padding-bottom: 80px; /* Espace pour la barre de navigation */
             }
         }
+
+        /* Animation pour l'alerte de succès */
+        .alert {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .alert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
-     <!-- Barre de navigation -->
-     <div class="sidebar">
+    <!-- Barre de navigation -->
+    <div class="sidebar">
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
@@ -168,6 +179,11 @@
     <div class="content">
         <h1 id="main-title">Ajouter un événement</h1>
         <div class="mt-4">
+            @if(session('success'))
+                <div class="alert alert-success show" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
             <form id="eventForm" method="POST" action="{{ route('events.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
@@ -195,9 +211,9 @@
                     <select class="form-control" id="class" name="class" required>
                         <!-- Liste déroulante des classes -->
                        <option value="classe 1">classe 1</option>
-                       <option value="classe 1">classe 1</option>
-                       <option value="classe 1">classe 1</option>
-                       <option value="classe 1">classe 1</option>
+                       <option value="classe 2">classe 2</option>
+                       <option value="classe 3">classe 3</option>
+                       <option value="classe 4">classe 4</option>
                     </select>
                 </div>
     
@@ -205,9 +221,15 @@
             </form>
         </div>
     </div>
-    
-    
-
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                setTimeout(() => {
+                    alert.classList.remove('show');
+                }, 3000); // Masquer l'alerte après 3 secondes
+            }
+        });
+    </script>
 </body>
 </html>

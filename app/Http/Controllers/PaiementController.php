@@ -57,7 +57,7 @@ class PaiementController extends Controller
         // Send SMS notification
         $this->sendSmsNotification($paiement);
 
-        return redirect()->back()->with('success', 'Paiement mis à jour avec succès.');
+        return redirect()->route('showpaiement', $paiement->id)->with('success', 'Paiement mis à jour avec succès.');
     }
 
     private function sendSmsNotification($paiement)

@@ -134,6 +134,17 @@
                 padding-bottom: 80px; 
             }
         }
+
+        /* Animation pour l'alerte de succès */
+        .alert {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .alert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -150,7 +161,7 @@
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="{{route('parentchat')}}" class="sidebar-item">
+        <a href="#" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
@@ -176,6 +187,11 @@
         <div class="container mt-5">
             <h1 id="main-title">Téléversement des documents</h1>
             <div class="mt-4">
+                @if(session('success'))
+                    <div class="alert alert-success show" role="alert">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 <form id="uploadForm" method="POST" action="{{ route('parent.uploadDocument') }}" enctype="multipart/form-data">
                     @csrf <!-- Token de sécurité pour Laravel -->
                     <div class="mb-3">

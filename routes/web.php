@@ -10,24 +10,42 @@ use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\FichierController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\SupportController;
 use App\Models\Document;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\EventController;
+
+Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
+
+Route::get('/', function () {
+    if (Auth::check()) {
+        $user = Auth::user();
+        if ($user instanceof \App\Models\Tuteur) {
+            return redirect()->route('parent');
+        } elseif ($user instanceof \App\Models\School) {
+            return redirect()->route('school');
+        }
+    }
+    return view('welcome');
+});
 
 Route::get('/documentschool', function () {
     return view('Schooldocument');
 })->name('Schooldocument');
 
-
-    Route::get('/documentschool', [FichierController::class, 'index'])->name('documentschool');
-    Route::get('/documents/view/{id}', [FichierController::class, 'viewDocument'])->name('school.viewDocument');
-    Route::get('/documents/download/{id}', [FichierController::class, 'downloadDocument'])->name('school.downloadDocument');
+//Route pour gerer les documents
+Route::get('/documentschool', [FichierController::class, 'index'])->name('documentschool');
+Route::get('/documents/view/{id}', [FichierController::class, 'viewDocument'])->name('school.viewDocument');
+Route::get('/documents/download/{id}', [FichierController::class, 'downloadDocument'])->name('school.downloadDocument');
 
   
     
-    // Route pour gérer les utilisateurs
-    Route::get('/tuteurschool', [TuteurController::class, 'index'])->name('tutueurschool');
-    Route::get('/tuteurschool/edit/{id}', [TuteurController::class, 'edit'])->name('users.edit');
-    Route::post('/tuteurschool/update/{id}', [TuteurController::class, 'update'])->name('users.update');
-    Route::delete('/tuteurschool/delete/{id}', [TuteurController::class, 'destroy'])->name('users.delete');
+// Route pour gérer les utilisateurs
+Route::get('/tuteurschool', [TuteurController::class, 'index'])->name('tutueurschool');
+Route::get('/tuteurschool/edit/{id}', [TuteurController::class, 'edit'])->name('users.edit');
+Route::post('/tuteurschool/update/{id}', [TuteurController::class, 'update'])->name('users.update');
+Route::delete('/tuteurschool/delete/{id}', [TuteurController::class, 'destroy'])->name('users.delete');
 
 
 //Route pour gérer les élèves
@@ -111,6 +129,9 @@ Route::get('/school', function(){
     return view ('school');
 })->name('school');
 
+Route::get('event', function(){
+    return view ('event');
+})->name('event');
 
 
 Route::get('/documents', function(){
@@ -159,4 +180,11 @@ Route::get('reset-password', function () {
     return view('reset-password');
 })->name('password.reset');
 
+Route::get('helpsupport', function(){
+    return view ('helpsupport');
+})->name('helpsupport');
+
 Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
+
+Route::get('/help-support', [SupportController::class, 'index'])->name('help.support');
+Route::post('/help-support/send', [SupportController::class, 'send'])->name('help.support.send');
