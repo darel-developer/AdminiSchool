@@ -77,7 +77,7 @@ class TuteurController extends Controller
     public function index()
     {
         $tuteurs = Tuteur::all();
-        return view('tuteurschool', compact('tuteurs'));
+        return view('userschool', compact('tuteurs'));
     }
 
     public function edit($id)

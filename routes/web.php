@@ -14,6 +14,15 @@ use App\Http\Controllers\SupportController;
 use App\Models\Document;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PlanningController;
+
+
+Route::get('/api/eleves', [NotificationController::class, 'getElevesByClasse'])->name('api.eleves');
+Route::post('/classes/upload', [ClasseController::class, 'ajouter_classe'])->name('school');
+Route::post('/plannings/upload', [PlanningController::class, 'ajouter_planning'])->name('plannings.upload');
+Route::get('/notificationschool', [NotificationController::class, 'index'])->name('notificationschool');
+Route::post('/notifications/send', [NotificationController::class, 'send'])->name('notifications.send');
 
 Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
 Route::post('/events', [EventController::class, 'store'])->name('events.store');
@@ -42,7 +51,7 @@ Route::get('/documents/download/{id}', [FichierController::class, 'downloadDocum
   
     
 // Route pour gérer les utilisateurs
-Route::get('/tuteurschool', [TuteurController::class, 'index'])->name('tutueurschool');
+Route::get('/userschool', [TuteurController::class, 'index'])->name('userschool');
 Route::get('/tuteurschool/edit/{id}', [TuteurController::class, 'edit'])->name('users.edit');
 Route::post('/tuteurschool/update/{id}', [TuteurController::class, 'update'])->name('users.update');
 Route::delete('/tuteurschool/delete/{id}', [TuteurController::class, 'destroy'])->name('users.delete');
@@ -91,6 +100,8 @@ Route::Post('/register/traitement/school', [SchoolController::class, 'ajouter_sc
 
 //Route pour ajouter des classes
 Route::post('/register/traitement/classe', [ClasseController::class, 'ajouter_classe'])->name('classes.upload');
+
+Route::post('/plannings/upload', [PlanningController::class, 'upload'])->name('plannings.upload');
 
 Route::get('/', function () {
     return view('welcome');
@@ -141,6 +152,10 @@ Route::get('/documents', function(){
 Route::get('/schoolevenement', function(){
     return view ('schoolevenement');
 })->name('schoolevenement');
+
+Route::get('notifications', function(){
+    return view('notifications');
+})->name('notifications');
 
 Route::get('/schoolpaiement', [PaiementController::class, 'liste_paiement'])->name('schoolpaiement');
 

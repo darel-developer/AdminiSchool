@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Planning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tuteur;
@@ -123,9 +124,10 @@ class StudentController extends Controller
                         ];
                         break;
                     case 'planning':
-                        // Remplace par la logique de récupération du planning
+                        // Logique de récupération du planning
+                        $planning = Planning::where('class', $student->class)->get();
                         $data = [
-                            'planning' => 'Le planning des activités sera affiché ici...',
+                            'planning' => $planning,
                         ];
                         break;
                     case 'barbillard':

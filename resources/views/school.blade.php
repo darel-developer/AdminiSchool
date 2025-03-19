@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Téléversement des données des élèves</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Téléversement des données</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -134,6 +134,17 @@
                 padding-bottom: 80px; 
             }
         }
+
+        /* Animation pour les formulaires */
+        .form-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .form-section.active {
+            display: block;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -166,7 +177,11 @@
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support
         </a>
-        <a href="{{route('tuteurschool')}}" class="sidebar-item">
+        <a href="{{route('userschool')}}" class="sidebar-item">
+            <img src="{{ asset('images/chatbot.png') }}" alt="user">
+            Users
+        </a>
+        <a href="{{route('notificationschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
             Users
         </a>
@@ -174,18 +189,65 @@
 
     <div class="content">
         <div class="container mt-5">
-            <h1 id="main-title">Téléversement des données des élèves</h1>
+            <h1 id="main-title">Téléversement des données</h1>
             <div class="mt-4">
-                <form id="uploadForm" method="POST" action="{{ route('student.upload') }}" enctype="multipart/form-data">
-                    @csrf <!-- Token de sécurité pour Laravel -->
-                    <div class="mb-3">
-                        <label for="studentFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                        <input type="file" name="studentFile" id="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Téléverser</button>
-                </form>
+                <div id="form1" class="form-section active">
+                    <form id="uploadStudentForm" method="POST" action="{{ route('student.upload') }}" enctype="multipart/form-data">
+                        @csrf <!-- Token de sécurité pour Laravel -->
+                        <div class="mb-3">
+                            <label for="studentFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
+                            <input type="file" name="studentFile" id="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Téléverser</button>
+                    </form>
+                    <button id="nextBtn" class="btn btn-secondary mt-3">Next</button>
+                </div>
+                <div id="form2" class="form-section">
+                    <form id="uploadClassForm" method="POST" action="{{ route('classes.upload') }}" enctype="multipart/form-data">
+                        @csrf <!-- Token de sécurité pour Laravel -->
+                        <div class="mb-3">
+                            <label for="classFile" class="form-label">Sélectionnez un fichier classe (Excel, TXT, CSV)</label>
+                            <input type="file" name="classFile" id="classFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Téléverser</button>
+                    </form>
+                    <button id="nextBtn2" class="btn btn-secondary mt-3">Next</button>
+                    <button id="backBtn" class="btn btn-secondary mt-3">Back</button>
+                </div>
+                <div id="form3" class="form-section">
+                    <form id="uploadPlanningForm" method="POST" action="{{ route('plannings.upload') }}" enctype="multipart/form-data">
+                        @csrf <!-- Token de sécurité pour Laravel -->
+                        <div class="mb-3">
+                            <label for="planningFile" class="form-label">Sélectionnez un fichier planning (Excel, TXT, CSV)</label>
+                            <input type="file" name="planningFile" id="planningFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Téléverser</button>
+                    </form>
+                    <button id="backBtn2" class="btn btn-secondary mt-3">Back</button>
+                </div>
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            document.getElementById('form1').classList.remove('active');
+            document.getElementById('form2').classList.add('active');
+        });
+
+        document.getElementById('nextBtn2').addEventListener('click', function() {
+            document.getElementById('form2').classList.remove('active');
+            document.getElementById('form3').classList.add('active');
+        });
+
+        document.getElementById('backBtn').addEventListener('click', function() {
+            document.getElementById('form2').classList.remove('active');
+            document.getElementById('form1').classList.add('active');
+        });
+
+        document.getElementById('backBtn2').addEventListener('click', function() {
+            document.getElementById('form3').classList.remove('active');
+            document.getElementById('form2').classList.add('active');
+        });
+    </script>
 </body>
 </html>

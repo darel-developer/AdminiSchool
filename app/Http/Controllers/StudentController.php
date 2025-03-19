@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Planning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tuteur;
@@ -61,14 +62,60 @@ class StudentController extends Controller
         $student = Student::where('name', $tuteur->child_name)->first();
 
         if ($student) {
+            $data = [];
+            switch ($section) {
+                case 'general':
+                    $data = [
+                        'name' => $student->name,
+                        'class' => $student->class,
+                        'enrollment_date' => $student->enrollment_date,
+                        'absences' => $student->absences,
+                        'convocations' => $student->convocations,
+                        'warnings' => $student->warnings,
+                    ];
+                    break;
+                case 'absence':
+                    $data = [
+                        'absences' => $student->absences,
+                    ];
+                    break;
+                case 'note':
+                    // Remplace par la logique de récupération des notes
+                    $data = [
+                        'notes' => 'Les notes seront affichées ici...',
+                    ];
+                    break;
+                case 'convocation':
+                    // Remplace par la logique de récupération des convocations
+                    $data = [
+                        'convocations' => $student->convocations,
+                    ];
+                    break;
+                case 'planning':
+                    // Logique de récupération du planning
+                    $planning = Planning::where('class', $student->class)->get();
+                    $data = [
+                        'planning' => $planning,
+                    ];
+                    break;
+                case 'barbillard':
+                    // Remplace par la logique de récupération du barbillard
+                    $data = [
+                        'warnings' => $student->warnings,
+                    ];
+                    break;
+                default:
+                    return response()->json(['success' => false, 'error' => 'Section inconnue.']);
+            }
+
             return response()->json([
                 'success' => true,
-                'data' => $student
+                'data' => $data,
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'error' => 'Aucun enfant trouvé.'
+                'error' => 'Aucun enfant trouvé.',
             ]);
         }
     }

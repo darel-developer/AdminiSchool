@@ -43,8 +43,7 @@
 </head>
 <body>
     <!-- Sidebar -->
-     <!-- Barre de navigation -->
-     <div class="sidebar">
+    <div class="sidebar">
         <a href="{{route('parent')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
@@ -63,17 +62,17 @@
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/notification.png') }}" alt="notification">
-            notification
+            Notification
         </a>
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
-            add enfant
+            Add Enfant
         </a>
         <a href="{{route('profile')}}" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
             Settings
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('helpsupport')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support
         </a>
@@ -84,9 +83,10 @@
         <h1>Parent Dashboard</h1>
         <div class="btn-group" role="group" aria-label="Sections">
             <button type="button" class="btn btn-primary" onclick="loadSection('general')">Informations Générales</button>
-            <button type="button" class="btn btn-primary" onclick="loadSection('absences')">Absences</button>
-            <button type="button" class="btn btn-primary" onclick="loadSection('convocations')">Convocations</button>
+            <button type="button" class="btn btn-primary" onclick="loadSection('absence')">Absences</button>
+            <button type="button" class="btn btn-primary" onclick="loadSection('convocation')">Convocations</button>
             <button type="button" class="btn btn-primary" onclick="loadSection('warnings')">Avertissements</button>
+            <button type="button" class="btn btn-primary" onclick="loadSection('planning')">Planning</button>
         </div>
         <div id="content" class="mt-4">
             <p>Sélectionnez une section pour afficher les données.</p>
@@ -105,17 +105,17 @@
                                 htmlContent = `
                                     <h2>Informations Générales</h2>
                                     <p>Nom: ${data.data.name}</p>
-                                    <p>Classe: ${data.data.class_id}</p>
+                                    <p>Classe: ${data.data.class}</p>
                                     <p>Date d'inscription: ${data.data.enrollment_date}</p>
                                 `;
                                 break;
-                            case 'absences':
+                            case 'absence':
                                 htmlContent = `
                                     <h2>Absences</h2>
                                     <p>Nombre d'absences: ${data.data.absences}</p>
                                 `;
                                 break;
-                            case 'convocations':
+                            case 'convocation':
                                 htmlContent = `
                                     <h2>Convocations</h2>
                                     <p>Nombre de convocations: ${data.data.convocations}</p>
@@ -125,6 +125,35 @@
                                 htmlContent = `
                                     <h2>Avertissements</h2>
                                     <p>Nombre d'avertissements: ${data.data.warnings}</p>
+                                `;
+                                break;
+                            case 'planning':
+                                htmlContent = `
+                                    <h2>Planning</h2>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Heure Début</th>
+                                                <th>Heure Fin</th>
+                                                <th>Code</th>
+                                                <th>Enseignant</th>
+                                                <th>Salle</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${data.data.planning.map(planning => `
+                                                <tr>
+                                                    <td>${planning.date}</td>
+                                                    <td>${planning.start_time}</td>
+                                                    <td>${planning.end_time}</td>
+                                                    <td>${planning.code}</td>
+                                                    <td>${planning.teacher}</td>
+                                                    <td>${planning.room}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
                                 `;
                                 break;
                             default:
