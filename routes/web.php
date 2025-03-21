@@ -78,7 +78,7 @@ Route::middleware(['auth:tuteur'])->group(function () {
     // Routes qui nécessitent l'authentification du tuteur
     Route::get('/dashboard', [TuteurController::class, 'dashboard'])->name('tuteur.dashboard');
     Route::get('/parentpaiement', [TuteurController::class, 'paiement'])->name('parentpaiement');
-    Route::get('/profile', [TuteurController::class, 'profile'])->name('tuteur.profile');
+    Route::get('/profileschool', [TuteurController::class, 'setting'])->name('profileschool');
     Route::post('/profile/update', [TuteurController::class, 'updateProfile'])->name('tuteur.updateProfile');
     Route::get('/addchild', [TuteurController::class, 'showAddChildForm'])->name('addchild');
     Route::post('/register/traitement/enfant', [TuteurController::class, 'addChild'])->name('parent.addChild');

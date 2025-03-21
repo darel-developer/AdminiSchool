@@ -83,7 +83,7 @@ class TuteurController extends Controller
     public function edit($id)
     {
         $tuteur = Tuteur::findOrFail($id);
-        return view('edit-tuteur', compact('tuteur'));
+        return view('profile', compact('tuteur'));
     }
 
     public function update(Request $request, $id)
@@ -101,11 +101,11 @@ class TuteurController extends Controller
         return redirect()->route('users')->with('success', 'Tuteur supprimé avec succès.');
     }
 
-    public function profile()
+    public function setting()
     {
         $tuteur = Auth::guard('tuteur')->user();
         $students = $tuteur->students;
-        return view('profile', compact('tuteur', 'students'));
+        return view('profileschool', compact('tuteur', 'students'));
     }
 
    /* public function updateProfile(Request $request)

@@ -68,7 +68,7 @@
             <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
             Add Enfant
         </a>
-        <a href="{{route('profile')}}" class="sidebar-item">
+        <a href="{{route('profileschool')}}" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
             Settings
         </a>
