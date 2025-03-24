@@ -34,27 +34,26 @@
                       </div>
                     </div>
                   </div>
-                  <form action="\traitement\password" method="POST">
+                  <form action="{{ route('password.email') }}" method="POST">
                     @csrf
                     <div class="row gy-3 overflow-hidden">
-                      <div class="col-12">
-                        <div class="form-floating mb-3">
-                          <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
-                          <label for="email" class="form-label">Email Address</label>
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
+                                <label for="email" class="form-label">Email Address</label>
+                            </div>
                         </div>
-                      </div>
-                      <div class="col-12">
-                        <div class="d-grid">
-                          <button class="btn btn-primary w-100" type="submit">Send Password Reset Link</button>
+                        <div class="col-12">
+                            <div class="d-grid">
+                                <button class="btn btn-primary w-100" type="submit">Send Password Reset Link</button>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                  </form>
+                </form>
                   <div class="row">
                     <div class="col-12">
                       <div class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-center mt-5">
                         <a href="{{ route('login') }}" class="link-secondary text-decoration-none">Login</a>
-                        <a href="{{ route('register') }}" class="link-secondary text-decoration-none">Register</a>
                       </div>
                     </div>
                   </div>

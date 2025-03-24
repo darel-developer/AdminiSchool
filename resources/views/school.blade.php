@@ -185,6 +185,10 @@
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
             Users
         </a>
+        <a href="{{ route('create.teacher') }}" class="sidebar-item">
+            <img src="{{ asset('images/teacher.png') }}" alt="teacher">
+            Create Teacher
+        </a>
     </div>
 
     <div class="content">

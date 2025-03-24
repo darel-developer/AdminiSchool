@@ -34,7 +34,9 @@ class PasswordResetController extends Controller
         );
 
         if ($status == Password::RESET_LINK_SENT) {
-            $this->sendEmailWithInfobip($request->email, $status);
+            // Récupérer le token de réinitialisation de mot de passe
+            $token = app('auth.password.broker')->createToken($request->user());
+            $this->sendEmailWithInfobip($request->email, $token);
             return back()->with(['status' => 'Password reset link sent!']);
         }
 
@@ -57,7 +59,7 @@ class PasswordResetController extends Controller
             'Accept' => 'application/json'
         ));
         $request->setBody(json_encode([
-            'from' => 'sanangdarel17@gmail.com',
+            'from' => 'darel.sanang@facsciences-uy1.cm',
             'to' => $email,
             'subject' => 'Password Reset Request',
             'text' => 'Click the following link to reset your password: ' . $resetLink,
@@ -73,5 +75,28 @@ class PasswordResetController extends Controller
         } catch (HTTP_Request2_Exception $e) {
             Log::error('Error: ' . $e->getMessage());
         }
+    }
+
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->password = bcrypt($password);
+                $user->save();
+            }
+        );
+
+        if ($status == Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('status', __($status));
+        }
+
+        return back()->withErrors(['email' => [__($status)]]);
     }
 }

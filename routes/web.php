@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PlanningController;
+use App\Http\Controllers\TeacherController;
 
 
 Route::get('/api/eleves', [NotificationController::class, 'getElevesByClasse'])->name('api.eleves');
@@ -185,21 +186,24 @@ Route::get('/login', function(){
     return view ('login');
 })->name('login');
 
-Route::get('password/reset', function () {
-    return view('password');
-})->name('password.request');
 
-Route::post('\traitement\password', [PasswordResetController::class, 'sendResetLinkEmailWithInfobip'])->name('password');
-
-Route::get('reset-password', function () {
-    return view('reset-password');
-})->name('password.reset');
 
 Route::get('helpsupport', function(){
     return view ('helpsupport');
 })->name('helpsupport');
 
+Route::get('invoice', function(){
+    return view ('invoice');
+})->name('invoice');
+
 Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 
 Route::get('/help-support', [SupportController::class, 'index'])->name('help.support');
 Route::post('/help-support/send', [SupportController::class, 'send'])->name('help.support.send');
+Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password', function () {
+    return view('reset-password');
+})->name('password.reset');
+Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
+Route::get('/create-teacher', [TeacherController::class, 'create'])->name('create.teacher');
+Route::post('/store-teacher', [TeacherController::class, 'store'])->name('store.teacher');
