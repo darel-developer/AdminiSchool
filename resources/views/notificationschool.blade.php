@@ -79,7 +79,7 @@
         </form>
     </div>
 
-    <!-- Modal -->
+    <!-- First Modal -->
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -91,6 +91,33 @@
                         <option value="absence">Absence</option>
                         <option value="convocation">Convocation</option>
                     </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Suivant</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Second Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Détails du motif</h2>
+            <form id="detailsForm">
+                <div class="mb-3">
+                    <label for="type" class="form-label">Type</label>
+                    <select class="form-control" id="type" name="type" required>
+                        <option value="retard">Retard</option>
+                        <option value="maladie">Maladie</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="heure" class="form-label">Heure</label>
+                    <input type="time" class="form-control" id="heure" name="heure" required>
+                </div>
+                <div class="mb-3" id="customTypeContainer" style="display: none;">
+                    <label for="customType" class="form-label">Type personnalisé</label>
+                    <input type="text" class="form-control" id="customType" name="customType">
                 </div>
                 <button type="submit" class="btn btn-primary">Envoyer</button>
             </form>
@@ -116,16 +143,20 @@
             modal.style.display = 'block';
         });
 
-        document.querySelector('.close').addEventListener('click', function() {
-            const modal = document.getElementById('myModal');
-            modal.style.display = 'none';
+        document.querySelectorAll('.close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                modal.style.display = 'none';
+            });
         });
 
         window.addEventListener('click', function(event) {
-            const modal = document.getElementById('myModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
         });
 
         document.getElementById('motifForm').addEventListener('submit', function(event) {
@@ -137,6 +168,42 @@
             input.name = 'motif';
             input.value = motif;
             form.appendChild(input);
+
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+
+            const detailsModal = document.getElementById('detailsModal');
+            detailsModal.style.display = 'block';
+        });
+
+        document.getElementById('type').addEventListener('change', function() {
+            const customTypeContainer = document.getElementById('customTypeContainer');
+            if (this.value === 'autre') {
+                customTypeContainer.style.display = 'block';
+            } else {
+                customTypeContainer.style.display = 'none';
+            }
+        });
+
+        document.getElementById('detailsForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const type = document.getElementById('type').value;
+            const heure = document.getElementById('heure').value;
+            const customType = document.getElementById('customType').value;
+
+            const form = document.getElementById('notificationForm');
+            const typeInput = document.createElement('input');
+            typeInput.type = 'hidden';
+            typeInput.name = 'type';
+            typeInput.value = type === 'autre' ? customType : type;
+            form.appendChild(typeInput);
+
+            const heureInput = document.createElement('input');
+            heureInput.type = 'hidden';
+            heureInput.name = 'heure';
+            heureInput.value = heure;
+            form.appendChild(heureInput);
+
             form.submit();
         });
     </script>

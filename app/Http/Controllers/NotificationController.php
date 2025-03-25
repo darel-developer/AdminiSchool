@@ -35,29 +35,37 @@ class NotificationController extends Controller
         $request->validate([
             'eleves' => 'required|array',
             'motif' => 'required|string|in:absence,convocation',
+            'type' => 'required|string',
+            'heure' => 'required|string',
         ]);
 
         $eleves = Student::whereIn('id', $request->eleves)->get();
         $motif = $request->motif;
+        $type = $request->type;
+        $heure = $request->heure;
 
         foreach ($eleves as $eleve) {
             $parent = $eleve->tuteur;
-            $message = $motif == 'absence' ? 
-                "Votre enfant {$eleve->name} est absent aujourd'hui." : 
-                "Votre enfant {$eleve->name} est convoqué pour une réunion.";
-
-            // Envoyer le SMS via l'API Infobip
-            $response = Http::withBasicAuth('your_infobip_username', 'your_infobip_password')
-                ->post('https://api.infobip.com/sms/1/text/single', [
-                    'from' => 'AdminiSchool',
-                    'to' => $parent->phone,
-                    'text' => $message,
-                ]);
-
-            if ($response->successful()) {
-                Log::info("SMS envoyé à {$parent->phone}: {$message}");
+            if ($parent) {
+                $message = $motif == 'absence' ? 
+                    "Votre enfant {$eleve->name} est absent aujourd'hui. Type: {$type}, Heure: {$heure}." : 
+                    "Votre enfant {$eleve->name} est convoqué pour une réunion. Motif: {$type}, Heure: {$heure}.";
+        
+                // Envoyer le SMS via l'API Infobip
+                $response = Http::withBasicAuth('your_infobip_username', 'your_infobip_password')
+                    ->post('https://api.infobip.com/sms/1/text/single', [
+                        'from' => 'AdminiSchool',
+                        'to' => $parent->phone,
+                        'text' => $message,
+                    ]);
+        
+                if ($response->successful()) {
+                    Log::info("SMS envoyé à {$parent->phone}: {$message}");
+                } else {
+                    Log::error("Erreur lors de l'envoi du SMS à {$parent->phone}: {$response->body()}");
+                }
             } else {
-                Log::error("Erreur lors de l'envoi du SMS à {$parent->phone}: {$response->body()}");
+                Log::warning("Aucun tuteur trouvé pour l'élève {$eleve->name}");
             }
         }
 

@@ -182,8 +182,8 @@
             Users
         </a>
         <a href="{{route('notificationschool')}}" class="sidebar-item">
-            <img src="{{ asset('images/chatbot.png') }}" alt="user">
-            Users
+            <img src="{{ asset('images/action.png') }}" alt="user">
+            student
         </a>
         <a href="{{ route('create.teacher') }}" class="sidebar-item">
             <img src="{{ asset('images/teacher.png') }}" alt="teacher">
