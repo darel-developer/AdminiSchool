@@ -146,6 +146,8 @@
     <!-- Submit Button -->
     <button type="submit" class="btn btn-primary">Soumettre</button>
 </form>
+            <!-- Button to view all payments -->
+            <a href="{{ route('parent.paiements') }}" class="btn btn-secondary mt-3">Voir tous les paiements</a>
         </div>
     </div>
 </body>

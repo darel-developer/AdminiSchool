@@ -13,21 +13,26 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $classes = Classe::all();
-        return view('notificationschool', compact('classes'));
+        $students = Student::with('classe')->get();
+        return view('notificationschool', compact('students'));
     }
 
     public function getElevesByClasse(Request $request)
     {
         $classeNom = $request->query('classe_nom');
-        $eleves = Student::where('class', $classeNom)->get();
-        return response()->json($eleves);
+        $classe = Classe::where('name', $classeNom)->first();
+
+        if ($classe) {
+            $eleves = Student::where('class', $classe->name)->get(); // Utilisez 'name' comme clé
+            return response()->json($eleves);
+        }
+
+        return response()->json([], 404);
     }
 
     public function send(Request $request)
     {
         $request->validate([
-            'classe_id' => 'required|exists:classes,id',
             'eleves' => 'required|array',
             'motif' => 'required|string|in:absence,convocation',
         ]);
@@ -36,10 +41,10 @@ class NotificationController extends Controller
         $motif = $request->motif;
 
         foreach ($eleves as $eleve) {
-            $parent = $eleve->parent;
+            $parent = $eleve->tuteur;
             $message = $motif == 'absence' ? 
-                "Votre enfant {$eleve->nom} est absent aujourd'hui." : 
-                "Votre enfant {$eleve->nom} est convoqué pour une réunion.";
+                "Votre enfant {$eleve->name} est absent aujourd'hui." : 
+                "Votre enfant {$eleve->name} est convoqué pour une réunion.";
 
             // Envoyer le SMS via l'API Infobip
             $response = Http::withBasicAuth('your_infobip_username', 'your_infobip_password')

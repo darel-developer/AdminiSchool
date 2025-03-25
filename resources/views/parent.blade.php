@@ -87,6 +87,7 @@
             <button type="button" class="btn btn-primary" onclick="loadSection('convocation')">Convocations</button>
             <button type="button" class="btn btn-primary" onclick="loadSection('warnings')">Avertissements</button>
             <button type="button" class="btn btn-primary" onclick="loadSection('planning')">Planning</button>
+            <button type="button" class="btn btn-primary" onclick="loadSection('notes')">Notes</button>
         </div>
         <div id="content" class="mt-4">
             <p>Sélectionnez une section pour afficher les données.</p>
@@ -156,11 +157,32 @@
                                     </table>
                                 `;
                                 break;
+                            case 'notes':
+                                htmlContent = `
+                                    <h2>Notes</h2>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Matière</th>
+                                                <th>Note</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${data.data.notes.map(note => `
+                                                <tr>
+                                                    <td>${note.subject}</td>
+                                                    <td>${note.grade}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                `;
+                                break;
                             default:
                                 htmlContent = `<p>Section inconnue.</p>`;
                                 break;
                         }
-
+    
                         document.getElementById('content').innerHTML = htmlContent;
                     } else {
                         alert(data.error || 'Une erreur est survenue.');

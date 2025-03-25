@@ -52,23 +52,30 @@
                 {{ session('success') }}
             </div>
         @endif
+        @if(session('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+        <div class="mb-3">
+            <input type="text" id="searchBar" class="form-control" placeholder="Rechercher un élève...">
+        </div>
         <form id="notificationForm" method="POST" action="{{ route('notifications.send') }}">
             @csrf
-            <div class="mb-3">
-                <label for="classe" class="form-label">Sélectionnez une classe</label>
-                <select class="form-control" id="classe" name="classe_id" required>
-                    <option value="">Sélectionnez une classe</option>
-                    @foreach($classes as $classe)
-                        <option value="{{ $classe->nom }}">{{ $classe->nom }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <button type="button" class="btn btn-secondary" id="loadStudentsBtn">Charger les élèves</button>
-            <div id="elevesContainer" class="mb-3" style="display: none;">
+            <div id="elevesContainer" class="mb-3">
                 <label for="eleves" class="form-label">Sélectionnez les élèves</label>
-                <div id="elevesList"></div>
+                <div id="elevesList">
+                    @foreach($students as $student)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="eleves[]" value="{{ $student->id }}" id="eleve_{{ $student->id }}">
+                            <label class="form-check-label" for="eleve_{{ $student->id }}">
+                                {{ $student->name }} - Classe: {{ $student->classe ? $student->classe->name : 'Non assignée' }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
             </div>
-            <button type="button" class="btn btn-primary" id="openModalBtn" style="display: none;">Envoyer Notification</button>
+            <button type="button" class="btn btn-primary" id="openModalBtn">Terminer</button>
         </form>
     </div>
 
@@ -91,44 +98,34 @@
     </div>
 
     <script>
-        document.getElementById('loadStudentsBtn').addEventListener('click', function() {
-            const classeNom = document.getElementById('classe').value;
-            if (classeNom) {
-                fetch(`/api/eleves?classe_nom=${classeNom}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const elevesContainer = document.getElementById('elevesContainer');
-                        const elevesList = document.getElementById('elevesList');
-                        elevesList.innerHTML = '';
-                        data.forEach(eleve => {
-                            const checkbox = document.createElement('input');
-                            checkbox.type = 'checkbox';
-                            checkbox.name = 'eleves[]';
-                            checkbox.value = eleve.id;
-                            checkbox.id = `eleve_${eleve.id}`;
-                            const label = document.createElement('label');
-                            label.htmlFor = `eleve_${eleve.id}`;
-                            label.textContent = eleve.nom;
-                            const div = document.createElement('div');
-                            div.appendChild(checkbox);
-                            div.appendChild(label);
-                            elevesList.appendChild(div);
-                        });
-                        elevesContainer.style.display = 'block';
-                        document.getElementById('openModalBtn').style.display = 'block';
-                    });
-            } else {
-                document.getElementById('elevesContainer').style.display = 'none';
-                document.getElementById('openModalBtn').style.display = 'none';
-            }
+        document.getElementById('searchBar').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const eleves = document.querySelectorAll('#elevesList .form-check');
+            eleves.forEach(eleve => {
+                const name = eleve.querySelector('label').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    eleve.style.display = '';
+                } else {
+                    eleve.style.display = 'none';
+                }
+            });
         });
 
         document.getElementById('openModalBtn').addEventListener('click', function() {
-            document.getElementById('myModal').style.display = 'block';
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'block';
         });
 
         document.querySelector('.close').addEventListener('click', function() {
-            document.getElementById('myModal').style.display = 'none';
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
         });
 
         document.getElementById('motifForm').addEventListener('submit', function(event) {

@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use HTTP_Request2;
 use HTTP_Request2_Exception;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\GradesImport;
 
 class TeacherController extends Controller
 {
@@ -84,5 +87,20 @@ class TeacherController extends Controller
         } catch (HTTP_Request2_Exception $e) {
             Log::error('Error: ' . $e->getMessage());
         }
+    }
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'gradesFile' => 'required|file|mimes:xlsx,xls,csv,txt',
+        ]);
+
+        $file = $request->file('gradesFile');
+        $filePath = $file->store('grades');
+
+        // Importer les données du fichier
+        Excel::import(new GradesImport, $filePath);
+
+        return back()->with('status', 'Grades uploaded successfully!');
     }
 }

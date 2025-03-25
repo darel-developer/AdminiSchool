@@ -11,7 +11,7 @@ class Student extends Model
 
     protected $fillable = [
         'name',
-        'class',
+        'class', // Assurez-vous que cette colonne existe dans la table `students`
         'enrollment_date',
         'absences',
         'convocations',
@@ -25,6 +25,11 @@ class Student extends Model
 
     public function classe()
     {
-        return $this->belongsTo(Classe::class, 'class_id');
+        return $this->belongsTo(Classe::class, 'class', 'name');
+    }
+
+    public function notes()
+    {
+        return $this->hasMany(Grades::class);
     }
 }

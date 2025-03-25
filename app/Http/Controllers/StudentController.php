@@ -54,11 +54,13 @@ class StudentController extends Controller
     }
 
     public function getChildData($section)
-    {
-        // Récupérer le tuteur connecté
-        $tuteur = auth()->guard('tuteur')->user();
-        
-        // Vérifier si le tuteur a un enfant associé
+{
+    // Récupérer le tuteur connecté
+    $tuteur = auth()->guard('tuteur')->user();
+    
+    // Vérifier si le tuteur a un enfant associé
+    if ($tuteur && $tuteur->child_name) {
+        // Chercher l'enfant dans la table 'students' avec le nom de l'enfant
         $student = Student::where('name', $tuteur->child_name)->first();
 
         if ($student) {
@@ -79,27 +81,24 @@ class StudentController extends Controller
                         'absences' => $student->absences,
                     ];
                     break;
-                case 'note':
-                    // Remplace par la logique de récupération des notes
+                case 'notes':
+                    // Logique de récupération des notes
                     $data = [
-                        'notes' => 'Les notes seront affichées ici...',
+                        'notes' => $student->notes,
                     ];
                     break;
                 case 'convocation':
-                    // Remplace par la logique de récupération des convocations
                     $data = [
                         'convocations' => $student->convocations,
                     ];
                     break;
                 case 'planning':
-                    // Logique de récupération du planning
                     $planning = Planning::where('class', $student->class)->get();
                     $data = [
                         'planning' => $planning,
                     ];
                     break;
                 case 'barbillard':
-                    // Remplace par la logique de récupération du barbillard
                     $data = [
                         'warnings' => $student->warnings,
                     ];
@@ -119,4 +118,10 @@ class StudentController extends Controller
             ]);
         }
     }
+
+    return response()->json([
+        'success' => false,
+        'error' => 'Tuteur non trouvé ou enfant non associé.',
+    ]);
+}
 }

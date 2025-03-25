@@ -43,6 +43,13 @@ class PaiementController extends Controller
         return view('schoolpaiement', compact('paiements'));
     }
 
+    public function listePaiementsParent()
+{
+    $tuteur = \Illuminate\Support\Facades\Auth::user();
+    $paiements = Paiement::where('nom', $tuteur->nom)->where('prenom', $tuteur->prenom)->get();
+    return view('parentpaiements', compact('paiements'));
+}
+
     public function show($id)
     {
         $paiement = Paiement::findOrFail($id);

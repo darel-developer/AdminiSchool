@@ -10,11 +10,11 @@ class Classe extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'name', // Assurez-vous que cette colonne existe dans la table `classes`
     ];
 
     public function students()
     {
-        return $this->hasMany(Student::class, 'class_id');
+        return $this->hasMany(Student::class, 'class', 'name'); // Utilisez 'class' comme clé étrangère
     }
 }

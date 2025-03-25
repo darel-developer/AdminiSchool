@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tuteur;
 use App\Models\School;
+use App\Models\Teacher;
 
 class AuthController extends Controller
 {
@@ -34,6 +35,14 @@ class AuthController extends Controller
         Auth::loginUsingId($school->id, $remember);
         return redirect('school')->with('success', 'Bienvenue, école!');
     }
+
+     // Vérification dans la table teacher
+     $teacher = Teacher::where('email', $request->username)->first();
+     if ($teacher && password_verify($request->password, $teacher->password)) {
+         // Authentification réussie pour une École
+         Auth::loginUsingId($teacher->id, $remember);
+         return redirect('teacher')->with('success', 'Bienvenue, école!');
+     }
 
     // Si aucune correspondance
     return back()->withErrors(['error' => 'Identifiants incorrects.'])->withInput();

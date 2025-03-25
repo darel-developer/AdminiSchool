@@ -33,7 +33,10 @@
             <input type="text" name="subject" id="subject" class="form-control" required>
         </div>
         <input type="hidden" name="type" value="teacher">
-        <input type="hidden" name="password" value="00000000">
+        <div class="mb-3">
+            <label for="subject" class="form-label">password</label>
+            <input type="password" name="password" id="password" class="form-control" required>
+        </div>
         <button type="submit" class="btn btn-primary">Create Teacher</button>
     </form>
 </div>

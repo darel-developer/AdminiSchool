@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('subject');
             $table->string('type')->default('teacher');
-            $table->string('password')->default('00000000');
+            $table->string('password');
             $table->timestamps();
         });
     }

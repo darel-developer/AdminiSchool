@@ -17,6 +17,9 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\GradesController;
+
+Route::post('/grades/upload', [GradesController::class, 'upload'])->name('grades.upload');
 
 
 Route::get('/api/eleves', [NotificationController::class, 'getElevesByClasse'])->name('api.eleves');
@@ -67,6 +70,7 @@ Route::post('student/upload/convocations', [StudentController::class, 'uploadCon
 Route::get('/schoolpaiement', [PaiementController::class, 'liste_paiement'])->name('schoolpaiement');
 Route::get('/paiement/{id}', [PaiementController::class, 'show'])->name('showpaiement');
 Route::put('/paiement/{id}', [PaiementController::class, 'update'])->name('paiement.update');
+Route::get('/parent/paiements', [PaiementController::class, 'listePaiementsParent'])->name('parent.paiements')->middleware('auth:tuteur');
 
 // Route pour stocker les paiements
 Route::post('/paiement', [PaiementController::class, 'store'])->name('paiement.store');
@@ -195,6 +199,10 @@ Route::get('helpsupport', function(){
 Route::get('invoice', function(){
     return view ('invoice');
 })->name('invoice');
+
+Route::get('teacher', function(){
+    return view ('teacher');
+})->name('teacher');
 
 Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 

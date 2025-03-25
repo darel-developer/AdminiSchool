@@ -111,27 +111,23 @@ class StudentController extends Controller
                             'absences' => $student->absences,
                         ];
                         break;
-                    case 'note':
-                        // Remplace par la logique de récupération des notes
+                    case 'notes':
                         $data = [
-                            'notes' => 'Les notes seront affichées ici...',
+                            'notes' => $student->notes, // Assurez-vous que la relation 'notes' est définie dans le modèle Student
                         ];
                         break;
                     case 'convocation':
-                        // Remplace par la logique de récupération des convocations
                         $data = [
                             'convocations' => $student->convocations,
                         ];
                         break;
                     case 'planning':
-                        // Logique de récupération du planning
                         $planning = Planning::where('class', $student->class)->get();
                         $data = [
                             'planning' => $planning,
                         ];
                         break;
                     case 'barbillard':
-                        // Remplace par la logique de récupération du barbillard
                         $data = [
                             'warnings' => $student->warnings,
                         ];
