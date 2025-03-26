@@ -181,7 +181,7 @@
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
             Users
         </a>
-        <a href="{{route('notificationschool')}}" class="sidebar-item">
+        <a href="{{route('studentschool')}}" class="sidebar-item">
             <img src="{{ asset('images/action.png') }}" alt="user">
             student
         </a>

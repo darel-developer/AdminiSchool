@@ -6,15 +6,16 @@ use Illuminate\Http\Request;
 use App\Models\Classe;
 use App\Models\Student;
 use App\Models\Tuteur;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use HTTP_Request2;
+use HTTP_Request2_Exception;
 
 class NotificationController extends Controller
 {
     public function index()
     {
         $students = Student::with('classe')->get();
-        return view('notificationschool', compact('students'));
+        return view('studentschool', compact('students'));
     }
 
     public function getElevesByClasse(Request $request)
@@ -23,7 +24,7 @@ class NotificationController extends Controller
         $classe = Classe::where('name', $classeNom)->first();
 
         if ($classe) {
-            $eleves = Student::where('class', $classe->name)->get(); // Utilisez 'name' comme clé
+            $eleves = Student::where('class', $classe->name)->get();
             return response()->json($eleves);
         }
 
@@ -47,28 +48,55 @@ class NotificationController extends Controller
         foreach ($eleves as $eleve) {
             $parent = $eleve->tuteur;
             if ($parent) {
-                $message = $motif == 'absence' ? 
-                    "Votre enfant {$eleve->name} est absent aujourd'hui. Type: {$type}, Heure: {$heure}." : 
-                    "Votre enfant {$eleve->name} est convoqué pour une réunion. Motif: {$type}, Heure: {$heure}.";
-        
-                // Envoyer le SMS via l'API Infobip
-                $response = Http::withBasicAuth('your_infobip_username', 'your_infobip_password')
-                    ->post('https://api.infobip.com/sms/1/text/single', [
-                        'from' => 'AdminiSchool',
-                        'to' => $parent->phone,
-                        'text' => $message,
-                    ]);
-        
-                if ($response->successful()) {
-                    Log::info("SMS envoyé à {$parent->phone}: {$message}");
-                } else {
-                    Log::error("Erreur lors de l'envoi du SMS à {$parent->phone}: {$response->body()}");
-                }
+                $message = $motif == 'absence' 
+                    ? "Votre enfant {$eleve->name} est absent aujourd'hui. Type: {$type}, Heure: {$heure}." 
+                    : "Votre enfant {$eleve->name} est convoqué pour une réunion. Motif: {$type}, Heure: {$heure}.";
+
+                $this->sendSmsNotification($parent->phone, $message);
             } else {
                 Log::warning("Aucun tuteur trouvé pour l'élève {$eleve->name}");
             }
         }
 
         return redirect()->back()->with('success', 'Notifications envoyées avec succès!');
+    }
+
+    private function sendSmsNotification($phoneNumber, $message)
+    {
+        $request = new HTTP_Request2();
+        $request->setUrl('https://wgyxxq.api.infobip.com/sms/2/text/advanced');
+        $request->setMethod(HTTP_Request2::METHOD_POST);
+        $request->setConfig([
+            'follow_redirects' => true,
+        ]);
+        $request->setHeader([
+            'Authorization' => 'App ' . env('INFOBIP_API_KEY'),
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ]);
+        $request->setBody(json_encode([
+            'messages' => [
+                [
+                    'from' => 'AdminiSchool',
+                    'destinations' => [
+                        [
+                            'to' => $phoneNumber,
+                        ],
+                    ],
+                    'text' => $message,
+                ],
+            ],
+        ]));
+
+        try {
+            $response = $request->send();
+            if ($response->getStatus() == 200) {
+                Log::info('SMS envoyé avec succès: ' . $response->getBody());
+            } else {
+                Log::error('Erreur lors de l\'envoi de la notification SMS: ' . $response->getStatus() . ' ' . $response->getReasonPhrase());
+            }
+        } catch (HTTP_Request2_Exception $e) {
+            Log::error('Erreur: ' . $e->getMessage());
+        }
     }
 }

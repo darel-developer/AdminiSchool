@@ -25,7 +25,7 @@ Route::post('/grades/upload', [GradesController::class, 'upload'])->name('grades
 Route::get('/api/eleves', [NotificationController::class, 'getElevesByClasse'])->name('api.eleves');
 Route::post('/classes/upload', [ClasseController::class, 'ajouter_classe'])->name('school');
 Route::post('/plannings/upload', [PlanningController::class, 'ajouter_planning'])->name('plannings.upload');
-Route::get('/notificationschool', [NotificationController::class, 'index'])->name('notificationschool');
+Route::get('/studentschool', [NotificationController::class, 'index'])->name('studentschool');
 Route::post('/notifications/send', [NotificationController::class, 'send'])->name('notifications.send');
 
 Route::get('/events/create', [EventController::class, 'create'])->name('events.create');

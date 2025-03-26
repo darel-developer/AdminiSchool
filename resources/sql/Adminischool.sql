@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 12 fév. 2025 à 10:04
+-- Généré le : mer. 26 mars 2025 à 11:42
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -114,9 +114,13 @@ CREATE TABLE `classes` (
 --
 
 INSERT INTO `classes` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, '6 ème', NULL, NULL),
-(2, '5 ème', NULL, NULL),
-(3, '4 ème', NULL, NULL);
+(4, '6 ème', '2025-03-19 18:15:56', '2025-03-19 18:15:56'),
+(5, '5 ème', '2025-03-19 18:15:56', '2025-03-19 18:15:56'),
+(6, '4 ème ', '2025-03-19 18:15:56', '2025-03-19 18:15:56'),
+(7, '3 ème', '2025-03-19 18:15:56', '2025-03-19 18:15:56'),
+(8, '2 nd', '2025-03-19 18:15:56', '2025-03-19 18:15:56'),
+(9, '1 ère', '2025-03-19 18:15:56', '2025-03-19 18:15:56'),
+(10, 'Tle', '2025-03-19 18:15:56', '2025-03-19 18:15:56');
 
 -- --------------------------------------------------------
 
@@ -152,8 +156,9 @@ CREATE TABLE `documents` (
 --
 
 INSERT INTO `documents` (`id`, `tuteur_id`, `file_path`, `created_at`, `updated_at`) VALUES
-(1, 1, 'documents/on0l5aEvEfNrMb3rdJ1T1Ij7vi9YqkotuJKiJ8Oo.pdf', '2025-02-01 23:45:00', '2025-02-01 23:45:00'),
-(2, 1, 'documents/KCNWi5lcbWG7iZnVoE0RXDASrz0wVg4s3tRyPxG7.pdf', '2025-02-01 23:45:11', '2025-02-01 23:45:11');
+(3, 2, 'documents/YG1VnB1bAG4LUCunFnkZrIvDUoK2rimNSEQ0peta.pdf', '2025-03-19 14:21:37', '2025-03-19 14:21:37'),
+(4, 2, 'documents/zfnUtIMB67VepnFlff6mHuRNjm3NqsWxcpIOFt1Q.pdf', '2025-03-19 14:24:07', '2025-03-19 14:24:07'),
+(5, 2, 'documents/8FR0ZAvmkT4xO0kHvtZoaobp5uAzGph6UlKhIoch.pdf', '2025-03-25 09:13:51', '2025-03-25 09:13:51');
 
 -- --------------------------------------------------------
 
@@ -172,6 +177,13 @@ CREATE TABLE `events` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Déchargement des données de la table `events`
+--
+
+INSERT INTO `events` (`id`, `title`, `description`, `event_date`, `event_time`, `class`, `created_at`, `updated_at`) VALUES
+(1, 'Reunon', 'azertyuio', '2025-03-20', '17:18:00', 'classe 1', '2025-03-19 15:18:08', '2025-03-19 15:18:08');
+
 -- --------------------------------------------------------
 
 --
@@ -187,6 +199,30 @@ CREATE TABLE `failed_jobs` (
   `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `grades`
+--
+
+CREATE TABLE `grades` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `student_name` varchar(255) NOT NULL,
+  `grade` double NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `grades`
+--
+
+INSERT INTO `grades` (`id`, `student_name`, `grade`, `created_at`, `updated_at`) VALUES
+(1, 'bren nya', 15, '2025-03-25 08:16:42', '2025-03-25 08:16:42'),
+(2, 'Jean Martin', 15, '2025-03-25 08:16:42', '2025-03-25 08:16:42'),
+(3, 'Sophie Bernard', 15, '2025-03-25 08:16:42', '2025-03-25 08:16:42'),
+(4, 'Luc Moreau', 15, '2025-03-25 08:16:42', '2025-03-25 08:16:42');
 
 -- --------------------------------------------------------
 
@@ -276,7 +312,15 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (20, '2025_02_03_092901_update_tuteurs_table', 7),
 (21, '2025_02_03_094721_update_paiements_table', 8),
 (22, '2025_02_03_095122_remove_tuteur_id_from_paiements_table', 9),
-(23, '2025_02_03_142120_remove_school_id_from_messages_table', 10);
+(23, '2025_02_03_142120_remove_school_id_from_messages_table', 10),
+(24, '2025_03_19_150038_add_remember_token_to_tuteurs_table', 11),
+(25, '2025_03_19_150415_add_remember_token_to_schools_table', 12),
+(26, '2025_03_19_202507_create_plannings_table', 13),
+(27, '2025_03_19_203458_create_plannings_table', 14),
+(28, '2025_03_21_132543_create_student_tutor_table', 15),
+(29, '2025_03_23_161949_create_teacher_table', 16),
+(30, '2025_03_24_104328_create_grades_table', 17),
+(31, '2025_03_25_075936_create_teacher_table', 18);
 
 -- --------------------------------------------------------
 
@@ -301,7 +345,9 @@ CREATE TABLE `paiements` (
 --
 
 INSERT INTO `paiements` (`id`, `nom`, `prenom`, `typepaiement`, `montant`, `num_facture`, `etat`, `created_at`, `updated_at`) VALUES
-(3, 'elvis', 'nya', 'pension', 300030.00, 'VQNVFIEBL?CPEO', 'payé', '2025-02-03 08:53:20', '2025-02-04 10:05:22');
+(3, 'elvis', 'nya', 'pension', 300030.00, 'VQNVFIEBL?CPEO', 'payé', '2025-02-03 08:53:20', '2025-03-19 14:38:44'),
+(4, 'Darel', 'nya', 'other', 150000.00, 'VQNVFIEBL?CPEO', 'annulé', '2025-03-22 18:04:07', '2025-03-22 18:09:45'),
+(5, 'Nya', 'Darel', 'other', 150000.00, '1234567890', 'annulé', '2025-03-22 18:14:39', '2025-03-24 07:53:50');
 
 -- --------------------------------------------------------
 
@@ -318,6 +364,81 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `plannings`
+--
+
+CREATE TABLE `plannings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `class` varchar(255) NOT NULL,
+  `date` date NOT NULL,
+  `start_time` varchar(255) NOT NULL,
+  `end_time` varchar(255) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `teacher` varchar(255) NOT NULL,
+  `room` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `plannings`
+--
+
+INSERT INTO `plannings` (`id`, `class`, `date`, `start_time`, `end_time`, `code`, `teacher`, `room`, `created_at`, `updated_at`) VALUES
+(1, '1ère', '2025-03-19', '11:30', '12:30', 'C661', 'M. Petit', 'Salle 105', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(2, '1ère', '2025-03-19', '15:30', '16:30', 'C641', 'M. Martin', 'Salle 101', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(3, '1ère', '2025-03-19', '11:30', '12:30', 'C307', 'M. Martin', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(4, '5ème', '2025-03-19', '16:00', '17:00', 'C490', 'Mme Morel', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(5, '4ème', '2025-03-19', '11:30', '12:30', 'C747', 'Mme Lefevre', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(6, '6ème', '2025-03-19', '16:00', '17:00', 'C541', 'M. Dupont', 'Salle 202', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(7, '3ème', '2025-03-19', '12:00', '13:00', 'C634', 'Mme Durand', 'Salle 103', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(8, '6ème', '2025-03-19', '8:00', '9:00', 'C325', 'Mme Morel', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(9, '1ère', '2025-03-19', '15:30', '16:30', 'C554', 'M. Martin', 'Salle 101', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(10, '4ème', '2025-03-19', '14:00', '15:00', 'C972', 'Mme Lefevre', 'Salle 202', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(11, '6ème', '2025-03-19', '8:00', '9:00', 'C887', 'Mme Morel', 'Salle 104', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(12, '2nde', '2025-03-19', '12:00', '13:00', 'C790', 'Mme Morel', 'Salle 202', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(13, '5ème', '2025-03-19', '13:00', '14:00', 'C641', 'M. Martin', 'Salle 202', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(14, '6ème', '2025-03-19', '9:30', '10:30', 'C129', 'Mme Lefevre', 'Salle 105', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(15, '6ème', '2025-03-19', '9:00', '10:00', 'C203', 'Mme Durand', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(16, '1ère', '2025-03-19', '12:00', '13:00', 'C944', 'Mme Durand', 'Salle 103', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(17, '3ème', '2025-03-19', '16:30', '17:30', 'C430', 'M. Martin', 'Salle 202', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(18, '6ème', '2025-03-19', '15:00', '16:00', 'C570', 'Mme Morel', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(19, '4ème', '2025-03-19', '16:30', '17:30', 'C787', 'Mme Morel', 'Salle 202', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(20, '2nde', '2025-03-19', '13:30', '14:30', 'C412', 'M. Martin', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(21, '6ème', '2025-03-19', '14:30', '15:30', 'C215', 'Mme Lefevre', 'Salle 202', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(22, '6ème', '2025-03-19', '8:00', '9:00', 'C685', 'M. Martin', 'Salle 104', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(23, '3ème', '2025-03-19', '11:00', '12:00', 'C282', 'Mme Lefevre', 'Salle 102', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(24, '2nde', '2025-03-19', '10:00', '11:00', 'C213', 'M. Lambert', 'Salle 104', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(25, '4ème', '2025-03-19', '10:00', '11:00', 'C560', 'M. Petit', 'Salle 104', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(26, 'Terminale', '2025-03-19', '10:00', '11:00', 'C702', 'Mme Lefevre', 'Salle 102', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(27, 'Terminale', '2025-03-19', '17:30', '18:30', 'C897', 'M. Dupont', 'Salle 104', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(28, '4ème', '2025-03-19', '15:30', '16:30', 'C253', 'M. Martin', 'Salle 105', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(29, '2nde', '2025-03-19', '13:30', '14:30', 'C214', 'M. Petit', 'Salle 202', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(30, 'Terminale', '2025-03-19', '17:30', '18:30', 'C410', 'M. Lambert', 'Salle 105', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(31, '6ème', '2025-03-19', '8:00', '9:00', 'C432', 'Mme Durand', 'Salle 102', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(32, 'Terminale', '2025-03-19', '10:00', '11:00', 'C645', 'M. Lambert', 'Salle 103', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(33, 'Terminale', '2025-03-19', '13:30', '14:30', 'C332', 'M. Dupont', 'Salle 101', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(34, '1ère', '2025-03-19', '16:00', '17:00', 'C880', 'M. Dupont', 'Salle 101', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(35, '2nde', '2025-03-19', '14:00', '15:00', 'C168', 'M. Martin', 'Salle 102', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(36, '1ère', '2025-03-19', '13:30', '14:30', 'C533', 'Mme Durand', 'Salle 101', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(37, '3ème', '2025-03-19', '8:00', '9:00', 'C212', 'M. Lambert', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(38, '6ème', '2025-03-19', '12:00', '13:00', 'C395', 'Mme Durand', 'Salle 104', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(39, '3ème', '2025-03-19', '10:00', '11:00', 'C234', 'Mme Morel', 'Salle 103', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(40, '6ème', '2025-03-19', '12:30', '13:30', 'C921', 'Mme Morel', 'Salle 104', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(41, '1ère', '2025-03-19', '9:30', '10:30', 'C887', 'Mme Lefevre', 'Salle 103', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(42, '4ème', '2025-03-19', '12:30', '13:30', 'C523', 'Mme Lefevre', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(43, '3ème', '2025-03-19', '13:30', '14:30', 'C474', 'Mme Durand', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(44, '5ème', '2025-03-19', '11:30', '12:30', 'C921', 'M. Martin', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(45, '1ère', '2025-03-19', '16:00', '17:00', 'C282', 'M. Petit', 'Salle 105', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(46, '6ème', '2025-03-19', '16:30', '17:30', 'C119', 'M. Dupont', 'Salle 101', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(47, '6ème', '2025-03-19', '12:30', '13:30', 'C166', 'M. Martin', 'Salle 101', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(48, '6ème', '2025-03-19', '8:00', '9:00', 'C947', 'M. Martin', 'Salle 105', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(49, '5ème', '2025-03-19', '12:30', '13:30', 'C765', 'M. Martin', 'Salle 103', '2025-03-19 19:50:13', '2025-03-19 19:50:13'),
+(50, '3ème', '2025-03-19', '14:00', '15:00', 'C374', 'Mme Morel', 'Salle 201', '2025-03-19 19:50:13', '2025-03-19 19:50:13');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `schools`
 --
 
@@ -328,16 +449,17 @@ CREATE TABLE `schools` (
   `password` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `type` varchar(255) NOT NULL
+  `type` varchar(255) NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `schools`
 --
 
-INSERT INTO `schools` (`id`, `name`, `email`, `password`, `created_at`, `updated_at`, `type`) VALUES
-(1, 'UY2', 'uy2@gmail.com', '$2y$12$eoH94Y2PS6mSTBzjo7p2jeAMUIsyDG1e1RjPwBB1Wqi5Qt6BVmIfS', '2025-01-30 12:12:35', '2025-01-30 12:12:35', 'school'),
-(2, 'UY1', 'uy1@gmail.com', '$2y$12$Vz6F/UiUL9s6sv2lW.bnK.rVDUcnS8M.WLMeJXxATke8EakRYH5KS', '2025-02-03 12:18:55', '2025-02-03 12:18:55', 'school');
+INSERT INTO `schools` (`id`, `name`, `email`, `password`, `created_at`, `updated_at`, `type`, `remember_token`) VALUES
+(1, 'UY2', 'uy2@gmail.com', '$2y$12$eoH94Y2PS6mSTBzjo7p2jeAMUIsyDG1e1RjPwBB1Wqi5Qt6BVmIfS', '2025-01-30 12:12:35', '2025-01-30 12:12:35', 'school', NULL),
+(2, 'UY1', 'uy1@gmail.com', '$2y$12$Vz6F/UiUL9s6sv2lW.bnK.rVDUcnS8M.WLMeJXxATke8EakRYH5KS', '2025-02-03 12:18:55', '2025-02-03 12:18:55', 'school', NULL);
 
 -- --------------------------------------------------------
 
@@ -359,10 +481,9 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('jBXDzZtV3KF9hnYxkr9Rj8LMtCe1XOlD3T0hLfjq', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiMEl6aXlXRTV2WU10Q0k3dWlLZ1ZxckY0ZmlyZFZSc3AzYld6a1c4NyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzQ6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9maWxlZG9jdW1lbnQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUzOiJsb2dpbl90dXRldXJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1738686373),
-('KBNJmQaQDdEkjeuCOo3mKB0sDDEELJNCDATXa786', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicW9lSjVkUkFtN1R1RE1zaHh4U05oTFhyczJkaFJVVzZ5SUcwOFN1aSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzQ6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9maWxlZG9jdW1lbnQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUzOiJsb2dpbl90dXRldXJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1738873002),
-('TLhfkQdJjB4Oh5qxCSYPzr4NeeqHMDNumPphZjfx', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNTdrajI1ZEZwRUUzbnFmNXNuU2tMdEd4T3BKY2p5bXJ2V1U2WnJvbyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1738751425),
-('VEmGu4FyDyc5yroa6cjM9xH1mf6foPueBmiUBlAb', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoic1p1cHJDTjZTWXJmQm9EMU1zWGtPbzlqS2lHcDQ0UXFlWWlOYkUzMiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zaG93cGFpZW1lbnQvMyI7fXM6NTM6ImxvZ2luX3R1dGV1cl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1738667266);
+('113cgFgZW7ocaNX3NPMnnCLdMA6CgACZ9MAKV7vJ', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZVM4M3NwMkgxQlBHU1g0Q1g3cEpmRWFHdWVMeUJFTGZiYjIyMlRHQSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9ub3RpZmljYXRpb25zY2hvb2wiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUzOiJsb2dpbl90dXRldXJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1742932455),
+('htdwYXNnpkVGfa1RY4oiaS9GJzAnJM8LqwJB8S5b', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZ0tFOUJubjdENXJTYUVYM0NMb21BYW9SMzg1ck9SRllmcFRyeVZUYSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzU6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zdHVkZW50c2Nob29sIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1742976877),
+('pfqavEDriVYTOikrT5dR8D0up3juhJf5cmQiYGbX', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYlpScUhHMVJiUDNUN0hIekxOVDBrWHg3RGUxN1ZQVTlhUHFjbFNHMiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9ub3RpZmljYXRpb25zY2hvb2wiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUzOiJsb2dpbl90dXRldXJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1742908607);
 
 -- --------------------------------------------------------
 
@@ -389,11 +510,51 @@ CREATE TABLE `students` (
 INSERT INTO `students` (`id`, `name`, `class`, `enrollment_date`, `absences`, `convocations`, `warnings`, `created_at`, `updated_at`) VALUES
 (1, 'John Doe', '6 ème', '2022-09-01', 3, 1, 1, '2025-01-31 08:01:26', '2025-01-31 08:01:26'),
 (2, 'Jane Smith', '5 ème', '2021-09-01', 5, 2, 0, '2025-01-31 08:01:27', '2025-01-31 08:01:27'),
-(3, 'Alice Brown', 'TLE', '2022-01-15', 2, 0, 2, '2025-01-31 08:01:27', '2025-01-31 08:01:27'),
+(3, 'Alice Brown', '1 ère', '2022-01-15', 2, 0, 2, '2025-01-31 08:01:27', '2025-01-31 08:01:27'),
 (4, 'Bob Johnson', '6 ème', '2020-09-01', 4, 3, 0, '2025-01-31 08:01:27', '2025-01-31 08:01:27'),
 (5, 'Charlie Davis', '2 nd', '2021-03-05', 0, 1, 10, '2025-01-31 08:01:27', '2025-01-31 08:01:27'),
-(6, 'yvan djanko', 'terminale', NULL, 2, 4, 0, '2025-01-31 08:22:29', '2025-02-03 11:48:23'),
-(7, 'bren nya', '3ème', NULL, 0, 0, 0, '2025-02-03 12:41:51', '2025-02-03 12:41:51');
+(6, 'yvan djanko', 'TLE', '2021-04-15', 2, 4, 0, '2025-01-31 08:22:29', '2025-03-25 18:26:55'),
+(7, 'bren nya', '3 ème', NULL, 0, 0, 0, '2025-02-03 12:41:51', '2025-02-03 12:41:51');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `student_tutor`
+--
+
+CREATE TABLE `student_tutor` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `student_id` bigint(20) UNSIGNED NOT NULL,
+  `tuteur_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `teacher`
+--
+
+CREATE TABLE `teacher` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL DEFAULT 'teacher',
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `teacher`
+--
+
+INSERT INTO `teacher` (`id`, `first_name`, `last_name`, `phone`, `email`, `subject`, `type`, `password`, `created_at`, `updated_at`) VALUES
+(1, 'Darel', 'Nya', '+237686236882', 'sanangdarel16@gmail.com', 'math', 'teacher', '$2y$12$sYTEUOcTuznLmcA1kd6zI.G8o/x86gIHrt7AAIiw5M0WkDSE3JU8a', '2025-03-25 07:54:15', '2025-03-25 07:54:15');
 
 -- --------------------------------------------------------
 
@@ -411,17 +572,17 @@ CREATE TABLE `tuteurs` (
   `password` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `phone_number` varchar(255) DEFAULT NULL
+  `phone_number` varchar(255) DEFAULT NULL,
+  `remember_token` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `tuteurs`
 --
 
-INSERT INTO `tuteurs` (`id`, `nom`, `prenom`, `type`, `email`, `child_name`, `password`, `created_at`, `updated_at`, `phone_number`) VALUES
-(1, 'elvis', 'nya', 'parent', 'nya@gmail.com', 'yvan djanko', '$2y$12$5jmBP2Hq27rdTTX/IZO/9ukEWBeLHf8w2iggoyiQZFKHPM7xNcaQu', '2025-01-30 10:39:02', '2025-01-31 08:22:29', '+237694517366'),
-(2, 'Nya', 'Darel', 'parent', 'sanangdarel17@gmail.com', 'bren nya', '$2y$12$4bayUd4fzkoV1MmujQLdvuFH4JCu27RD0.x5y/BUAiv4X8FCDXmtW', '2025-02-03 12:39:17', '2025-02-03 12:41:51', '693865560'),
-(3, 'nya', 'bren', 'parent', 'bren@gmail.com', NULL, '$2y$12$wuBrS9e74N3KhgE2G9SOVeYEA6Q.NSJ/p5eCiJ8SFN1SG6wpE1eWy', '2025-02-03 12:41:09', '2025-02-03 12:41:09', '633456789');
+INSERT INTO `tuteurs` (`id`, `nom`, `prenom`, `type`, `email`, `child_name`, `password`, `created_at`, `updated_at`, `phone_number`, `remember_token`) VALUES
+(2, 'Nya', 'Darel', 'parent', 'sanangdarel17@gmail.com', 'bren nya', '$2y$12$4bayUd4fzkoV1MmujQLdvuFH4JCu27RD0.x5y/BUAiv4X8FCDXmtW', '2025-02-03 12:39:17', '2025-02-03 12:41:51', '+237686236882', 'H7Wz2mAfyf2zxCf58LGGGhpyBWa3RYKI5edZ587ulhOvB7nCC7C57Cu7KpPk'),
+(3, 'nya', 'bren', 'parent', 'bren@gmail.com', NULL, '$2y$12$wuBrS9e74N3KhgE2G9SOVeYEA6Q.NSJ/p5eCiJ8SFN1SG6wpE1eWy', '2025-02-03 12:41:09', '2025-02-03 12:41:09', '633456789', NULL);
 
 -- --------------------------------------------------------
 
@@ -509,6 +670,12 @@ ALTER TABLE `failed_jobs`
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
+-- Index pour la table `grades`
+--
+ALTER TABLE `grades`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Index pour la table `jobs`
 --
 ALTER TABLE `jobs`
@@ -547,6 +714,12 @@ ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
 
 --
+-- Index pour la table `plannings`
+--
+ALTER TABLE `plannings`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Index pour la table `schools`
 --
 ALTER TABLE `schools`
@@ -566,6 +739,21 @@ ALTER TABLE `sessions`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `student_tutor`
+--
+ALTER TABLE `student_tutor`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_tutor_student_id_foreign` (`student_id`),
+  ADD KEY `student_tutor_tuteur_id_foreign` (`tuteur_id`);
+
+--
+-- Index pour la table `teacher`
+--
+ALTER TABLE `teacher`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `teacher_email_unique` (`email`);
 
 --
 -- Index pour la table `tuteurs`
@@ -607,7 +795,7 @@ ALTER TABLE `acteurs`
 -- AUTO_INCREMENT pour la table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT pour la table `convocations`
@@ -619,19 +807,25 @@ ALTER TABLE `convocations`
 -- AUTO_INCREMENT pour la table `documents`
 --
 ALTER TABLE `documents`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT pour la table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `grades`
+--
+ALTER TABLE `grades`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `jobs`
@@ -649,13 +843,19 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT pour la table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT pour la table `paiements`
 --
 ALTER TABLE `paiements`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT pour la table `plannings`
+--
+ALTER TABLE `plannings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT pour la table `schools`
@@ -667,7 +867,19 @@ ALTER TABLE `schools`
 -- AUTO_INCREMENT pour la table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT pour la table `student_tutor`
+--
+ALTER TABLE `student_tutor`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `teacher`
+--
+ALTER TABLE `teacher`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `tuteurs`
@@ -696,6 +908,13 @@ ALTER TABLE `documents`
 --
 ALTER TABLE `messages`
   ADD CONSTRAINT `messages_tuteur_id_foreign` FOREIGN KEY (`tuteur_id`) REFERENCES `tuteurs` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `student_tutor`
+--
+ALTER TABLE `student_tutor`
+  ADD CONSTRAINT `student_tutor_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_tutor_tuteur_id_foreign` FOREIGN KEY (`tuteur_id`) REFERENCES `tuteurs` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

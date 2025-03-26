@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications</title>
+    <title>Student</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .modal {
@@ -71,6 +71,7 @@
                             <label class="form-check-label" for="eleve_{{ $student->id }}">
                                 {{ $student->name }} - Classe: {{ $student->classe ? $student->classe->name : 'Non assignée' }}
                             </label>
+                            <hr>
                         </div>
                     @endforeach
                 </div>
@@ -106,9 +107,7 @@
                 <div class="mb-3">
                     <label for="type" class="form-label">Type</label>
                     <select class="form-control" id="type" name="type" required>
-                        <option value="retard">Retard</option>
-                        <option value="maladie">Maladie</option>
-                        <option value="autre">Autre</option>
+                        <!-- Options will be dynamically populated based on the selected motif -->
                     </select>
                 </div>
                 <div class="mb-3">
@@ -125,6 +124,19 @@
     </div>
 
     <script>
+        const absenceTypes = [
+            { value: 'retard', text: 'Retard' },
+            { value: 'maladie', text: 'Maladie' },
+            { value: 'autre', text: 'Autre' }
+        ];
+
+        const convocationTypes = [
+            { value: 'reunion', text: 'Réunion' },
+            { value: 'discipline', text: 'Discipline' },
+            { value: 'bagarre', text: 'Bagarre'},
+            { value: 'autre', text: 'Autre' }
+        ];
+
         document.getElementById('searchBar').addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
             const eleves = document.querySelectorAll('#elevesList .form-check');
@@ -168,6 +180,17 @@
             input.name = 'motif';
             input.value = motif;
             form.appendChild(input);
+
+            // Populate the "Type" dropdown based on the selected motif
+            const typeSelect = document.getElementById('type');
+            typeSelect.innerHTML = ''; // Clear existing options
+            const types = motif === 'absence' ? absenceTypes : convocationTypes;
+            types.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type.value;
+                option.textContent = type.text;
+                typeSelect.appendChild(option);
+            });
 
             const modal = document.getElementById('myModal');
             modal.style.display = 'none';
