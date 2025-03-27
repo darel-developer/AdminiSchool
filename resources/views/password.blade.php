@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Reset Password</title>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-</head>
+    <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
+  </head>
 <body>
   <!-- Password Reset 8 - Bootstrap Brain Component -->
 <section class="bg-light p-3 p-md-4 p-xl-5">

@@ -46,14 +46,14 @@ class EventController extends Controller
             $parent = \App\Models\Tuteur::where('child_name', $student->name)->first();
     
             if ($parent) {
-                // Prepare the SMS message
+                // préparation du sms
                 $message = "Événement: {$event->title}\n"
                     . "Description: {$event->description}\n"
                     . "Date: {$event->event_date}\n"
                     . "Heure: {$event->event_time}\n"
                     . "Classe: {$event->class}";
     
-                // Send the SMS
+                // Envoi
                 $this->sendSmsNotification($parent->phone_number, $message);
             } else {
                 Log::warning("Aucun tuteur trouvé pour l'élève {$student->name}");

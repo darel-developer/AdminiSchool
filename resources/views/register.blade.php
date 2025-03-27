@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Register</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
+    <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
+   <style>
         .gradient-custom-2 {
             background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
         }
