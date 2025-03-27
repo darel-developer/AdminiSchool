@@ -20,6 +20,8 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\GradesController;
 
 Route::post('/grades/upload', [GradesController::class, 'upload'])->name('grades.upload');
+Route::get('/eventschool', [EventController::class, 'create'])->name('eventschool');
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
 
 Route::get('/api/eleves', [NotificationController::class, 'getElevesByClasse'])->name('api.eleves');

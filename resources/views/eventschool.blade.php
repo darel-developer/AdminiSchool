@@ -176,7 +176,7 @@
         </a>
     </div>
 
-    <div class="content">
+       <div class="content">
         <h1 id="main-title">Ajouter un événement</h1>
         <div class="mt-4">
             @if(session('success'))
@@ -187,36 +187,78 @@
             <form id="eventForm" method="POST" action="{{ route('events.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
-                    <label for="title" class="form-label">Titre de l'événement</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
+                    <label for="title" class="form-label">Type d'événement</label>
+                    <select class="form-control" id="title" name="title" required>
+                        <option value="">-- Sélectionnez un événement --</option>
+                        <optgroup label="Réunions">
+                            <option value="Réunion des parents d'élèves">Réunion des parents d'élèves</option>
+                            <option value="Réunion du conseil de classe">Réunion du conseil de classe</option>
+                            <option value="Réunion des professeurs">Réunion des professeurs</option>
+                            <option value="Réunion du personnel">Réunion du personnel</option>
+                        </optgroup>
+
+                        <optgroup label="Événements scolaires">
+                            <option value="Journée portes ouvertes">Journée portes ouvertes</option>
+                            <option value="Journée culturelle">Journée culturelle</option>
+                            <option value="Journée sportive">Journée sportive</option>
+                            <option value="Cérémonie de remise des diplômes">Cérémonie de remise des diplômes</option>
+                            <option value="Spectacle de fin d'année">Spectacle de fin d'année</option>
+                        </optgroup>
+
+                        <optgroup label="Examens et évaluations">
+                            <option value="Session d'examens">Session d'examens</option>
+                            <option value="Devoirs surveillés">Devoirs surveillés</option>
+                            <option value="Baccalauréat blanc">Baccalauréat blanc</option>
+                            <option value="Brevet blanc">Brevet blanc</option>
+                        </optgroup>
+
+                        <optgroup label="Sorties et voyages">
+                            <option value="Sortie pédagogique">Sortie pédagogique</option>
+                            <option value="Voyage scolaire">Voyage scolaire</option>
+                            <option value="Classe de découverte">Classe de découverte</option>
+                            <option value="Visite musée/exposition">Visite musée/exposition</option>
+                        </optgroup>
+
+                        <optgroup label="Administratif">
+                            <option value="Convocation">Convocation</option>
+                            <option value="Commission disciplinaire">Commission disciplinaire</option>
+                            <option value="Réunion d'information orientation">Réunion d'information orientation</option>
+                        </optgroup>
+
+                        <optgroup label="Autres">
+                            <option value="Formation des enseignants">Formation des enseignants</option>
+                            <option value="Journée pédagogique">Journée pédagogique</option>
+                            <option value="Forum des métiers">Forum des métiers</option>
+                            <option value="Autre (précisez en description)">Autre (précisez en description)</option>
+                        </optgroup>
+                    </select>
                 </div>
-    
+
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea class="form-control" id="description" name="description" required></textarea>
                 </div>
-    
+
                 <div class="mb-3">
                     <label for="event_date" class="form-label">Date</label>
                     <input type="date" class="form-control" id="event_date" name="event_date" required>
                 </div>
-    
+
                 <div class="mb-3">
                     <label for="event_time" class="form-label">Heure</label>
                     <input type="time" class="form-control" id="event_time" name="event_time" required>
                 </div>
-    
+
                 <div class="mb-3">
                     <label for="class" class="form-label">Classe</label>
                     <select class="form-control" id="class" name="class" required>
-                        <!-- Liste déroulante des classes -->
-                       <option value="classe 1">classe 1</option>
-                       <option value="classe 2">classe 2</option>
-                       <option value="classe 3">classe 3</option>
-                       <option value="classe 4">classe 4</option>
+                        <option value="">-- Sélectionnez une classe --</option>
+                        @foreach($classes as $classe)
+                            <option value="{{ $classe->name }}">{{ $classe->name }}</option>
+                        @endforeach
                     </select>
                 </div>
-    
+
                 <button type="submit" class="btn btn-primary">Soumettre</button>
             </form>
         </div>

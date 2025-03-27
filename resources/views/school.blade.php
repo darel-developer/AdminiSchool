@@ -157,7 +157,7 @@
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
-        <a href="{{route('schoolevenement')}}" class="sidebar-item">
+        <a href="{{route('eventschool')}}" class="sidebar-item">
             <img src="{{ asset('images/Event.png') }}" alt="document">
             Evenement
         </a>
