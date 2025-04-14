@@ -135,4 +135,10 @@ class StudentController extends Controller
             'error' => 'Tuteur non trouvé ou enfant non associé.',
         ]);
     }
+
+    public function details()
+    {
+        $students = Student::all();
+        return view('students.details', ['students' => $students]);
+    }
 }

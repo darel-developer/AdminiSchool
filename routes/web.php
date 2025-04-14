@@ -18,6 +18,9 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\GradesController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ConvocationController;
+use App\Http\Controllers\AbsenceController;
 
 
 
@@ -236,3 +239,10 @@ Route::get('/reset-password', function () {
 Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 Route::get('/create-teacher', [TeacherController::class, 'create'])->name('create.teacher');
 Route::post('/store-teacher', [TeacherController::class, 'store'])->name('store.teacher');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::get('/students/details', [StudentController::class, 'details'])->name('students.details');
+Route::get('/teachers/details', [TeacherController::class, 'details'])->name('teachers.details');
+Route::get('/convocations/details', [ConvocationController::class, 'details'])->name('convocations.details');
+Route::get('/absences/details', [AbsenceController::class, 'details'])->name('absences.details');
