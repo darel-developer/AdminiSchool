@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 26 mars 2025 à 11:42
+-- Généré le : lun. 14 avr. 2025 à 10:18
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -99,6 +99,22 @@ CREATE TABLE `cache_locks` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `cahier_textes`
+--
+
+CREATE TABLE `cahier_textes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `titre` varchar(255) NOT NULL,
+  `contenu` text NOT NULL,
+  `date` date NOT NULL,
+  `fichier_excel` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `classes`
 --
 
@@ -158,7 +174,8 @@ CREATE TABLE `documents` (
 INSERT INTO `documents` (`id`, `tuteur_id`, `file_path`, `created_at`, `updated_at`) VALUES
 (3, 2, 'documents/YG1VnB1bAG4LUCunFnkZrIvDUoK2rimNSEQ0peta.pdf', '2025-03-19 14:21:37', '2025-03-19 14:21:37'),
 (4, 2, 'documents/zfnUtIMB67VepnFlff6mHuRNjm3NqsWxcpIOFt1Q.pdf', '2025-03-19 14:24:07', '2025-03-19 14:24:07'),
-(5, 2, 'documents/8FR0ZAvmkT4xO0kHvtZoaobp5uAzGph6UlKhIoch.pdf', '2025-03-25 09:13:51', '2025-03-25 09:13:51');
+(5, 2, 'documents/8FR0ZAvmkT4xO0kHvtZoaobp5uAzGph6UlKhIoch.pdf', '2025-03-25 09:13:51', '2025-03-25 09:13:51'),
+(6, 3, 'documents/3wDE7WoQtan3oS6GjwnMw6Z7cOaOs3ZYUpM4pdgA.pdf', '2025-03-28 07:54:08', '2025-03-28 07:54:08');
 
 -- --------------------------------------------------------
 
@@ -182,7 +199,14 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`id`, `title`, `description`, `event_date`, `event_time`, `class`, `created_at`, `updated_at`) VALUES
-(1, 'Reunon', 'azertyuio', '2025-03-20', '17:18:00', 'classe 1', '2025-03-19 15:18:08', '2025-03-19 15:18:08');
+(1, 'Reunon', 'azertyuio', '2025-03-20', '17:18:00', 'classe 1', '2025-03-19 15:18:08', '2025-03-19 15:18:08'),
+(2, 'Sortie pédagogique', 'vufutc', '2025-03-27', '14:24:00', 'classe 2', '2025-03-27 12:24:47', '2025-03-27 12:24:47'),
+(3, 'Réunion des professeurs', 'azta', '2025-03-21', '15:05:00', '3 ème', '2025-03-27 13:05:56', '2025-03-27 13:05:56'),
+(4, 'Journée culturelle', 'azerty', '2025-03-29', '12:30:00', 'Tle', '2025-03-27 17:50:09', '2025-03-27 17:50:09'),
+(5, 'Réunion des parents d\'élèves', 'a', '2025-03-27', '19:53:00', '6 ème', '2025-03-27 17:53:32', '2025-03-27 17:53:32'),
+(6, 'Réunion du conseil de classe', 'cc', '2025-03-27', '19:54:00', '6 ème', '2025-03-27 17:54:21', '2025-03-27 17:54:21'),
+(7, 'Cérémonie de remise des diplômes', 'azerty', '2025-03-28', '08:59:00', '4 ème', '2025-03-28 07:00:01', '2025-03-28 07:00:01'),
+(8, 'Réunion des professeurs', 'st', '2025-03-28', '11:05:00', '4 ème', '2025-03-28 09:05:19', '2025-03-28 09:05:19');
 
 -- --------------------------------------------------------
 
@@ -267,11 +291,21 @@ CREATE TABLE `job_batches` (
 
 CREATE TABLE `messages` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `content` text NOT NULL,
+  `teacher_id` bigint(20) UNSIGNED NOT NULL,
   `tuteur_id` bigint(20) UNSIGNED NOT NULL,
+  `message` text NOT NULL,
+  `reply` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `messages`
+--
+
+INSERT INTO `messages` (`id`, `teacher_id`, `tuteur_id`, `message`, `reply`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, 'salut', NULL, '2025-04-01 12:05:47', '2025-04-01 12:05:47'),
+(2, 1, 2, 'salut', NULL, '2025-04-03 18:58:46', '2025-04-03 18:58:46');
 
 -- --------------------------------------------------------
 
@@ -320,7 +354,13 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (28, '2025_03_21_132543_create_student_tutor_table', 15),
 (29, '2025_03_23_161949_create_teacher_table', 16),
 (30, '2025_03_24_104328_create_grades_table', 17),
-(31, '2025_03_25_075936_create_teacher_table', 18);
+(31, '2025_03_25_075936_create_teacher_table', 18),
+(32, '2025_01_30_032408_create_cahier_de_textes_table', 19),
+(33, '2025_03_27_195104_add_class_id_to_teacher_table', 20),
+(34, '2025_04_01_123127_create_teachers_table', 21),
+(35, '2025_04_01_123248_create_messages_table', 22),
+(36, '2025_04_01_125829_create_messages_table', 23),
+(37, '2025_04_01_131109_add_reply_to_messages_table', 24);
 
 -- --------------------------------------------------------
 
@@ -347,7 +387,8 @@ CREATE TABLE `paiements` (
 INSERT INTO `paiements` (`id`, `nom`, `prenom`, `typepaiement`, `montant`, `num_facture`, `etat`, `created_at`, `updated_at`) VALUES
 (3, 'elvis', 'nya', 'pension', 300030.00, 'VQNVFIEBL?CPEO', 'payé', '2025-02-03 08:53:20', '2025-03-19 14:38:44'),
 (4, 'Darel', 'nya', 'other', 150000.00, 'VQNVFIEBL?CPEO', 'annulé', '2025-03-22 18:04:07', '2025-03-22 18:09:45'),
-(5, 'Nya', 'Darel', 'other', 150000.00, '1234567890', 'annulé', '2025-03-22 18:14:39', '2025-03-24 07:53:50');
+(5, 'Nya', 'Darel', 'other', 150000.00, '1234567890', 'payé', '2025-03-22 18:14:39', '2025-03-29 18:52:52'),
+(6, 'Nya', 'Darel', 'pension', 150000.00, '1234567890', 'payé', '2025-03-28 07:54:47', '2025-04-09 21:49:45');
 
 -- --------------------------------------------------------
 
@@ -481,9 +522,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('113cgFgZW7ocaNX3NPMnnCLdMA6CgACZ9MAKV7vJ', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZVM4M3NwMkgxQlBHU1g0Q1g3cEpmRWFHdWVMeUJFTGZiYjIyMlRHQSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9ub3RpZmljYXRpb25zY2hvb2wiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUzOiJsb2dpbl90dXRldXJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1742932455),
-('htdwYXNnpkVGfa1RY4oiaS9GJzAnJM8LqwJB8S5b', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZ0tFOUJubjdENXJTYUVYM0NMb21BYW9SMzg1ck9SRllmcFRyeVZUYSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzU6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zdHVkZW50c2Nob29sIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1742976877),
-('pfqavEDriVYTOikrT5dR8D0up3juhJf5cmQiYGbX', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYlpScUhHMVJiUDNUN0hIekxOVDBrWHg3RGUxN1ZQVTlhUHFjbFNHMiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9ub3RpZmljYXRpb25zY2hvb2wiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUzOiJsb2dpbl90dXRldXJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1742908607);
+('01Xw9wNV5jQHpxjULzrFkUIZ4LDEgP78YmZiGEOa', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVG45R2c4Q012OEtqUnVrRFNUeU1lT3NPMlVGNUd3blNIbkhoTHI2RCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9jaGlsZC9wbGFubmluZyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTM6ImxvZ2luX3R1dGV1cl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1744475485),
+('nf3wpWawNnAzpy3eR73YMUkfDKn8Q3wpJ2raUwfc', 2, '127.0.0.1', 'Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 CrKey/1.54.248666 Edg/135.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRkxqZ3hTdnIxb1ViZFBQMk03TGxKalgzZ2U0aVRpV3JrWHl0MXZ1diI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9jaGlsZC9wbGFubmluZyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTM6ImxvZ2luX3R1dGV1cl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1744275905);
 
 -- --------------------------------------------------------
 
@@ -514,7 +554,8 @@ INSERT INTO `students` (`id`, `name`, `class`, `enrollment_date`, `absences`, `c
 (4, 'Bob Johnson', '6 ème', '2020-09-01', 4, 3, 0, '2025-01-31 08:01:27', '2025-01-31 08:01:27'),
 (5, 'Charlie Davis', '2 nd', '2021-03-05', 0, 1, 10, '2025-01-31 08:01:27', '2025-01-31 08:01:27'),
 (6, 'yvan djanko', 'TLE', '2021-04-15', 2, 4, 0, '2025-01-31 08:22:29', '2025-03-25 18:26:55'),
-(7, 'bren nya', '3 ème', NULL, 0, 0, 0, '2025-02-03 12:41:51', '2025-02-03 12:41:51');
+(7, 'bren nya', '6ème', NULL, 0, 0, 0, '2025-02-03 12:41:51', '2025-02-03 12:41:51'),
+(14, 'SANANG NYA DAREL', '2nde', NULL, 0, 0, 0, '2025-03-28 07:57:47', '2025-03-28 07:57:47');
 
 -- --------------------------------------------------------
 
@@ -533,10 +574,10 @@ CREATE TABLE `student_tutor` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `teacher`
+-- Structure de la table `teachers`
 --
 
-CREATE TABLE `teacher` (
+CREATE TABLE `teachers` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
@@ -545,16 +586,17 @@ CREATE TABLE `teacher` (
   `subject` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL DEFAULT 'teacher',
   `password` varchar(255) NOT NULL,
+  `class_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Déchargement des données de la table `teacher`
+-- Déchargement des données de la table `teachers`
 --
 
-INSERT INTO `teacher` (`id`, `first_name`, `last_name`, `phone`, `email`, `subject`, `type`, `password`, `created_at`, `updated_at`) VALUES
-(1, 'Darel', 'Nya', '+237686236882', 'sanangdarel16@gmail.com', 'math', 'teacher', '$2y$12$sYTEUOcTuznLmcA1kd6zI.G8o/x86gIHrt7AAIiw5M0WkDSE3JU8a', '2025-03-25 07:54:15', '2025-03-25 07:54:15');
+INSERT INTO `teachers` (`id`, `first_name`, `last_name`, `phone`, `email`, `subject`, `type`, `password`, `class_id`, `created_at`, `updated_at`) VALUES
+(1, 'Darel', 'Nyaa', '+237686236882', 'sanangdare16@gmail.com', 'math', 'teacher', '$2y$12$FOI0cxXFJoJJd2GV5UdZV.Z8OXjhXcTODhkVS9Oxr..B1aU9dAHYG', 7, '2025-04-01 11:37:00', '2025-04-01 11:37:00');
 
 -- --------------------------------------------------------
 
@@ -582,7 +624,7 @@ CREATE TABLE `tuteurs` (
 
 INSERT INTO `tuteurs` (`id`, `nom`, `prenom`, `type`, `email`, `child_name`, `password`, `created_at`, `updated_at`, `phone_number`, `remember_token`) VALUES
 (2, 'Nya', 'Darel', 'parent', 'sanangdarel17@gmail.com', 'bren nya', '$2y$12$4bayUd4fzkoV1MmujQLdvuFH4JCu27RD0.x5y/BUAiv4X8FCDXmtW', '2025-02-03 12:39:17', '2025-02-03 12:41:51', '+237686236882', 'H7Wz2mAfyf2zxCf58LGGGhpyBWa3RYKI5edZ587ulhOvB7nCC7C57Cu7KpPk'),
-(3, 'nya', 'bren', 'parent', 'bren@gmail.com', NULL, '$2y$12$wuBrS9e74N3KhgE2G9SOVeYEA6Q.NSJ/p5eCiJ8SFN1SG6wpE1eWy', '2025-02-03 12:41:09', '2025-02-03 12:41:09', '633456789', NULL);
+(3, 'nya', 'bren', 'parent', 'bren@gmail.com', 'Jane Smith', '$2y$12$wuBrS9e74N3KhgE2G9SOVeYEA6Q.NSJ/p5eCiJ8SFN1SG6wpE1eWy', '2025-02-03 12:41:09', '2025-02-03 12:41:09', '633456789', NULL);
 
 -- --------------------------------------------------------
 
@@ -636,6 +678,12 @@ ALTER TABLE `cache`
 --
 ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`);
+
+--
+-- Index pour la table `cahier_textes`
+--
+ALTER TABLE `cahier_textes`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Index pour la table `classes`
@@ -693,6 +741,7 @@ ALTER TABLE `job_batches`
 --
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`),
+  ADD KEY `messages_teacher_id_foreign` (`teacher_id`),
   ADD KEY `messages_tuteur_id_foreign` (`tuteur_id`);
 
 --
@@ -749,11 +798,13 @@ ALTER TABLE `student_tutor`
   ADD KEY `student_tutor_tuteur_id_foreign` (`tuteur_id`);
 
 --
--- Index pour la table `teacher`
+-- Index pour la table `teachers`
 --
-ALTER TABLE `teacher`
+ALTER TABLE `teachers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `teacher_email_unique` (`email`);
+  ADD UNIQUE KEY `teachers_phone_unique` (`phone`),
+  ADD UNIQUE KEY `teachers_email_unique` (`email`),
+  ADD KEY `teachers_class_id_foreign` (`class_id`);
 
 --
 -- Index pour la table `tuteurs`
@@ -792,6 +843,12 @@ ALTER TABLE `acteurs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT pour la table `cahier_textes`
+--
+ALTER TABLE `cahier_textes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `classes`
 --
 ALTER TABLE `classes`
@@ -807,13 +864,13 @@ ALTER TABLE `convocations`
 -- AUTO_INCREMENT pour la table `documents`
 --
 ALTER TABLE `documents`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pour la table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT pour la table `failed_jobs`
@@ -837,19 +894,19 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT pour la table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT pour la table `paiements`
 --
 ALTER TABLE `paiements`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pour la table `plannings`
@@ -867,7 +924,7 @@ ALTER TABLE `schools`
 -- AUTO_INCREMENT pour la table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT pour la table `student_tutor`
@@ -876,9 +933,9 @@ ALTER TABLE `student_tutor`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pour la table `teacher`
+-- AUTO_INCREMENT pour la table `teachers`
 --
-ALTER TABLE `teacher`
+ALTER TABLE `teachers`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
@@ -907,6 +964,7 @@ ALTER TABLE `documents`
 -- Contraintes pour la table `messages`
 --
 ALTER TABLE `messages`
+  ADD CONSTRAINT `messages_teacher_id_foreign` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `messages_tuteur_id_foreign` FOREIGN KEY (`tuteur_id`) REFERENCES `tuteurs` (`id`) ON DELETE CASCADE;
 
 --
@@ -915,6 +973,12 @@ ALTER TABLE `messages`
 ALTER TABLE `student_tutor`
   ADD CONSTRAINT `student_tutor_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `student_tutor_tuteur_id_foreign` FOREIGN KEY (`tuteur_id`) REFERENCES `tuteurs` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `teachers`
+--
+ALTER TABLE `teachers`
+  ADD CONSTRAINT `teachers_class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

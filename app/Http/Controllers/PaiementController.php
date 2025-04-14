@@ -57,22 +57,22 @@ class PaiementController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $paiement = Paiement::findOrFail($id);
-        $paiement->etat = $request->input('etat');
-        $paiement->save();
+{
+    $paiement = Paiement::findOrFail($id);
+    $paiement->etat = $request->input('etat');
+    $paiement->save();
 
-        // Generate PDF
-        $pdfContent = $this->generateInvoicePdf($paiement);
+    // Générer le PDF
+    $pdfPath = $this->generateInvoicePdf($paiement);
 
-        // Send SMS notification
-        $this->sendSmsNotification($paiement);
+    // Envoyer une notification par SMS
+    $this->sendSmsNotification($paiement);
 
-        // Send email notification with PDF attachment
-        $this->sendEmailNotification($paiement, $pdfContent);
+    // Envoyer une notification par email avec le PDF en pièce jointe
+    $this->sendEmailNotification($paiement, $pdfPath);
 
-        return redirect()->route('showpaiement', $paiement->id)->with('success', 'Paiement mis à jour avec succès.');
-    }
+    return redirect()->route('showpaiement', $paiement->id)->with('success', 'Paiement mis à jour avec succès. Facture générée.');
+}
 
     private function sendSmsNotification($paiement)
     {
@@ -133,8 +133,29 @@ class PaiementController extends Controller
 
 private function generateInvoicePdf($paiement)
 {
+    // Définir le chemin du répertoire
+    $directoryPath = storage_path('app/public/factures');
+
+    // Vérifier si le répertoire existe, sinon le créer
+    if (!is_dir($directoryPath)) {
+        mkdir($directoryPath, 0755, true); // Crée le répertoire avec les permissions appropriées
+    }
+
+    // Définir le chemin où enregistrer le PDF
+    $filePath = $directoryPath . '/' . $paiement->id . '_facture.pdf';
+
+    // Si le fichier existe, le supprimer pour le remplacer par une nouvelle version
+    if (file_exists($filePath)) {
+        unlink($filePath); // Supprime l'ancien fichier
+    }
+
+    // Charger la vue pour le PDF
     $pdf = Pdf::loadView('invoice', compact('paiement'));
-    return $pdf->output();
+
+    // Enregistrer le PDF sur le disque
+    $pdf->save($filePath);
+
+    return $filePath; // Retourner le chemin du fichier PDF
 }
 private function sendEmailNotification($paiement, $pdfContent)
 {
@@ -179,6 +200,18 @@ private function sendEmailNotification($paiement, $pdfContent)
     } catch (HTTP_Request2_Exception $e) {
         Log::error('Error: ' . $e->getMessage());
     }
+}
+
+public function viewInvoice($id)
+{
+    $paiement = Paiement::findOrFail($id);
+    $filePath = storage_path('app/public/factures/' . $paiement->id . '_facture.pdf');
+
+    if (!file_exists($filePath)) {
+        return redirect()->back()->with('error', 'La facture n\'existe pas.');
+    }
+
+    return response()->file($filePath);
 }
 
 }

@@ -20,6 +20,7 @@
                     <th>Montant</th>
                     <th>Numéro de Facture</th>
                     <th>État</th>
+                    <th>Facture</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +32,11 @@
                         <td>{{ $paiement->montant }}</td>
                         <td>{{ $paiement->num_facture }}</td>
                         <td>{{ $paiement->etat }}</td>
+                        <td>
+                            <div class="mt-3">
+                                <a href="{{ route('paiement.facture', $paiement->id) }}" class="btn btn-secondary" target="_blank">Voir la Facture</a>
+                            </div>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

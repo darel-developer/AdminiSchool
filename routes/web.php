@@ -19,6 +19,24 @@ use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\GradesController;
 
+
+
+// Routes pour les tuteurs
+Route::middleware(['auth:tuteur'])->group(function () {
+    Route::get('/parentchat', [ChatController::class, 'parentChat'])->name('parentchat');
+    Route::get('/get-teachers', [ChatController::class, 'getTeachers'])->name('get.teachers');
+    Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('send.message');
+    Route::get('/get-messages/{teacherId}', [ChatController::class, 'fetchMessages'])->name('get.messages');
+});
+
+// Routes pour les enseignants
+Route::middleware(['auth:teacher'])->group(function () {
+    Route::get('/teacher-chat', [ChatController::class, 'teacherChat'])->name('teacher.chat');
+    Route::get('/get-parents', [ChatController::class, 'getParents'])->name('get.parents');
+    Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('send.message');
+    Route::get('/get-messages/{parentId}', [ChatController::class, 'fetchMessages'])->name('get.messages');
+});
+
 Route::post('/grades/upload', [GradesController::class, 'upload'])->name('grades.upload');
 Route::get('/eventschool', [EventController::class, 'create'])->name('eventschool');
 Route::post('/events', [EventController::class, 'store'])->name('events.store');
@@ -73,6 +91,7 @@ Route::get('/schoolpaiement', [PaiementController::class, 'liste_paiement'])->na
 Route::get('/paiement/{id}', [PaiementController::class, 'show'])->name('showpaiement');
 Route::put('/paiement/{id}', [PaiementController::class, 'update'])->name('paiement.update');
 Route::get('/parent/paiements', [PaiementController::class, 'listePaiementsParent'])->name('parent.paiements')->middleware('auth:tuteur');
+Route::get('/paiements/paiement/{id}', [PaiementController::class, 'viewInvoice'])->name('paiement.facture')->middleware('auth:tuteur');
 
 // Route pour stocker les paiements
 Route::post('/paiement', [PaiementController::class, 'store'])->name('paiement.store');

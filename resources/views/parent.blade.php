@@ -40,6 +40,22 @@
             padding: 20px;
             flex-grow: 1;
         }
+        .section-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .section-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .table {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -57,7 +73,7 @@
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('parentchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
@@ -81,8 +97,10 @@
 
     <!-- Content -->
     <div class="content">
-        <h1>Parent Dashboard</h1>
-        <div class="btn-group" role="group" aria-label="Sections">
+        <div class="section-header">
+            <h1>Parent Dashboard</h1>
+        </div>
+        <div class="btn-group mb-4" role="group" aria-label="Sections">
             <button type="button" class="btn btn-primary" onclick="loadSection('general')">Informations Générales</button>
             <button type="button" class="btn btn-primary" onclick="loadSection('absence')">Absences</button>
             <button type="button" class="btn btn-primary" onclick="loadSection('convocation')">Convocations</button>
@@ -90,102 +108,65 @@
             <button type="button" class="btn btn-primary" onclick="loadSection('planning')">Planning</button>
             <button type="button" class="btn btn-primary" onclick="loadSection('notes')">Notes</button>
         </div>
-        <div id="content" class="mt-4">
+        <div id="content" class="section-content">
             <p>Sélectionnez une section pour afficher les données.</p>
         </div>
     </div>
 
     <script>
         function loadSection(section) {
+            console.log(`Chargement de la section : ${section}`);
             fetch(`/child/${section}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        console.log(`Données reçues pour la section ${section} :`, data);
                         let htmlContent = '';
                         switch (section) {
-                            case 'general':
-                                htmlContent = `
-                                    <h2>Informations Générales</h2>
-                                    <p>Nom: ${data.data.name}</p>
-                                    <p>Classe: ${data.data.class}</p>
-                                    <p>Date d'inscription: ${data.data.enrollment_date}</p>
-                                `;
-                                break;
-                            case 'absence':
-                                htmlContent = `
-                                    <h2>Absences</h2>
-                                    <p>Nombre d'absences: ${data.data.absences}</p>
-                                `;
-                                break;
-                            case 'convocation':
-                                htmlContent = `
-                                    <h2>Convocations</h2>
-                                    <p>Nombre de convocations: ${data.data.convocations}</p>
-                                `;
-                                break;
-                            case 'warnings':
-                                htmlContent = `
-                                    <h2>Avertissements</h2>
-                                    <p>Nombre d'avertissements: ${data.data.warnings}</p>
-                                `;
-                                break;
                             case 'planning':
-                                htmlContent = `
-                                    <h2>Planning</h2>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Heure Début</th>
-                                                <th>Heure Fin</th>
-                                                <th>Code</th>
-                                                <th>Enseignant</th>
-                                                <th>Salle</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${data.data.planning.map(planning => `
+                                if (data.data.planning.length > 0) {
+                                    console.log('Classe trouvée, affichage du planning.');
+                                    htmlContent = `
+                                        <h2>Planning</h2>
+                                        <table class="table table-striped">
+                                            <thead>
                                                 <tr>
-                                                    <td>${planning.date}</td>
-                                                    <td>${planning.start_time}</td>
-                                                    <td>${planning.end_time}</td>
-                                                    <td>${planning.code}</td>
-                                                    <td>${planning.teacher}</td>
-                                                    <td>${planning.room}</td>
+                                                    <th>Date</th>
+                                                    <th>Heure Début</th>
+                                                    <th>Heure Fin</th>
+                                                    <th>Code</th>
+                                                    <th>Enseignant</th>
+                                                    <th>Salle</th>
                                                 </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
-                                `;
-                                break;
-                            case 'notes':
-                                htmlContent = `
-                                    <h2>Notes</h2>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Matière</th>
-                                                <th>Note</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${data.data.notes.map(note => `
-                                                <tr>
-                                                    <td>${note.subject}</td>
-                                                    <td>${note.grade}</td>
-                                                </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
-                                `;
+                                            </thead>
+                                            <tbody>
+                                                ${data.data.planning.map(planning => `
+                                                    <tr>
+                                                        <td>${planning.date}</td>
+                                                        <td>${planning.start_time}</td>
+                                                        <td>${planning.end_time}</td>
+                                                        <td>${planning.code}</td>
+                                                        <td>${planning.teacher}</td>
+                                                        <td>${planning.room}</td>
+                                                    </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                    `;
+                                } else {
+                                    console.log('Aucun planning trouvé pour cette classe.');
+                                    htmlContent = '<p>Aucun planning disponible pour cette classe.</p>';
+                                }
                                 break;
                             default:
-                                htmlContent = `<p>Section inconnue.</p>`;
+                                console.log(`Affichage de la section ${section}.`);
+                                htmlContent = `<p>Section ${section} chargée avec succès.</p>`;
                                 break;
                         }
-    
+
                         document.getElementById('content').innerHTML = htmlContent;
                     } else {
+                        console.error(`Erreur lors du chargement de la section ${section} :`, data.error);
                         alert(data.error || 'Une erreur est survenue.');
                     }
                 })
@@ -195,6 +176,5 @@
                 });
         }
     </script>
-    
 </body>
 </html>
