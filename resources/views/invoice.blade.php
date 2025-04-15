@@ -7,30 +7,31 @@
     <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background-color: #f4f4f9;
         }
         .container {
             width: 80%;
             margin: 20px auto;
-            background: #fff;
-            padding: 20px;
+            background: #ffffff;
+            padding: 30px;
             border: 1px solid #ddd;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         .header img {
-            max-width: 100px;
+            max-width: 120px;
+            margin-bottom: 10px;
         }
         .header h1 {
             margin: 10px 0;
-            font-size: 24px;
+            font-size: 28px;
             color: #333;
         }
         .header p {
@@ -39,7 +40,10 @@
             color: #555;
         }
         .details {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
         }
         .details p {
             margin: 5px 0;
@@ -59,7 +63,7 @@
         }
         table th, table td {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 12px;
             text-align: left;
         }
         table th {
@@ -79,7 +83,7 @@
         }
         .footer {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
             font-size: 12px;
             color: #777;
         }

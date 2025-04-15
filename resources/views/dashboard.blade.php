@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -117,7 +118,7 @@
                 <div class="col-md-3">
                     <a href="{{ route('students.details') }}" class="text-decoration-none">
                         <div class="card dashboard-card p-3 text-center">
-                            <div class="dashboard-title">Students</div>
+                            <div class="dashboard-title">Students <i class="fas fa-user-graduate"></i></div>
                             <div class="dashboard-value">{{ $studentCount }}</div>
                         </div>
                     </a>
@@ -125,7 +126,7 @@
                 <div class="col-md-3">
                     <a href="{{ route('convocations.details') }}" class="text-decoration-none">
                         <div class="card dashboard-card p-3 text-center">
-                            <div class="dashboard-title">Convocations</div>
+                            <div class="dashboard-title">Convocations <i class="fas fa-bullhorn"></i></div>
                             <div class="dashboard-value">{{ $convocationCount }}</div>
                         </div>
                     </a>
@@ -133,8 +134,16 @@
                 <div class="col-md-3">
                     <a href="{{ route('absences.details') }}" class="text-decoration-none">
                         <div class="card dashboard-card p-3 text-center">
-                            <div class="dashboard-title">Absences</div>
+                            <div class="dashboard-title">Absences <i class="fas fa-calendar-times"></i></div>
                             <div class="dashboard-value">{{ $absenceCount }}</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                     <a href="{{ route('paiements.details') }}" class="text-decoration-none">
+                        <div class="card dashboard-card p-3 text-center">
+                            <div class="dashboard-title">Paiements <i class="fas fa-money-bill-wave"></i></div>
+                            <div class="dashboard-value">{{ $paiementCount }}</div>
                         </div>
                     </a>
                 </div>
@@ -161,7 +170,75 @@
                     </div>
                 </div>
             </div>
+            <div class="row mt-5">
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5 class="text-center">Comparative Payment Types</h5>
+                        <canvas id="paymentChart" width="200" height="200"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5 class="text-center">Monthly Registrations</h5>
+                        <canvas id="registrationChart" width="200" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('paymentChart').getContext('2d');
+        const paymentChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pension', 'Other'],
+                datasets: [{
+                    label: 'Payment Types',
+                    data: [{{ $pensionCount }}, {{ $otherCount }}],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        const registrationCtx = document.getElementById('registrationChart').getContext('2d');
+        const registrationChart = new Chart(registrationCtx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [{
+                    label: 'Registrations',
+                    data: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65], // Example data, replace with dynamic values
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

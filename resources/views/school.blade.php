@@ -86,9 +86,9 @@
             width: 250px;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(135deg, #ee7724, #d8363a, #dd3675, #b44593);
+            background: #2c3e50;
             border-right: 1px solid #ddd;
-            color: #fff;
+            color: #ecf0f1;
             padding: 20px 0;
             position: fixed;
             top: 0;

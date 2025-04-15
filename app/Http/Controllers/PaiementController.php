@@ -214,4 +214,10 @@ public function viewInvoice($id)
     return response()->file($filePath);
 }
 
+public function details()
+{
+    $paiements = Paiement::all();
+    return view('paiements.details', compact('paiements'));
+}
+
 }

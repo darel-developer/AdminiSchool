@@ -16,31 +16,50 @@
         }
         .sidebar {
             width: 250px;
-            background: linear-gradient(135deg, #ee7724, #d8363a, #dd3675, #b44593);
-            color: #fff;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            border-right: 1px solid #34495e;
             padding: 20px 0;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar-title {
+            font-family: 'Lemonada', sans-serif;
+            font-weight: 600;
+            font-size: 1.8rem;
+            text-align: center;
+            color: #ecf0f1;
+            margin-bottom: 20px;
+        }
+        .sidebar-separator {
+            border-top: 1px solid #34495e;
+            margin: 10px 20px;
         }
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 10px 20px;
+            padding: 12px 20px;
             text-decoration: none;
-            color: #fff;
-            font-weight: bold;
+            color: #bdc3c7;
+            font-weight: 500;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
         }
         .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: #34495e;
+            color: #ecf0f1;
         }
         .sidebar-item img {
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
             margin-right: 15px;
+        }
+        .sidebar-item.active {
+            background-color: #1abc9c;
+            color: #ffffff;
         }
         .content {
             margin-left: 250px;
@@ -79,11 +98,12 @@
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 10px 20px;
-            margin: 5px 0;
+            padding: 8px 15px; /* Réduction de la taille des paddings */
+            margin: 3px 0; /* Réduction de l'espacement entre les éléments */
             text-decoration: none;
             color: #fff;
             font-weight: bold;
+            font-size: 14px; /* Réduction de la taille de la police */
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.2s;
         }
@@ -92,9 +112,9 @@
             transform: scale(1.05);
         }
         .sidebar-item img {
-            width: 30px;
-            height: 30px;
-            margin-right: 15px;
+            width: 20px; /* Réduction de la largeur des icônes */
+            height: 20px; /* Réduction de la hauteur des icônes */
+            margin-right: 10px; /* Réduction de l'espacement entre l'icône et le texte */
         }
         .content {
             margin-left: 250px;
@@ -498,15 +518,21 @@
 
     <!-- Barre de navigation -->
     <div class="sidebar">
-        <a href="#" class="sidebar-item">
+        <div class="sidebar-title">ADMINISCHOOL</div>
+        <div class="sidebar-separator"></div>
+        <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('documentschool')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('eventschool')}}" class="sidebar-item active">
+            <img src="{{ asset('images/Event.png') }}" alt="event">
+            Evenement
+        </a>
+        <a href="{{route('schoolpaiement')}}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
@@ -518,9 +544,21 @@
             <img src="{{ asset('images/setting.png') }}" alt="settings">
             Settings
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('helpsupport')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support
+        </a>
+        <a href="{{route('userschool')}}" class="sidebar-item">
+            <img src="{{ asset('images/chatbot.png') }}" alt="user">
+            Users
+        </a>
+        <a href="{{route('studentschool')}}" class="sidebar-item">
+            <img src="{{ asset('images/action.png') }}" alt="user">
+            student
+        </a>
+        <a href="{{ route('create.teacher') }}" class="sidebar-item">
+            <img src="{{ asset('images/teacher.png') }}" alt="teacher">
+            Create Teacher
         </a>
     </div>
 

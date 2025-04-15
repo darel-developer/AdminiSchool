@@ -246,3 +246,4 @@ Route::get('/students/details', [StudentController::class, 'details'])->name('st
 Route::get('/teachers/details', [TeacherController::class, 'details'])->name('teachers.details');
 Route::get('/convocations/details', [ConvocationController::class, 'details'])->name('convocations.details');
 Route::get('/absences/details', [AbsenceController::class, 'details'])->name('absences.details');
+Route::get('/paiements/details', [PaiementController::class, 'details'])->name('paiements.details');
