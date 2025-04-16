@@ -10,8 +10,10 @@ class Message extends Model
     use HasFactory;
 
     protected $fillable = [
-        'content',
+        'message',
         'tuteur_id',
+        'teacher_id',
+        'reply',
     ];
 
     public function tuteur()
@@ -22,5 +24,10 @@ class Message extends Model
     public function school()
     {
         return $this->belongsTo(School::class);
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
     }
 }

@@ -92,6 +92,10 @@
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
+        <a href="#" class="sidebar-item">
+            <img src="{{ asset('images/chat.png') }}" alt="chat">
+            Chat
+        </a>
     </div>
 
     <!-- Contenu principal -->

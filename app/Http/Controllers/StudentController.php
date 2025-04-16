@@ -56,85 +56,57 @@ class StudentController extends Controller
     }
 
     public function getChildData($section)
-    {
-        // Récupérer le tuteur connecté
-        $tuteur = auth()->guard('tuteur')->user();
-        
-        if ($tuteur) {
-            
-            // Log pour vérifier l'utilisateur connecté
-            
-            Log::info('Utilisateur connecté : ', ['tuteur' => $tuteur->id]);
-            // Vérifier si le tuteur a un enfant associé
-            if ($tuteur && $tuteur->child_name) {
-                // Chercher l'enfant dans la table 'students' avec le nom de l'enfant
-                $student = Student::where('name', $tuteur->child_name)->first();
+{
+    // Récupérer le tuteur connecté
+    $tuteur = auth()->guard('tuteur')->user();
+    Log::info('Début de la méthode getChildData.', ['section' => $section]);
 
-                if ($student) {
-                    Log::info('Enfant trouvé : ', ['student' => $student->id]);
-                    $data = [];
-                    switch ($section) {
-                        case 'general':
-                            $data = [
-                                'name' => $student->name,
-                                'class' => $student->class,
-                                'enrollment_date' => $student->enrollment_date,
-                                'absences' => $student->absences,
-                                'convocations' => $student->convocations,
-                                'warnings' => $student->warnings,
-                            ];
-                            break;
-                        case 'absence':
-                            $data = [
-                                'absences' => $student->absences,
-                            ];
-                            break;
-                        case 'notes':
-                            // Logique de récupération des notes
-                            $data = [
-                                'notes' => $student->notes,
-                            ];
-                            break;
-                        case 'convocation':
-                            $data = [
-                                'convocations' => $student->convocations,
-                            ];
-                            break;
-                        case 'planning':
-                            $planning = Planning::where('class', $student->class)->get();
-                            $data = [
-                                'planning' => $planning,
-                            ];
-                            break;
-                        case 'barbillard':
-                            $data = [
-                                'warnings' => $student->warnings,
-                            ];
-                            break;
-                        default:
-                            return response()->json(['success' => false, 'error' => 'Section inconnue.']);
-                    }
+    if ($tuteur) {
+        Log::info('Utilisateur connecté : ', ['tuteur' => $tuteur->id]);
 
-                    return response()->json([
-                        'success' => true,
-                        'data' => $data,
-                    ]);
-                } else {
-                    Log::error('Aucun enfant trouvé pour le tuteur : ', ['tuteur' => $tuteur->id]);
-                    return response()->json([
-                        'success' => false,
-                        'error' => 'Aucun enfant trouvé.',
-                    ]);
+        if ($tuteur->child_name) {
+            $student = Student::where('name', $tuteur->child_name)->first();
+            Log::info('Étudiant trouvé : ', ['student' => $student]);
+
+            if ($student) {
+                $data = [];
+                switch ($section) {
+                    case 'general':
+                        $data = [
+                            'name' => $student->name,
+                            'class' => $student->class,
+                            'enrollment_date' => $student->enrollment_date,
+                            'absences' => $student->absences,
+                            'convocations' => $student->convocations,
+                            'warnings' => $student->warnings,
+                        ];
+                        break;
+                    case 'planning':
+                        $planning = Planning::where('class', $student->class)->get();
+                        $data = [
+                            'planning' => $planning,
+                        ];
+                        break;
+                    default:
+                        Log::warning('Section inconnue demandée.', ['section' => $section]);
+                        return response()->json(['success' => false, 'error' => 'Section inconnue.']);
                 }
-            }
-        }
 
-        Log::error('Tuteur non trouvé ou enfant non associé.');
-        return response()->json([
-            'success' => false,
-            'error' => 'Tuteur non trouvé ou enfant non associé.',
-        ]);
+                Log::info('Données récupérées avec succès.', ['data' => $data]);
+                return response()->json(['success' => true, 'data' => $data]);
+            } else {
+                Log::error('Aucun étudiant trouvé pour le tuteur.', ['tuteur_id' => $tuteur->id]);
+                return response()->json(['success' => false, 'error' => 'Aucun étudiant trouvé.']);
+            }
+        } else {
+            Log::error('Aucun enfant associé au tuteur.', ['tuteur_id' => $tuteur->id]);
+            return response()->json(['success' => false, 'error' => 'Aucun enfant associé.']);
+        }
     }
+
+    Log::error('Tuteur non authentifié.');
+    return response()->json(['success' => false, 'error' => 'Tuteur non authentifié.']);
+}
 
     public function details()
     {

@@ -58,7 +58,7 @@
             margin-right: 15px;
         }
         .sidebar-item.active {
-            background-color: #1abc9c;
+            
             color: #ffffff;
         }
         .content {
@@ -86,9 +86,9 @@
             width: 250px;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(135deg, #ee7724, #d8363a, #dd3675, #b44593);
+            background: #2c3e50; /* Couleur de fond similaire */
             border-right: 1px solid #ddd;
-            color: #fff;
+            color: #ecf0f1;
             padding: 20px 0;
             position: fixed;
             top: 0;
@@ -99,22 +99,22 @@
             display: flex;
             align-items: center;
             padding: 8px 15px; /* Réduction de la taille des paddings */
-            margin: 3px 0; /* Réduction de l'espacement entre les éléments */
+            font-size: 0.9rem; /* Taille de police similaire */
+            margin: 5px 0; /* Espacement entre les éléments */
             text-decoration: none;
             color: #fff;
             font-weight: bold;
-            font-size: 14px; /* Réduction de la taille de la police */
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.2s;
         }
         .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.2); /* Effet hover similaire */
             transform: scale(1.05);
         }
         .sidebar-item img {
-            width: 20px; /* Réduction de la largeur des icônes */
-            height: 20px; /* Réduction de la hauteur des icônes */
-            margin-right: 10px; /* Réduction de l'espacement entre l'icône et le texte */
+            width: 20px; /* Taille des icônes similaire */
+            height: 20px;
+            margin-right: 8px; /* Espacement entre l'icône et le texte */
         }
         .content {
             margin-left: 250px;

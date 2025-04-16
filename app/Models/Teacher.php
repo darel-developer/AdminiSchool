@@ -9,11 +9,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Teacher extends Model
+class Teacher extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    protected $table = 'teacher';
+    protected $table = 'teachers';
 
     protected $fillable = [
         'first_name',
@@ -33,5 +33,21 @@ class Teacher extends Model
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function students()
+{
+    return $this->belongsTo(Student::class, 'class_id', 'class_id');
+}
+
+    public function classe()
+{
+    return $this->belongsTo(Classe::class, 'class_id', 'id');
+}
+    
 }
 

@@ -34,5 +34,10 @@ class Tuteur extends Authenticatable
         return $this->hasMany(Document::class);
     }
 
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
     protected $guard = 'tuteur';
 }

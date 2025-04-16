@@ -228,6 +228,10 @@ Route::get('teacher', function(){
     return view ('teacher');
 })->name('teacher');
 
+Route::get('teacherchat', function(){
+    return view ('teacherchat');
+})->name('teacherchat');
+
 Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 
 Route::get('/help-support', [SupportController::class, 'index'])->name('help.support');

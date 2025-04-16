@@ -43,6 +43,15 @@ return [
         'driver' => 'session',
         'provider' => 'tuteurs',
     ],
+    'api' => [
+        'driver' => 'token',
+        'provider' => 'users',
+        'hash' => false,
+    ],
+    'teacher' => [ // Ajoutez ce guard
+        'driver' => 'session',
+        'provider' => 'teachers',
+    ],
 ],
 
 
@@ -67,6 +76,10 @@ return [
     'tuteurs' => [
         'driver' => 'eloquent',
         'model' => App\Models\Tuteur::class,
+    ],
+    'teachers' => [ // Ajoutez ce provider
+        'driver' => 'eloquent',
+        'model' => App\Models\Teacher::class,
     ],
 ],
 

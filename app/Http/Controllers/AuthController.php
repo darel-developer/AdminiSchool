@@ -41,7 +41,7 @@ class AuthController extends Controller
      if ($teacher && password_verify($request->password, $teacher->password)) {
          // Authentification réussie pour une École
          Auth::loginUsingId($teacher->id, $remember);
-         return redirect('teacher')->with('success', 'Bienvenue, école!');
+         return redirect('teacher')->with('success', 'Bienvenue, prof!');
      }
 
     // Si aucune correspondance
