@@ -76,7 +76,7 @@
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('parentdocument')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
             Document
         </a>
@@ -84,15 +84,23 @@
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('parentchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
         <a href="#" class="sidebar-item">
+            <img src="{{ asset('images/notification.png') }}" alt="notification">
+            Notification
+        </a>
+        <a href="{{route('parentchild')}}" class="sidebar-item">
+            <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
+            Add Enfant
+        </a>
+        <a href="{{route('profileschool')}}" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
             Settings
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('helpsupport')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support
         </a>

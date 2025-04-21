@@ -6,6 +6,7 @@
     <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
         body {
             background-color: #f8f9fa;
@@ -83,7 +84,7 @@
         </a>
         <a href="{{route('school')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
-            ROLL
+            DONNEES
         </a>
         <a href="{{ route('documentschool') }}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
@@ -100,6 +101,22 @@
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
+        </a>
+        <a href="{{route('userschool')}}" class="sidebar-item">
+            <img src="{{ asset('images/chatbot.png') }}" alt="user">
+            Users
+        </a>
+        <a href="{{route('studentschool')}}" class="sidebar-item">
+            <img src="{{ asset('images/action.png') }}" alt="user">
+            student
+        </a>
+        <a href="{{ route('create.teacher') }}" class="sidebar-item">
+            <img src="{{ asset('images/teacher.png') }}" alt="teacher">
+            Create Teacher
+        </a>
+        <a href="{{ route('cahiertexte') }}" class="sidebar-item">
+            <img src="{{ asset('images/Book.png') }}" alt="teacher">
+            Book Text
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">

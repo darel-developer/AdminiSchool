@@ -28,13 +28,15 @@ class Student extends Model
         return $this->belongsTo(Classe::class, 'class', 'name');
     }
 
-    public function notes()
-    {
-        return $this->hasMany(Grades::class);
-    }
+    
 
     public function teachers()
 {
     return $this->hasMany(Teacher::class, 'class_id', 'class_Name');
+}
+
+public function notes()
+{
+    return $this->hasMany(Grades::class, 'student_name', 'name');
 }
 }

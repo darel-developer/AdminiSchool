@@ -128,6 +128,8 @@
         const absenceTypes = [
             { value: 'retard', text: 'Retard' },
             { value: 'maladie', text: 'Maladie' },
+            { value: 'absence', text: 'Absence'},
+            { value: 'motif familial grave (décès, accident, etc.)', text: 'Motif familial grave (décès, accident, etc.)'},
             { value: 'autre', text: 'Autre' }
         ];
 
@@ -135,6 +137,11 @@
             { value: 'reunion', text: 'Réunion' },
             { value: 'discipline', text: 'Discipline' },
             { value: 'bagarre', text: 'Bagarre'},
+            { value: 'interpellation', text: 'Interpellation'},
+            { value: 'absences répétées non justifiées', text: 'Absence répétées non justifiées'},
+            { value: 'alerte sur le comportement en classe', text: 'Alerte sur le comportement en classe'},
+            { value: 'demande de soutien scolaire ou orientation', text: 'Demande de soutien scolaire ou orientation'},
+            { value: 'baisse de niveau constatée', text: 'Baisse de niveau constatée'},
             { value: 'autre', text: 'Autre' }
         ];
 

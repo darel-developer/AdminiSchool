@@ -237,7 +237,7 @@
                                     <tbody>
                                         ${data.data.notes.map(note => `
                                             <tr>
-                                                <td>${note.subject}</td>
+                                                <td>${note.matiere}</td>
                                                 <td>${note.grade}</td>
                                                 <td>${note.comment || 'Aucun commentaire'}</td>
                                             </tr>

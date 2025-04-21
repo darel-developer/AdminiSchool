@@ -15,6 +15,7 @@ class GradesImport implements ToModel, WithHeadingRow
             return new Grades([
                 'student_name' => $row['student_name'],
                 'grade' => (float) $row['grade'], // Convertir en float si c'est un nombre
+                'matiere' => $row['matiere'],
             ]);
         }
 

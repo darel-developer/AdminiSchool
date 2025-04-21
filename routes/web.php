@@ -21,11 +21,18 @@ use App\Http\Controllers\GradesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConvocationController;
 use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\CahierDeTexteController;
 
 
+
+Route::get('/cahierexte', [CahierDeTexteController::class, 'index'])->name('cahiertexte');
+Route::post('/cahiertexte', [CahierDeTexteController::class, 'store'])->name('cahiertexte.store');
+Route::delete('/cahiertexte/{class}', [CahierDeTexteController::class, 'destroy'])->name('cahiertexte.destroy');
+Route::get('/cahiertexte/{class}', [CahierDeTexteController::class, 'show'])->name('cahiertexte.show');
+Route::get('/cahiertexte/{class}/download', [CahierDeTexteController::class, 'downloadPDF'])->name('cahiertexte.download');
 
 // Routes pour les tuteurs
-Route::middleware(['auth:tuteur'])->group(function () {
+Route::middleware(['auth:tuteur'])->prefix('tuteur')->group(function () {
     Route::get('/parentchat', [ChatController::class, 'parentChat'])->name('parentchat');
     Route::get('/get-teachers', [ChatController::class, 'getTeachers'])->name('get.teachers');
     Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('send.message');
@@ -33,7 +40,7 @@ Route::middleware(['auth:tuteur'])->group(function () {
 });
 
 // Routes pour les enseignants
-Route::middleware(['auth:teacher'])->group(function () {
+Route::middleware(['auth:teacher'])->prefix('teacher')->group(function () {
     Route::get('/teacher-chat', [ChatController::class, 'teacherChat'])->name('teacher.chat');
     Route::get('/get-parents', [ChatController::class, 'getParents'])->name('get.parents');
     Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('send.message');
@@ -69,6 +76,8 @@ Route::get('/', function () {
 Route::get('/documentschool', function () {
     return view('Schooldocument');
 })->name('Schooldocument');
+
+
 
 //Route pour gerer les documents
 Route::get('/documentschool', [FichierController::class, 'index'])->name('documentschool');

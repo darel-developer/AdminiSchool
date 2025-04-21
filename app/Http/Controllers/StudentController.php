@@ -56,7 +56,8 @@ class StudentController extends Controller
         return back()->with('success', 'Les données des convocations ont été importées avec succès.');
     }
 
-    public function getChildData($section)
+
+public function getChildData($section)
 {
     // Récupérer le tuteur connecté
     $tuteur = auth()->guard('tuteur')->user();
@@ -82,12 +83,39 @@ class StudentController extends Controller
                             'warnings' => $student->warnings,
                         ];
                         break;
+
                     case 'planning':
                         $planning = Planning::where('class', $student->class)->get();
                         $data = [
                             'planning' => $planning,
                         ];
                         break;
+
+                    case 'notes':
+                        $notes = $student->notes; // Relation définie dans le modèle Student
+                        $data = [
+                            'notes' => $notes,
+                        ];
+                        break;
+
+                    case 'absence':
+                        $data = [
+                            'absences' => $student->absences,
+                        ];
+                        break;
+
+                    case 'convocation':
+                        $data = [
+                            'convocations' => $student->convocations,
+                        ];
+                        break;
+
+                    case 'warnings':
+                        $data = [
+                            'warnings' => $student->warnings,
+                        ];
+                        break;
+
                     default:
                         Log::warning('Section inconnue demandée.', ['section' => $section]);
                         return response()->json(['success' => false, 'error' => 'Section inconnue.']);

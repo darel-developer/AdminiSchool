@@ -18,13 +18,11 @@
             width: 250px;
             background-color: #2c3e50;
             color: #ecf0f1;
-            border-right: 1px solid #34495e;
             padding: 20px 0;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar-title {
             font-family: 'Lemonada', sans-serif;
@@ -33,10 +31,6 @@
             text-align: center;
             color: #ecf0f1;
             margin-bottom: 20px;
-        }
-        .sidebar-separator {
-            border-top: 1px solid #34495e;
-            margin: 10px 20px;
         }
         .sidebar-item {
             display: flex;
@@ -57,117 +51,12 @@
             height: 25px;
             margin-right: 15px;
         }
-        .sidebar-item.active {
-            background-color: #1abc9c;
-            color: #ffffff;
-        }
         .content {
             margin-left: 250px;
             padding: 20px;
             flex-grow: 1;
             background: #fff;
         }
-        .content-section {
-            display: none;
-        }
-        .content-section.active {
-            display: block;
-        }
-
-        /* Styles personnalisés */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
-            display: flex;
-            flex-direction: column;
-            background: #2c3e50;
-            border-right: 1px solid #ddd;
-            color: #ecf0f1;
-            padding: 20px 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-        }
-        .sidebar-title {
-            font-family: 'Lemonada', sans-serif;
-            font-weight: 600;
-            font-size: 1.2rem;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .sidebar-separator {
-            border-top: 1px solid rgba(255, 255, 255, 0.5);
-            margin: 10px 20px;
-        }
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            margin: 5px 0;
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-        .sidebar-item img {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-        }
-        .content {
-            margin-left: 250px;
-            flex-grow: 1;
-            padding: 20px;
-            background: #fff;
-        }
-        .content h1 {
-            color: #333;
-        }
-
-        /* Styles pour les petits écrans */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: 60px;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 0;
-                border-right: none;
-                border-top: 1px solid #ddd;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-            }
-            .sidebar-item {
-                flex-direction: column;
-                align-items: center;
-                padding: 5px;
-                font-size: 12px;
-            }
-            .sidebar-item img {
-                margin-right: 0;
-                margin-bottom: 5px;
-            }
-            .content {
-                margin: 0;
-                padding-bottom: 80px; 
-            }
-        }
-
-        /* Animation pour les formulaires */
         .form-section {
             display: none;
             opacity: 0;
@@ -177,39 +66,67 @@
             display: block;
             opacity: 1;
         }
+        .form-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="sidebar-title">ADMINISCHOOL</div>
-        <div class="sidebar-separator"></div>
-        <a href="{{route('dashboard')}}"" class="sidebar-item">
+        <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
-        <a href="{{route('documentschool')}}" class="sidebar-item">
+        <a href="{{route('school')}}" class="sidebar-item">
+            <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
+            ROLL
+        </a>
+        <a href="{{ route('documentschool') }}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
-            Document
+            Documents
         </a>
-        <a href="{{route('eventschool')}}" class="sidebar-item">
-            <img src="{{ asset('images/Event.png') }}" alt="document">
-            Evenement
+        <a href="{{ route('eventschool') }}" class="sidebar-item">
+            <img src="{{ asset('images/Event.png') }}" alt="event">
+            Events
         </a>
-        <a href="{{route('schoolpaiement')}}" class="sidebar-item">
-            <img src="{{ asset('images/paiement.png') }}" alt="paiement">
-            Paiement
+        <a href="{{ route('schoolpaiement') }}" class="sidebar-item">
+            <img src="{{ asset('images/paiement.png') }}" alt="payment">
+            Payments
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
-        </a>
-        <a href="{{route('helpsupport')}}" class="sidebar-item">
-            <img src="{{ asset('images/chatbot.png') }}" alt="help support">
-            Help Support
         </a>
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
@@ -223,49 +140,78 @@
             <img src="{{ asset('images/teacher.png') }}" alt="teacher">
             Create Teacher
         </a>
+        <a href="#" class="sidebar-item">
+            <img src="{{ asset('images/setting.png') }}" alt="settings">
+            Settings
+        </a>
+        <a href="{{ route('helpsupport') }}" class="sidebar-item">
+            <img src="{{ asset('images/chatbot.png') }}" alt="help support">
+            Help Support
+        </a>
     </div>
 
     <div class="content">
         <div class="container mt-5">
-            <h1 id="main-title">Téléversement des données</h1>
+            <h1 id="main-title" class="text-center">Téléversement des données</h1>
             <div class="mt-4">
+                <!-- Formulaire pour les élèves -->
                 <div id="form1" class="form-section active">
+                    
+                    <p class="form-description">
+                        Veuillez téléverser un fichier Excel contenant les informations des élèves. Le fichier doit inclure les colonnes suivantes :
+                        <strong>name, class, enrollment_date, absences, convocations, warnings</strong>.
+                    </p>
                     <form id="uploadStudentForm" method="POST" action="{{ route('student.upload') }}" enctype="multipart/form-data">
-                        @csrf <!-- Token de sécurité pour Laravel -->
+                        @csrf
                         <div class="mb-3">
-                            <label for="studentFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                            <input type="file" name="studentFile" id="studentFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                            <label for="studentFile" class="form-label">Fichier des élèves</label>
+                            <input type="file" name="studentFile" id="studentFile" class="form-control" accept=".xlsx, .xls, .csv" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Téléverser</button>
                     </form>
-                    <button id="nextBtn" class="btn btn-secondary mt-3">Next</button>
+                    <button id="nextBtn" class="btn btn-secondary mt-3">Suivant</button>
                 </div>
+
+                <!-- Formulaire pour les classes -->
                 <div id="form2" class="form-section">
+                    
+                    <p class="form-description">
+                        Veuillez téléverser un fichier Excel contenant les informations des classes. Le fichier doit inclure la colonne suivante :
+                        <strong>name</strong>.
+                    </p>
                     <form id="uploadClassForm" method="POST" action="{{ route('classes.upload') }}" enctype="multipart/form-data">
-                        @csrf <!-- Token de sécurité pour Laravel -->
+                        @csrf
                         <div class="mb-3">
-                            <label for="classFile" class="form-label">Sélectionnez un fichier classe (Excel, TXT, CSV)</label>
-                            <input type="file" name="classFile" id="classFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                            <label for="classFile" class="form-label">Fichier des classes</label>
+                            <input type="file" name="classFile" id="classFile" class="form-control" accept=".xlsx, .xls, .csv" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Téléverser</button>
                     </form>
-                    <button id="nextBtn2" class="btn btn-secondary mt-3">Next</button>
-                    <button id="backBtn" class="btn btn-secondary mt-3">Back</button>
+                    <button id="nextBtn2" class="btn btn-secondary mt-3">Suivant</button>
+                    <button id="backBtn" class="btn btn-secondary mt-3">Retour</button>
                 </div>
+
+                <!-- Formulaire pour le planning -->
                 <div id="form3" class="form-section">
+                    
+                    <p class="form-description">
+                        Veuillez téléverser un fichier Excel contenant les informations du planning. Le fichier doit inclure les colonnes suivantes :
+                        <strong>class, date, start_time, end_time, code, teacher, room</strong>.
+                    </p>
                     <form id="uploadPlanningForm" method="POST" action="{{ route('plannings.upload') }}" enctype="multipart/form-data">
-                        @csrf <!-- Token de sécurité pour Laravel -->
+                        @csrf
                         <div class="mb-3">
-                            <label for="planningFile" class="form-label">Sélectionnez un fichier planning (Excel, TXT, CSV)</label>
-                            <input type="file" name="planningFile" id="planningFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
+                            <label for="planningFile" class="form-label">Fichier du planning</label>
+                            <input type="file" name="planningFile" id="planningFile" class="form-control" accept=".xlsx, .xls, .csv" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Téléverser</button>
                     </form>
-                    <button id="backBtn2" class="btn btn-secondary mt-3">Back</button>
+                    <button id="backBtn2" class="btn btn-secondary mt-3">Retour</button>
                 </div>
             </div>
         </div>
     </div>
+
     <script>
         document.getElementById('nextBtn').addEventListener('click', function() {
             document.getElementById('form1').classList.remove('active');
