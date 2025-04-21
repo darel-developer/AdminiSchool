@@ -103,6 +103,7 @@ Route::post('/paiement', [PaiementController::class, 'store'])->name('paiement.s
 
 // Route pour récuperer les informations des enfants pour leurs parents
 Route::get('/child/{section}', [StudentController::class, 'getChildData'])->middleware('auth:tuteur');
+Route::get('/child/planning/download', [StudentController::class, 'downloadPlanning'])->name('child.planning.download');
 Route::middleware(['auth:tuteur'])->group(function () {
     // Routes qui nécessitent l'authentification du tuteur
     Route::get('/dashboard', [TuteurController::class, 'dashboard'])->name('tuteur.dashboard');

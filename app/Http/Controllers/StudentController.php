@@ -12,6 +12,7 @@ use App\Imports\StudentsImport;
 use App\Imports\AbsencesImport;
 use App\Imports\ConvocationsImport;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class StudentController extends Controller
@@ -113,4 +114,25 @@ class StudentController extends Controller
         $students = Student::all();
         return view('students.details', ['students' => $students]);
     }
+
+    public function downloadPlanning()
+{
+    $tuteur = auth()->guard('tuteur')->user();
+
+    if (!$tuteur || !$tuteur->child_name) {
+        return redirect()->back()->with('error', 'Aucun enfant associé à ce tuteur.');
+    }
+
+    $student = Student::where('name', $tuteur->child_name)->first();
+
+    if (!$student) {
+        return redirect()->back()->with('error', 'Aucun étudiant trouvé.');
+    }
+
+    $planning = Planning::where('class', $student->class)->get();
+
+    $pdf = Pdf::loadView('pdf.planning', ['planning' => $planning, 'student' => $student]);
+
+    return $pdf->download('planning_' . $student->class . '.pdf');
+}
 }

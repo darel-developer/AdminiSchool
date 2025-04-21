@@ -166,6 +166,10 @@
                             console.log('Classe trouvée, affichage du planning.');
                             htmlContent = `
                                 <h2>Planning</h2>
+                                <a href="/child/planning/download" class="btn btn-success mb-3 float-end" target="_blank">
+                                    <img src="https://img.icons8.com/ios-filled/50/ffffff/download.png" alt="Download" style="width: 20px; height: 20px; margin-right: 5px;">
+                                    Télécharger le PDF
+                                </a>
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>

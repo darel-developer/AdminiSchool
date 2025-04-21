@@ -67,7 +67,7 @@
             width: 250px;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(135deg, #ee7724, #d8363a, #dd3675, #b44593);
+            background: #2c3e50;
             border-right: 1px solid #ddd;
             color: #fff;
             padding: 20px 0;
@@ -76,10 +76,22 @@
             left: 0;
             height: 100vh;
         }
+        .sidebar-title {
+            font-family: 'Lemonada', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .sidebar-separator {
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            margin: 10px 20px;
+        }
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 10px 20px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
             margin: 5px 0;
             text-decoration: none;
             color: #fff;
@@ -92,9 +104,9 @@
             transform: scale(1.05);
         }
         .sidebar-item img {
-            width: 30px;
-            height: 30px;
-            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
         }
         .content {
             margin-left: 250px;
@@ -150,6 +162,8 @@
 </head>
 <body>
     <div class="sidebar">
+        <div class="sidebar-title">ADMINISCHOOL</div>
+        <div class="sidebar-separator"></div>
         <a href="{{route('parent')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
