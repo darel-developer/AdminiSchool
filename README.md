@@ -1,71 +1,115 @@
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+# 📚 AdminiSchool
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**AdminiSchool** est une plateforme interactive de gestion scolaire qui permet une meilleure communication entre l’administration scolaire et les parents d’élèves. Ce projet vise à moderniser les échanges entre les établissements scolaires et les familles en centralisant les informations clés telles que les devoirs, les signatures, les absences, les notifications et les bulletins.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Fonctionnalités principales
 
-## Learning Laravel
+- 📖 Gestion du cahier de texte (enseignants et élèves)
+- 🧑‍🏫 Espace dédié aux enseignants pour gérer les devoirs, les matières et les niveaux
+- 🧑‍🎓 Accès parent avec suivi des devoirs et notifications
+- 📝 Système de signature (image, scan, reconnaissance faciale)
+- 📊 Tableau de bord interactif
+- 🔔 Système de notification SMS via l’API Infobip
+- 🗂️ Gestion des utilisateurs (admin, enseignants, parents)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🚀 Comment faire fonctionner le projet
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### ⚙️ Prérequis
 
-## Laravel Sponsors
+- PHP >= 8.1
+- Composer
+- Laravel 10+
+- MySQL / MariaDB
+- Node.js + npm
+- Clé API Infobip (pour l'envoi de SMS)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🔧 Installation
 
-### Premium Partners
+1. **Cloner le dépôt**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+git clone https://github.com/votre-utilisateur/adminischool.git
+cd adminischool
+```
 
-## Contributing
+2. **Installer les dépendances PHP**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer install
+```
 
-## Code of Conduct
+3. **Copier le fichier `.env`**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+cp .env.example .env
+```
 
-## Security Vulnerabilities
+4. **Configurer la base de données et l'API Infobip dans `.env`**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+DB_DATABASE=adminischool
+DB_USERNAME=root
+DB_PASSWORD=
 
-## License
+INFOBIP_API_KEY=votre_clé_api
+INFOBIP_BASE_URL=https://xxxxx.api.infobip.com
+INFOBIP_SENDER_ID=AdminiSchool
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# AdminiSchool
-Plateforme de communication interactive en laravel
->>>>>>> 2192be7e4b86ad786ff84f210ccb43e27b206656
+5. **Générer la clé d'application**
+
+```bash
+php artisan key:generate
+```
+
+6. **Lancer les migrations**
+
+```bash
+php artisan migrate
+```
+
+7. **Installer les dépendances front-end (si nécessaire)**
+
+```bash
+npm install && npm run dev
+```
+
+8. **Démarrer le serveur**
+
+```bash
+php artisan serve
+```
+
+---
+
+## 🧱 Structure du projet
+
+```
+adminischool/
+├── app/                    # Contrôleurs, modèles et logiques métier
+├── database/               # Migrations et seeders
+├── public/                 # Fichiers publics accessibles (CSS, JS compilés, etc.)
+├── resources/
+│   ├── views/              # Vues Blade (frontend Laravel)
+│   └── js/ & css/          # Fichiers JS et CSS (si Vue.js ou autres frameworks)
+├── routes/
+│   └── web.php             # Routes de l'application
+├── config/                 # Fichiers de configuration
+├── .env                    # Variables d'environnement
+```
+
+---
+
+## 💡 À venir
+
+- Intégration d’une version mobile (Flutter)
+- Gestion des emplois du temps
+- Système de messagerie interne
+- Génération de bulletins PDF
+
