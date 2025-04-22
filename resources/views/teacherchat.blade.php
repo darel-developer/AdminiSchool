@@ -146,59 +146,69 @@
 
             // Charger les parents et afficher la fenêtre modale
             contactParentBtn.addEventListener('click', function () {
-                fetch('/get-parents')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                            return;
-                        }
+           console.log("Chargement des parents...");
 
-                        parentList.innerHTML = '';
-                        data.parents.forEach(parent => {
-                            const listItem = document.createElement('li');
-                            listItem.className = 'list-group-item list-group-item-action';
-                            listItem.textContent = `${parent.first_name} ${parent.last_name}`;
-                            listItem.dataset.id = parent.id;
-                            listItem.addEventListener('click', function () {
-                                selectedParentId = parent.id;
-                                chatHeader.textContent = `Discussion avec ${parent.first_name} ${parent.last_name}`;
-                                sendMessageBtn.disabled = false;
-                                loadMessages();
-                                const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
-                                parentModal.hide();
-                            });
-                            parentList.appendChild(listItem);
-                        });
+         fetch('/get-parents')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Parents récupérés :", data);
 
-                        const parentModal = new bootstrap.Modal(document.getElementById('parentModal'));
-                        parentModal.show();
-                    })
-                    .catch(error => {
-                        alert("Erreur lors du chargement des parents.");
-                    });
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            parentList.innerHTML = '';
+            data.parents.forEach(parent => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item list-group-item-action';
+                listItem.textContent = `${parent.nom} ${parent.prenom}`;
+                listItem.dataset.id = parent.id;
+                listItem.addEventListener('click', function () {
+                    selectedParentId = parent.id;
+                    chatHeader.textContent = `Discussion avec ${parent.nom} ${parent.prenom}`;
+                    sendMessageBtn.disabled = false;
+                    loadMessages();
+                    const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
+                    parentModal.hide();
+                });
+                parentList.appendChild(listItem);
             });
+
+            const parentModal = new bootstrap.Modal(document.getElementById('parentModal'));
+            parentModal.show();
+        })
+        .catch(error => {
+            console.error("Erreur lors du chargement des parents :", error);
+            alert("Erreur lors du chargement des parents.");
+        });
+    });
 
             // Charger les messages
             function loadMessages() {
-                if (!selectedParentId) return;
+    if (!selectedParentId) return;
 
-                fetch(`/get-messages/${selectedParentId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        chatMessages.innerHTML = '';
-                        data.messages.forEach(message => {
-                            const messageElement = document.createElement('div');
-                            messageElement.textContent = message.message;
-                            messageElement.className = 'mb-2 p-2 rounded ' + (message.teacher_id ? 'bg-primary text-white' : 'bg-light');
-                            chatMessages.appendChild(messageElement);
-                        });
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    })
-                    .catch(error => {
-                        alert("Erreur lors de la récupération des messages.");
-                    });
-            }
+    console.log("Chargement des messages pour le parent ID :", selectedParentId);
+
+    fetch(`/get-messages/${selectedParentId}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Messages récupérés :", data);
+
+            chatMessages.innerHTML = '';
+            data.messages.forEach(message => {
+                const messageElement = document.createElement('div');
+                messageElement.textContent = message.message;
+                messageElement.className = 'mb-2 p-2 rounded ' + (message.teacher_id ? 'bg-primary text-white' : 'bg-light');
+                chatMessages.appendChild(messageElement);
+            });
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        })
+        .catch(error => {
+            console.error("Erreur lors de la récupération des messages :", error);
+            alert("Erreur lors de la récupération des messages.");
+        });
+}
 
             // Envoyer un message
             sendMessageBtn.addEventListener('click', function () {

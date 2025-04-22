@@ -49,24 +49,30 @@ class ChatController extends Controller
     return response()->json(['success' => true]);
 }
 
-    public function fetchMessages($id)
-    {
-        $user = Auth::user();
 
-        if ($user instanceof Tuteur) {
-            $messages = Message::where('tuteur_id', $user->id)
-                ->where('teacher_id', $id)
-                ->get();
-        } else {
-            $messages = Message::where('teacher_id', $user->id)
-                ->where('tuteur_id', $id)
-                ->get();
-        }
+public function fetchMessages($id)
+{
+    $user = Auth::user();
 
-        Log::info('Messages récupérés.', ['user_id' => $user->id, 'conversation_with' => $id]);
-
-        return response()->json(['messages' => $messages]);
+    if ($user instanceof Tuteur) {
+        $messages = Message::where('tuteur_id', $user->id)
+            ->where('teacher_id', $id)
+            ->orderBy('created_at', 'asc') // Trier les messages par date
+            ->get();
+    } elseif ($user instanceof Teacher) {
+        $messages = Message::where('teacher_id', $user->id)
+            ->where('tuteur_id', $id)
+            ->orderBy('created_at', 'asc') // Trier les messages par date
+            ->get();
+    } else {
+        Log::error('Utilisateur non autorisé pour récupérer les messages.');
+        return response()->json(['error' => 'Utilisateur non autorisé.'], 403);
     }
+
+    Log::info('Messages récupérés.', ['user_id' => $user->id, 'conversation_with' => $id, 'messages' => $messages->toArray()]);
+
+    return response()->json(['messages' => $messages]);
+}
 
     public function getTeachers(Request $request)
     {
@@ -108,17 +114,49 @@ class ChatController extends Controller
         Log::info('Étape 5 : Liste des enseignants retournée', ['teachers' => $teachers->toArray()]);
         return response()->json(['teachers' => $teachers->toArray()]);
     }
+ 
     public function getParents(Request $request)
-    {
-        $teacher = Auth::user();
-        $parents = Tuteur::whereHas('students', function ($query) use ($teacher) {
-            $query->where('class', $teacher->class);
-        })->get();
+{
+    $teacher = Auth::user();
 
-        Log::info('Enseignant a récupéré la liste des parents.', ['teacher_id' => $teacher->id]);
-
-        return response()->json(['parents' => $parents]);
+    // Vérifiez si l'enseignant est authentifié
+    if (!$teacher) {
+        Log::error('Enseignant non authentifié.');
+        return response()->json(['error' => 'Enseignant non authentifié.'], 403);
     }
+
+    Log::info('Enseignant connecté.', ['teacher_id' => $teacher->id, 'class_id' => $teacher->class_id]);
+
+    // Étape 1 : Récupérer la classe de l'enseignant
+    $classe = $teacher->classe;
+    if (!$classe) {
+        Log::error('Classe non trouvée pour l\'enseignant.', ['teacher_id' => $teacher->id]);
+        return response()->json(['error' => 'Classe non trouvée pour cet enseignant.'], 404);
+    }
+
+    Log::info('Classe trouvée pour l\'enseignant.', ['class_name' => $classe->name]);
+
+    // Étape 2 : Trouver les étudiants dans cette classe
+    $students = Student::where('class', $classe->name)->get();
+    if ($students->isEmpty()) {
+        Log::info('Aucun étudiant trouvé pour cette classe.', ['class_name' => $classe->name]);
+        return response()->json(['error' => 'Aucun étudiant trouvé pour cette classe.'], 404);
+    }
+
+    Log::info('Étudiants trouvés pour la classe.', ['students' => $students->toArray()]);
+
+    // Étape 3 : Trouver les tuteurs associés à ces étudiants
+    $parents = Tuteur::whereIn('child_name', $students->pluck('name'))->get();
+    if ($parents->isEmpty()) {
+        Log::info('Aucun parent trouvé pour les étudiants de cette classe.', ['class_name' => $classe->name]);
+        return response()->json(['error' => 'Aucun parent trouvé pour cette classe.'], 404);
+    }
+
+    Log::info('Liste des parents récupérée.', ['parents' => $parents->toArray()]);
+
+    // Retourner les parents trouvés
+    return response()->json(['parents' => $parents]);
+}
 
     public function parentChat()
     {

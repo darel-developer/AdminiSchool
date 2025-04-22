@@ -24,7 +24,7 @@ use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\CahierDeTexteController;
 
 
-
+Route::get('/notifications', [PaiementController::class, 'getNotifications'])->name('notifications');
 Route::get('/cahierexte', [CahierDeTexteController::class, 'index'])->name('cahiertexte');
 Route::post('/cahiertexte', [CahierDeTexteController::class, 'store'])->name('cahiertexte.store');
 Route::delete('/cahiertexte/{class}', [CahierDeTexteController::class, 'destroy'])->name('cahiertexte.destroy');

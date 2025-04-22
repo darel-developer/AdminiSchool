@@ -10,6 +10,8 @@ use HTTP_Request2_Exception;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
 
 class PaiementController extends Controller
 {
@@ -70,6 +72,15 @@ class PaiementController extends Controller
 
     // Envoyer une notification par email avec le PDF en pièce jointe
     $this->sendEmailNotification($paiement, $pdfPath);
+
+    // Ajouter une notification pour le tuteur
+    $tuteur = Tuteur::where('nom', $paiement->nom)->where('prenom', $paiement->prenom)->first();
+    if ($tuteur) {
+        Notification::create([
+            'tuteur_id' => $tuteur->id,
+            'message' => 'Votre paiement a été mis à jour. Etat : ' . $paiement->etat,
+        ]);
+    }
 
     return redirect()->route('showpaiement', $paiement->id)->with('success', 'Paiement mis à jour avec succès. Facture générée.');
 }
@@ -218,6 +229,21 @@ public function details()
 {
     $paiements = Paiement::all();
     return view('paiements.details', compact('paiements'));
+}
+
+public function getNotifications()
+{
+    $tuteur = Auth::user();
+
+    if (!$tuteur) {
+        return response()->json(['notifications' => []]);
+    }
+
+    $notifications = Notification::where('tuteur_id', $tuteur->id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json(['notifications' => $notifications]);
 }
 
 }

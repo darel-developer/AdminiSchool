@@ -75,7 +75,7 @@
                                         </div>
 
                                         <div class="form-outline mb-4">
-                                            <input type="number" id="phone_number" name="phone_number" class="form-control" placeholder="number" value="{{ old('phone_number') }}" required />
+                                            <input type="number" id="phone_number" name="phone_number" class="form-control" placeholder="number" value="{{ old('phone_number') }}" placeholder="Renseigner l'indicatif de votre pays (+237)" required />
                                             <label class="form-label" for="username">Number</label>
                                             @error('phone_number')
                                             <div class="text-danger">{{ $message }}</div>

@@ -7,81 +7,152 @@
     <title>Liste des Tuteurs</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+        }
+        .sidebar-title {
+            font-family: 'Lemonada', sans-serif;
+            font-weight: 600;
+            font-size: 1.8rem;
+            text-align: center;
+            color: #ecf0f1;
+            margin-bottom: 20px;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #bdc3c7;
+            font-weight: 500;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .sidebar-item:hover {
+            background-color: #34495e;
+            color: #ecf0f1;
+        }
+        .sidebar-item img {
+            width: 25px;
+            height: 25px;
+            margin-right: 15px;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            flex-grow: 1;
+            background: #fff;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Liste des Tuteurs</h1>
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <!-- Table des tuteurs -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Email</th>
-                    <th>Numéro de Téléphone</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($tuteurs as $tuteur)
-                    <tr>
-                        <td>{{ $tuteur->nom }}</td>
-                        <td>{{ $tuteur->prenom }}</td>
-                        <td>{{ $tuteur->email }}</td>
-                        <td>{{ $tuteur->phone_number }}</td>
-                        <td>
-                            <a href="{{ route('users.edit', $tuteur->id) }}" class="btn btn-warning">Modifier</a>
-                            <form action="{{ route('users.delete', $tuteur->id) }}" method="POST" style="display:inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="sidebar">
+        <div class="sidebar-title">ADMINISCHOOL</div>
+        <a href="{{route('dashboard')}}" class="sidebar-item">
+            <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
+            Dashboard
+        </a>
+        <a href="{{route('school')}}" class="sidebar-item">
+            <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
+            Données
+        </a>
+        <a href="{{ route('documentschool') }}" class="sidebar-item">
+            <img src="{{ asset('images/Add_Document.png') }}" alt="document">
+            Documents
+        </a>
+        <a href="{{ route('eventschool') }}" class="sidebar-item">
+            <img src="{{ asset('images/Event.png') }}" alt="event">
+            Events
+        </a>
+        <a href="{{ route('schoolpaiement') }}" class="sidebar-item">
+            <img src="{{ asset('images/paiement.png') }}" alt="payment">
+            Payments
+        </a>
+        <a href="#" class="sidebar-item">
+            <img src="{{ asset('images/chat.png') }}" alt="chat">
+            Chat
+        </a>
+        <a href="{{route('userschool')}}" class="sidebar-item">
+            <img src="{{ asset('images/chatbot.png') }}" alt="user">
+            Users
+        </a>
+        <a href="{{route('studentschool')}}" class="sidebar-item">
+            <img src="{{ asset('images/action.png') }}" alt="user">
+            student
+        </a>
+        <a href="{{ route('create.teacher') }}" class="sidebar-item">
+            <img src="{{ asset('images/teacher.png') }}" alt="teacher">
+            Create Teacher
+        </a>
+        <a href="#" class="sidebar-item">
+            <img src="{{ asset('images/setting.png') }}" alt="settings">
+            Settings
+        </a>
+        <a href="{{ route('helpsupport') }}" class="sidebar-item">
+            <img src="{{ asset('images/chatbot.png') }}" alt="help support">
+            Help Support
+        </a>
     </div>
-
-    <!-- Fenêtre modale -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ajouter un Tuteur</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="content">
+        <div class="container mt-5">
+            <h1>Liste des Tuteurs</h1>
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
                 </div>
-                <div class="modal-body">
-                    <form action="{{ route('users.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="nom" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="nom" name="nom" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="prenom" class="form-label">Prénom</label>
-                            <input type="text" class="form-control" id="prenom" name="prenom" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone_number" class="form-label">Numéro de Téléphone</label>
-                            <input type="text" class="form-control" id="phone_number" name="phone_number" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Ajouter</button>
-                    </form>
-                </div>
-            </div>
+            @endif
+    
+            <!-- Table des tuteurs -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Numéro de Téléphone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($tuteurs as $tuteur)
+                        <tr>
+                            <td>{{ $tuteur->nom }}</td>
+                            <td>{{ $tuteur->prenom }}</td>
+                            <td>{{ $tuteur->email }}</td>
+                            <td>{{ $tuteur->phone_number }}</td>
+                            <td>
+                                <a href="{{ route('users.edit', $tuteur->id) }}" class="btn btn-warning">Modifier</a>
+                                <form action="{{ route('users.delete', $tuteur->id) }}" method="POST" style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
+   
+
+    <!-- Fenêtre modale -->
+    
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -126,6 +126,7 @@
         <div class="">
             <h1>Parent Dashboard</h1>
         </div>
+        
         <div class="btn-group mb-4" role="group" aria-label="Sections">
             <button type="button" class="btn btn-primary" onclick="loadSection('general')">Informations Générales</button>
             <button type="button" class="btn btn-primary" onclick="loadSection('absence')">Absences</button>

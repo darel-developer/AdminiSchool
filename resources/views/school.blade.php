@@ -110,7 +110,7 @@
         </a>
         <a href="{{route('school')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
-            ROLL
+            Données
         </a>
         <a href="{{ route('documentschool') }}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
