@@ -47,7 +47,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Notifications</h1>
+        <h1>Actions</h1>
         @if(session('success'))
             <div class="alert alert-success" role="alert">
                 {{ session('success') }}

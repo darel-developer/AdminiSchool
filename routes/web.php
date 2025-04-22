@@ -32,7 +32,7 @@ Route::get('/cahiertexte/{class}', [CahierDeTexteController::class, 'show'])->na
 Route::get('/cahiertexte/{class}/download', [CahierDeTexteController::class, 'downloadPDF'])->name('cahiertexte.download');
 
 // Routes pour les tuteurs
-Route::middleware(['auth:tuteur'])->prefix('tuteur')->group(function () {
+Route::middleware(['auth:tuteur'])->group(function () {
     Route::get('/parentchat', [ChatController::class, 'parentChat'])->name('parentchat');
     Route::get('/get-teachers', [ChatController::class, 'getTeachers'])->name('get.teachers');
     Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('send.message');

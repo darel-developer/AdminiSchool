@@ -113,12 +113,12 @@
                 <label for="class" class="form-label">Classe</label>
                 <select class="form-control" id="class" name="class_id" required>
                     <option value="6ème">6ème</option>
-                    <option value="5ème">5ème</option>
+                    <option value="5ème">5 ème</option>
                     <option value="4ème">4ème</option>
                     <option value="3ème">3ème</option>
-                    <option value="2nde">2nde</option>
-                    <option value="1ère">1ère</option>
-                    <option value="Terminale">Terminale</option>
+                    <option value="2nde">2 nd</option>
+                    <option value="1ère">1 ère</option>
+                    <option value="Terminale">Tle</option>
                 </select>
             </div>
             <input type="hidden" name="tuteur_id" value="{{ auth()->guard('tuteur')->user()->id }}">
