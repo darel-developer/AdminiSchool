@@ -68,11 +68,11 @@ class TeacherController extends Controller
                     'destinations' => [
                         ['to' => $teacher->phone]
                     ],
-                    'text' => "Welcome, {$teacher->first_name} {$teacher->last_name}\n\n" .
-                              "Your account has been created successfully. Here are your login details:\n" .
+                    'text' => "Bienvenue, {$teacher->first_name} {$teacher->last_name}\n\n" .
+                              "Votre compte a été correctement créer. Voici vos informations de connexion:\n" .
                               "Email: {$teacher->email}\n" .
-                              "Password: {$password}\n\n" .
-                              "Please click the following link to login: {$loginLink}",
+                              "Mot de passe: {$password}\n\n" .
+                              "Connectez-vous via le lien suivant: {$loginLink}",
                 ]
             ]
         ]));

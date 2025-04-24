@@ -18,8 +18,8 @@ class SupportController extends Controller
             'message' => 'required|string|max:1000',
         ]);
 
-        // Logique pour envoyer le message à l'équipe technique
-        // Vous pouvez utiliser Mail::send() pour envoyer un email
+        // Logique pour envoyer le message à l'équipe technique à revoir
+        
 
         return back()->with('success', 'Votre message a été envoyé avec succès.');
     }

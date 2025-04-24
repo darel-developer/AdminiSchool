@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function loginTraitement(Request $request)
 {
-    // Validation des champs
+    
     $request->validate([
         'username' => 'required|email',
         'password' => 'required',

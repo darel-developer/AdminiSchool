@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\Tuteur;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log; // Importer la classe Log
+use Illuminate\Support\Facades\Log; 
 use App\Models\Teacher;
 
 use Illuminate\Routing\Controller;

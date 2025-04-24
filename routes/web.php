@@ -24,14 +24,18 @@ use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\CahierDeTexteController;
 
 
-Route::get('/notifications', [PaiementController::class, 'getNotifications'])->name('notifications');
+
+//Route pour gérer les cahiers de textes
 Route::get('/cahierexte', [CahierDeTexteController::class, 'index'])->name('cahiertexte');
 Route::post('/cahiertexte', [CahierDeTexteController::class, 'store'])->name('cahiertexte.store');
 Route::delete('/cahiertexte/{class}', [CahierDeTexteController::class, 'destroy'])->name('cahiertexte.destroy');
 Route::get('/cahiertexte/{class}', [CahierDeTexteController::class, 'show'])->name('cahiertexte.show');
 Route::get('/cahiertexte/{class}/download', [CahierDeTexteController::class, 'downloadPDF'])->name('cahiertexte.download');
 
-// Routes pour les tuteurs
+//Route pour gérer les notifications
+Route::get('/notifications', [PaiementController::class, 'getNotifications'])->name('notifications');
+
+// Routes pour les tuteurs (messagerie)
 Route::middleware(['auth:tuteur'])->group(function () {
     Route::get('/parentchat', [ChatController::class, 'parentChat'])->name('parentchat');
     Route::get('/get-teachers', [ChatController::class, 'getTeachers'])->name('get.teachers');
@@ -39,7 +43,7 @@ Route::middleware(['auth:tuteur'])->group(function () {
     Route::get('/get-messages/{teacherId}', [ChatController::class, 'fetchMessages'])->name('get.messages');
 });
 
-// Routes pour les enseignants
+// Routes pour les enseignants (messagerie)
 Route::middleware(['auth:teacher'])->prefix('teacher')->group(function () {
     Route::get('/teacher-chat', [ChatController::class, 'teacherChat'])->name('teacher.chat');
     Route::get('/get-parents', [ChatController::class, 'getParents'])->name('get.parents');
@@ -47,8 +51,13 @@ Route::middleware(['auth:teacher'])->prefix('teacher')->group(function () {
     Route::get('/get-messages/{parentId}', [ChatController::class, 'fetchMessages'])->name('get.messages');
 });
 
+//Routes pour uplaoder les notes des élèves
 Route::post('/grades/upload', [GradesController::class, 'upload'])->name('grades.upload');
+
+//Route pour gérer les évènements
 Route::get('/eventschool', [EventController::class, 'create'])->name('eventschool');
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
+Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
 Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
 
@@ -58,8 +67,7 @@ Route::post('/plannings/upload', [PlanningController::class, 'ajouter_planning']
 Route::get('/studentschool', [NotificationController::class, 'index'])->name('studentschool');
 Route::post('/notifications/send', [NotificationController::class, 'send'])->name('notifications.send');
 
-Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
-Route::post('/events', [EventController::class, 'store'])->name('events.store');
+
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -107,7 +115,8 @@ Route::get('/paiements/paiement/{id}', [PaiementController::class, 'viewInvoice'
 
 // Route pour stocker les paiements
 Route::post('/paiement', [PaiementController::class, 'store'])->name('paiement.store');
-
+Route::get('/schoolpaiement', [PaiementController::class, 'liste_paiement'])->name('schoolpaiement');
+Route::get('/showpaiement/{id}', [PaiementController::class, 'show'])->name('showpaiement');
 
 
 // Route pour récuperer les informations des enfants pour leurs parents
@@ -140,7 +149,36 @@ Route::Post('/register/traitement/school', [SchoolController::class, 'ajouter_sc
 //Route pour ajouter des classes
 Route::post('/register/traitement/classe', [ClasseController::class, 'ajouter_classe'])->name('classes.upload');
 
+//Route pour ajouter les planningd
 Route::post('/plannings/upload', [PlanningController::class, 'upload'])->name('plannings.upload');
+
+
+//Route pour gérer l'aide technique
+Route::get('/help-support', [SupportController::class, 'index'])->name('help.support');
+Route::post('/help-support/send', [SupportController::class, 'send'])->name('help.support.send');
+
+//Route pour gérer le mot de passe oublié
+Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password', function () {
+    return view('reset-password');
+})->name('password.reset');
+Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
+Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
+
+//Route pour créer un enseignant
+Route::get('/create-teacher', [TeacherController::class, 'create'])->name('create.teacher');
+Route::post('/store-teacher', [TeacherController::class, 'store'])->name('store.teacher');
+
+//Route du dashboard
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/students/details', [StudentController::class, 'details'])->name('students.details');
+Route::get('/teachers/details', [TeacherController::class, 'details'])->name('teachers.details');
+Route::get('/convocations/details', [ConvocationController::class, 'details'])->name('convocations.details');
+Route::get('/absences/details', [AbsenceController::class, 'details'])->name('absences.details');
+Route::get('/paiements/details', [PaiementController::class, 'details'])->name('paiements.details');
+
+//Route pour gérer l'enfant
+Route::get('/parentchild', [TuteurController::class, 'showAddChildForm'])->name('parentchild');
 
 Route::get('/', function () {
     return view('welcome');
@@ -169,7 +207,6 @@ Route::get('/parentpaiement', function(){
     return view ('parentpaiement');
 })->name('parentpaiement');
 
-Route::get('/parentchild', [TuteurController::class, 'showAddChildForm'])->name('parentchild');
 
 Route::get('SchoolRegister', function(){
     return view ('SchoolRegister');
@@ -196,10 +233,6 @@ Route::get('notifications', function(){
     return view('notifications');
 })->name('notifications');
 
-Route::get('/schoolpaiement', [PaiementController::class, 'liste_paiement'])->name('schoolpaiement');
-
-Route::get('/showpaiement/{id}', [PaiementController::class, 'show'])->name('showpaiement');
-
 Route::get('/paiement', function(){
     return view ('paiement');
 })->name('paiement');
@@ -224,8 +257,6 @@ Route::get('/login', function(){
     return view ('login');
 })->name('login');
 
-
-
 Route::get('helpsupport', function(){
     return view ('helpsupport');
 })->name('helpsupport');
@@ -242,22 +273,4 @@ Route::get('teacherchat', function(){
     return view ('teacherchat');
 })->name('teacherchat');
 
-Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 
-Route::get('/help-support', [SupportController::class, 'index'])->name('help.support');
-Route::post('/help-support/send', [SupportController::class, 'send'])->name('help.support.send');
-Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/reset-password', function () {
-    return view('reset-password');
-})->name('password.reset');
-Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
-Route::get('/create-teacher', [TeacherController::class, 'create'])->name('create.teacher');
-Route::post('/store-teacher', [TeacherController::class, 'store'])->name('store.teacher');
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-Route::get('/students/details', [StudentController::class, 'details'])->name('students.details');
-Route::get('/teachers/details', [TeacherController::class, 'details'])->name('teachers.details');
-Route::get('/convocations/details', [ConvocationController::class, 'details'])->name('convocations.details');
-Route::get('/absences/details', [AbsenceController::class, 'details'])->name('absences.details');
-Route::get('/paiements/details', [PaiementController::class, 'details'])->name('paiements.details');

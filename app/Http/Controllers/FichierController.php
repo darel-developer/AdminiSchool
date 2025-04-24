@@ -34,9 +34,6 @@ class FichierController extends Controller
         return back()->with('success', 'Document téléversé avec succès.');
     }
 
-  
-
-
     public function viewDocument($id)
     {
         $document = Document::findOrFail($id);

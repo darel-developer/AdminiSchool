@@ -12,7 +12,7 @@ class TuteurController extends Controller
 {
     public function ajouter_parent_traitement(Request $request)
     {
-        // Validation des données envoyées
+        
         $validatedData = $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
@@ -35,14 +35,14 @@ class TuteurController extends Controller
 
     public function addChild(Request $request)
     {
-        // Validate the request data
+       
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'class_id' => 'required|string|max:255',
             'tuteur_id' => 'required|integer|exists:tuteurs,id',
         ]);
 
-        // Create a new student
+        // créer un nouvent élève
         $student = Student::create([
             'name' => $validatedData['name'],
             'class' => $validatedData['class_id'],
@@ -52,7 +52,7 @@ class TuteurController extends Controller
             'warnings' => 0,
         ]);
 
-        // Update the tuteur with the child's name
+        // mettre à jour le tuteur avec le nom de l'élève
         $tuteur = Tuteur::find($validatedData['tuteur_id']);
         $tuteur->child_name = $validatedData['name'];
         $tuteur->students()->attach($student->id);

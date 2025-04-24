@@ -15,7 +15,7 @@ class EventController extends Controller
 {
     public function create()
     {
-        $classes = \App\Models\Classe::all(); // Fetch all classes from the database
+        $classes = \App\Models\Classe::all(); 
         return view('eventschool', compact('classes'));
     }
 
@@ -38,11 +38,11 @@ class EventController extends Controller
             'class' => $request->class,
         ]);
     
-        // Fetch all students in the selected class
+        // Rechercher tous les élévès associés à laclasse sélectionner
         $students = \App\Models\Student::where('class', $request->class)->get();
     
         foreach ($students as $student) {
-            // Find the parent (tuteur) of the student
+            // Recherhcer le parent de l'élève
             $parent = \App\Models\Tuteur::where('child_name', $student->name)->first();
     
             if ($parent) {

@@ -1,7 +1,4 @@
 <?php
-// filepath: c:\xampp\htdocs\Adminischool\app\Models\Event.php
-
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -10,11 +10,11 @@ class StudentsImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        // Check if the student already exists
+        // Verifier si l'élève existe déjà
         $student = Student::where('name', $row['name'])->first();
 
         if ($student) {
-            // Update existing student
+            // Mettre à jour les données
             $student->update([
                 'class' => $row['class'],
                 'enrollment_date' => $this->transformDate($row['enrollment_date']),
@@ -22,9 +22,9 @@ class StudentsImport implements ToModel, WithHeadingRow
                 'convocations' => $row['convocations'],
                 'warnings' => $row['warnings'],
             ]);
-            return null; // Return null to indicate no new model should be created
+            return null; 
         } else {
-            // Insert new student
+            // inserer un nouvel élève
             return new Student([
                 'name' => $row['name'],
                 'class' => $row['class'],
