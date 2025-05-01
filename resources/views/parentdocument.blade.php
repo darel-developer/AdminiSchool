@@ -213,10 +213,33 @@
                         <label for="documentFile" class="form-label">Sélectionnez un fichier (pdf)</label>
                         <input type="file" name="documentfile" id="documentFile" class="form-control" accept=".pdf" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Type de document</label>
+                        <select name="type" id="type" class="form-control" required>
+                            <option value="bulletin">Bulletin</option>
+                            <option value="autorisation">Autorisation</option>
+                            <option value="rapport">Rapport</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="customTypeContainer" style="display: none;">
+                        <label for="customType" class="form-label">Entrez le type de document</label>
+                        <input type="text" name="custom_type" id="customType" class="form-control">
+                    </div>
                     <button type="submit" class="btn btn-primary">Téléverser</button>
                 </form>
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('type').addEventListener('change', function () {
+            const customTypeContainer = document.getElementById('customTypeContainer');
+            if (this.value === 'autre') {
+                customTypeContainer.style.display = 'block';
+            } else {
+                customTypeContainer.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

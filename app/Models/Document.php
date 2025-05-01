@@ -12,6 +12,7 @@ class Document extends Model
     protected $fillable = [
         'tuteur_id',
         'file_path',
+        'type',
     ];
 
     public function tuteur()

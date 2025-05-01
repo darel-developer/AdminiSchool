@@ -74,7 +74,7 @@
         <div class="sidebar-title">ADMINISCHOOL</div>
         <div class="sidebar-separator"></div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
-            <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
+            <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
             Dashboard
         </a>
         <a href="{{route('documentschool')}}" class="sidebar-item">

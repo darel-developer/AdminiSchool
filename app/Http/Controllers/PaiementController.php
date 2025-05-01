@@ -247,4 +247,16 @@ class PaiementController extends Controller
         return response()->json(['notifications' => $notifications]);
     }
 
+    public function downloadInvoice($id)
+{
+    $paiement = Paiement::findOrFail($id);
+    $filePath = storage_path('app/public/factures/' . $paiement->id . '_facture.pdf');
+
+    if (!file_exists($filePath)) {
+        return redirect()->back()->with('error', 'La facture n\'existe pas.');
+    }
+
+    return response()->download($filePath, 'facture_' . $paiement->id . '.pdf');
+}
+
 }

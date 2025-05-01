@@ -23,8 +23,6 @@ use App\Http\Controllers\ConvocationController;
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\CahierDeTexteController;
 
-
-
 //Route pour gérer les cahiers de textes
 Route::get('/cahierexte', [CahierDeTexteController::class, 'index'])->name('cahiertexte');
 Route::post('/cahiertexte', [CahierDeTexteController::class, 'store'])->name('cahiertexte.store');
@@ -91,7 +89,7 @@ Route::get('/documentschool', function () {
 Route::get('/documentschool', [FichierController::class, 'index'])->name('documentschool');
 Route::get('/documents/view/{id}', [FichierController::class, 'viewDocument'])->name('school.viewDocument');
 Route::get('/documents/download/{id}', [FichierController::class, 'downloadDocument'])->name('school.downloadDocument');
-
+Route::get('/parent', [TuteurController::class, 'enfants'])->name('parent;');
   
     
 // Route pour gérer les utilisateurs
@@ -112,6 +110,7 @@ Route::get('/paiement/{id}', [PaiementController::class, 'show'])->name('showpai
 Route::put('/paiement/{id}', [PaiementController::class, 'update'])->name('paiement.update');
 Route::get('/parent/paiements', [PaiementController::class, 'listePaiementsParent'])->name('parent.paiements')->middleware('auth:tuteur');
 Route::get('/paiements/paiement/{id}', [PaiementController::class, 'viewInvoice'])->name('paiement.facture')->middleware('auth:tuteur');
+Route::get('/paiement/{id}/download', [PaiementController::class, 'downloadInvoice'])->name('paiement.download');
 
 // Route pour stocker les paiements
 Route::post('/paiement', [PaiementController::class, 'store'])->name('paiement.store');
@@ -121,7 +120,9 @@ Route::get('/showpaiement/{id}', [PaiementController::class, 'show'])->name('sho
 
 // Route pour récuperer les informations des enfants pour leurs parents
 Route::get('/child/{section}', [StudentController::class, 'getChildData'])->middleware('auth:tuteur');
-Route::get('/child/planning/download', [StudentController::class, 'downloadPlanning'])->name('child.planning.download');
+Route::get('/child/{section}/{id}', [StudentController::class, 'getChildData'])->middleware('auth:tuteur');
+Route::get('/child/planning/download/{id}', [StudentController::class, 'downloadPlanning'])->name('child.planning.download');
+Route::get('/child/data/{id}', [StudentController::class, 'getChildDataById'])->middleware('auth:tuteur');
 Route::middleware(['auth:tuteur'])->group(function () {
     // Routes qui nécessitent l'authentification du tuteur
     Route::get('/dashboard', [TuteurController::class, 'dashboard'])->name('tuteur.dashboard');
@@ -180,14 +181,18 @@ Route::get('/paiements/details', [PaiementController::class, 'details'])->name('
 //Route pour gérer l'enfant
 Route::get('/parentchild', [TuteurController::class, 'showAddChildForm'])->name('parentchild');
 
+//Route pour les statistiques de classe et annonces
+Route::get('/class-statistics', [TeacherController::class, 'showStatistics'])->name('class.statistics');
+Route::get('/send-announcement', [TeacherController::class, 'createAnnouncement'])->name('announcements.create');
+Route::post('/send-announcement', [TeacherController::class, 'storeAnnouncement'])->name('announcements.store');
+
+//Route pour les statistiques des enseignants
+Route::get('/statistics', [TeacherController::class, 'showStatistics'])->name('teacher.statistics');
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/parent', function(){
-    return view ('parent');
-})->name('parent');
 
 Route::get('/profile', function(){
     return view('profile');

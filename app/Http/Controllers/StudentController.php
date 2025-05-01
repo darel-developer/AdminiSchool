@@ -14,7 +14,6 @@ use App\Imports\ConvocationsImport;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-
 class StudentController extends Controller
 {   
     public function upload(Request $request)
@@ -56,84 +55,86 @@ class StudentController extends Controller
         return back()->with('success', 'Les données des convocations ont été importées avec succès.');
     }
 
-
-    public function getChildData($section)
+    public function getChildData($section, $id)
     {
-        // Récupérer le tuteur connecté
         $tuteur = auth()->guard('tuteur')->user();
-        Log::info('Début de la méthode getChildData.', ['section' => $section]);
 
         if ($tuteur) {
-            Log::info('Utilisateur connecté : ', ['tuteur' => $tuteur->id]);
+            $student = Student::where('id', $id)->where('tuteur_id', $tuteur->id)->first();
 
-            if ($tuteur->child_name) {
-                $student = Student::where('name', $tuteur->child_name)->first();
-                Log::info('Étudiant trouvé : ', ['student' => $student]);
+            if ($student) {
+                $data = [];
+                switch ($section) {
+                    case 'general':
+                        $data = [
+                            'name' => $student->name,
+                            'class' => $student->class,
+                            'enrollment_date' => $student->enrollment_date,
+                            'absences' => $student->absences,
+                            'convocations' => $student->convocations,
+                            'warnings' => $student->warnings,
+                        ];
+                        break;
 
-                if ($student) {
-                    $data = [];
-                    switch ($section) {
-                        case 'general':
-                            $data = [
-                                'name' => $student->name,
-                                'class' => $student->class,
-                                'enrollment_date' => $student->enrollment_date,
-                                'absences' => $student->absences,
-                                'convocations' => $student->convocations,
-                                'warnings' => $student->warnings,
-                            ];
-                            break;
+                    case 'planning':
+                        $data = ['planning' => Planning::where('class', $student->class)->get()];
+                        break;
 
-                        case 'planning':
-                            $planning = Planning::where('class', $student->class)->get();
-                            $data = [
-                                'planning' => $planning,
-                            ];
-                            break;
+                    case 'notes':
+                        $data = ['notes' => $student->notes];
+                        break;
 
-                        case 'notes':
-                            $notes = $student->notes; 
-                            $data = [
-                                'notes' => $notes,
-                            ];
-                            break;
+                    case 'absence':
+                        $data = ['absences' => $student->absences];
+                        break;
 
-                        case 'absence':
-                            $data = [
-                                'absences' => $student->absences,
-                            ];
-                            break;
+                    case 'convocation':
+                        $data = ['convocations' => $student->convocations];
+                        break;
 
-                        case 'convocation':
-                            $data = [
-                                'convocations' => $student->convocations,
-                            ];
-                            break;
+                    case 'warnings':
+                        $data = ['warnings' => $student->warnings];
+                        break;
 
-                        case 'warnings':
-                            $data = [
-                                'warnings' => $student->warnings,
-                            ];
-                            break;
-
-                        default:
-                            Log::warning('Section inconnue demandée.', ['section' => $section]);
-                            return response()->json(['success' => false, 'error' => 'Section inconnue.']);
-                    }
-
-                    Log::info('Données récupérées avec succès.', ['data' => $data]);
-                    return response()->json(['success' => true, 'data' => $data]);
-                } else {
-                    Log::error('Aucun étudiant trouvé pour le tuteur.', ['tuteur_id' => $tuteur->id]);
-                    return response()->json(['success' => false, 'error' => 'Aucun étudiant trouvé.']);
+                    default:
+                        return response()->json(['success' => false, 'error' => 'Section inconnue.']);
                 }
+
+                return response()->json(['success' => true, 'data' => $data]);
             } else {
-                Log::error('Aucun enfant associé au tuteur.', ['tuteur_id' => $tuteur->id]);
-                return response()->json(['success' => false, 'error' => 'Aucun enfant associé.']);
+                return response()->json(['success' => false, 'error' => 'Enfant non trouvé ou non associé à ce tuteur.']);
             }
         }
 
-        Log::error('Tuteur non authentifié.');
+        return response()->json(['success' => false, 'error' => 'Tuteur non authentifié.']);
+    }
+
+    public function getChildDataById($id)
+    {
+        $tuteur = auth()->guard('tuteur')->user();
+
+        if ($tuteur) {
+            $student = Student::where('id', $id)->where('tuteur_id', $tuteur->id)->first();
+
+            if ($student) {
+                $data = [
+                    'name' => $student->name,
+                    'class' => $student->class,
+                    'enrollment_date' => $student->enrollment_date,
+                    'absences' => $student->absences,
+                    'convocations' => $student->convocations,
+                    'warnings' => $student->warnings,
+                    'total_absences' => $student->absences, // Nombre total d'absences
+                    'total_convocations' => $student->convocations, // Nombre total de convocations
+                    'total_warnings' => $student->warnings, // Nombre total d'avertissements
+                ];
+
+                return response()->json(['success' => true, 'data' => $data]);
+            } else {
+                return response()->json(['success' => false, 'error' => 'Enfant non trouvé ou non associé à ce tuteur.']);
+            }
+        }
+
         return response()->json(['success' => false, 'error' => 'Tuteur non authentifié.']);
     }
 
@@ -143,22 +144,33 @@ class StudentController extends Controller
         return view('students.details', ['students' => $students]);
     }
 
-    public function downloadPlanning()
+    public function downloadPlanning($id)
     {
         $tuteur = auth()->guard('tuteur')->user();
 
-        if (!$tuteur || !$tuteur->child_name) {
-            return redirect()->back()->with('error', 'Aucun enfant associé à ce tuteur.');
+        if (!$tuteur) {
+            Log::error('Tuteur non authentifié.');
+            return redirect()->back()->with('error', 'Tuteur non authentifié.');
         }
 
-        $student = Student::where('name', $tuteur->child_name)->first();
+        $student = Student::where('id', $id)->where('tuteur_id', $tuteur->id)->first();
 
         if (!$student) {
-            return redirect()->back()->with('error', 'Aucun étudiant trouvé.');
+            Log::error('Enfant non trouvé ou non associé.', ['tuteur_id' => $tuteur->id, 'student_id' => $id]);
+            return redirect()->back()->with('error', 'Enfant non trouvé ou non associé à ce tuteur.');
         }
 
+        // Récupérer le planning de la classe de l'enfant
         $planning = Planning::where('class', $student->class)->get();
 
+        if ($planning->isEmpty()) {
+            Log::info('Aucun planning disponible.', ['class' => $student->class]);
+            return redirect()->back()->with('error', 'Aucun planning disponible pour cet étudiant.');
+        }
+
+        Log::info('Planning trouvé.', ['class' => $student->class, 'planning' => $planning]);
+
+        // Générer le PDF
         $pdf = Pdf::loadView('pdf.planning', ['planning' => $planning, 'student' => $student]);
 
         return $pdf->download('planning_' . $student->class . '.pdf');

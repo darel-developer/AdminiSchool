@@ -16,19 +16,18 @@ class Student extends Model
         'absences',
         'convocations',
         'warnings',
+        'tuteur_id', // Ajout de la colonne tuteur_id
     ];
 
     public function tuteur()
     {
-        return $this->belongsTo(Tuteur::class);
+        return $this->belongsTo(Tuteur::class, 'tuteur_id');
     }
 
     public function classe()
     {
         return $this->belongsTo(Classe::class, 'class', 'name');
     }
-
-    
 
     public function teachers()
     {

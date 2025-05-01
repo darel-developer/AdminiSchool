@@ -12,7 +12,6 @@ class TuteurController extends Controller
 {
     public function ajouter_parent_traitement(Request $request)
     {
-        
         $validatedData = $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
@@ -35,28 +34,23 @@ class TuteurController extends Controller
 
     public function addChild(Request $request)
     {
-       
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'class_id' => 'required|string|max:255',
-            'tuteur_id' => 'required|integer|exists:tuteurs,id',
         ]);
 
-        // créer un nouvent élève
+        $tuteur = auth()->guard('tuteur')->user();
+
+        // Créer un nouvel élève et l'associer au tuteur
         $student = Student::create([
             'name' => $validatedData['name'],
             'class' => $validatedData['class_id'],
-            'enrollment_date' => null,
+            'enrollment_date' => now(),
             'absences' => 0,
             'convocations' => 0,
             'warnings' => 0,
+            'tuteur_id' => $tuteur->id, // Association avec le tuteur
         ]);
-
-        // mettre à jour le tuteur avec le nom de l'élève
-        $tuteur = Tuteur::find($validatedData['tuteur_id']);
-        $tuteur->child_name = $validatedData['name'];
-        $tuteur->students()->attach($student->id);
-        $tuteur->save();
 
         return redirect()->back()->with('success', 'Enfant ajouté avec succès.');
     }
@@ -66,12 +60,12 @@ class TuteurController extends Controller
         $classes = Classe::all();
         return view('parentchild', compact('classes'));
     }
-    
+
     public function dashboard()
     {
         $tuteur = auth()->guard('tuteur')->user();
-        $students = $tuteur->students;
-        return view('parent', compact('students'));
+        $students = $tuteur->students; // Récupération des enfants liés au tuteur
+        return view('parent', compact('students')); // Transmission de $students à la vue
     }
 
     public function index()
@@ -107,20 +101,4 @@ class TuteurController extends Controller
         $students = $tuteur->students;
         return view('profileschool', compact('tuteur', 'students'));
     }
-
-   /* public function updateProfile(Request $request)
-    {
-        $tuteur = Auth::guard('tuteur')->user();
-
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'email' => 'required|email|unique:tuteurs,email,' . $tuteur->id,
-            'phone_number' => 'required|string|max:255',
-        ]);
-
-        $tuteur->update($request->all());
-
-        return redirect()->route('tuteur.profile')->with('success', 'Profil mis à jour avec succès.');
-    } */
 }

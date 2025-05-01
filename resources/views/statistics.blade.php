@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Téléversement des données</title>
+    <title>Statistiques des Performances des Élèves</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
-         body {
+        body {
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
@@ -168,16 +167,6 @@
         }
 
 
-        /* Animation pour les formulaires */
-        .form-section {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        .form-section.active {
-            display: block;
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
@@ -205,20 +194,114 @@
 
     <div class="content">
         <div class="container mt-5">
-            <h1 id="main-title">Téléversement des données</h1>
-            <div class="mt-4">
-                <div id="form1" class="form-section active">
-                    <form id="uploadGradesForm" method="POST" action="{{ route('grades.upload') }}" enctype="multipart/form-data">
-                        @csrf <!-- Token de sécurité pour Laravel -->
-                        <div class="mb-3">
-                            <label for="gradesFile" class="form-label">Sélectionnez un fichier (Excel, TXT, CSV)</label>
-                            <input type="file" name="gradesFile" id="gradesFile" class="form-control" accept=".xlsx, .xls, .csv, .txt" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Téléverser</button>
-                    </form>
+            <h1 class="text-center mb-4">Statistiques des Performances des Élèves</h1>
+    
+            <!-- Tableau des statistiques -->
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nom de l'Élève</th>
+                            <th>Matière</th>
+                            <th>Moyenne</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($statistics as $stat)
+                        <tr>
+                            <td>{{ $stat->student_name }}</td>
+                            <td>{{ $stat->matiere }}</td>
+                            <td>{{ number_format($stat->average_grade, 2) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+    
+            <!-- Graphiques -->
+            <div class="mt-5">
+                <h3 class="text-center">Graphiques des Performances</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="averageGradeChart"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="subjectPerformanceChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+   
+
+    <!-- Inclusion de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Préparation des données pour les graphiques
+        const studentNames = @json($statistics->pluck('student_name'));
+        const averageGrades = @json($statistics->pluck('average_grade'));
+        const subjects = @json($statistics->pluck('matiere'));
+
+        // Graphique des moyennes par élève
+        const ctx1 = document.getElementById('averageGradeChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: studentNames,
+                datasets: [{
+                    label: 'Moyenne des Notes',
+                    data: averageGrades,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    tooltip: { enabled: true }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Graphique des performances par matière
+        const ctx2 = document.getElementById('subjectPerformanceChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: subjects,
+                datasets: [{
+                    label: 'Performances par Matière',
+                    data: averageGrades,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

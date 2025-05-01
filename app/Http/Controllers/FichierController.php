@@ -21,15 +21,22 @@ class FichierController extends Controller
     {
         $request->validate([
             'documentfile' => 'required|mimes:pdf|max:2048',
+            'type' => 'required|string|max:255',
         ]);
 
-        $file = $request->file('documentfile');
-        $filePath = $file->store('documents', 'public');
+    $type = $request->input('type');
+    if ($type === 'autre') {
+        $type = $request->input('custom_type'); // Récupérer le type personnalisé
+    }
 
-        Document::create([
-            'tuteur_id' => Auth::guard('tuteur')->id(),
-            'file_path' => $filePath,
-        ]);
+    // Store the uploaded file and get its path
+    $filePath = $request->file('documentfile')->store('documents', 'public');
+
+    Document::create([
+        'tuteur_id' => Auth::guard('tuteur')->id(),
+        'file_path' => $filePath,
+        'type' => $type,
+    ]);
 
         return back()->with('success', 'Document téléversé avec succès.');
     }

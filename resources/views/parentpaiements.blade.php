@@ -7,6 +7,18 @@
     <title>Liste des Paiements</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
+    <style>
+        .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -36,6 +48,11 @@
                             <div class="mt-3">
                                 <a href="{{ route('paiement.facture', $paiement->id) }}" class="btn btn-secondary" target="_blank">Voir la Facture</a>
                             </div>
+                        </td>
+                        <td>
+                            <a href="{{ route('paiement.download', $paiement->id) }}" class="btn btn-success">
+                                <i class="fas fa-download"></i> Télécharger la Facture
+                            </a> 
                         </td>
                     </tr>
                 @endforeach

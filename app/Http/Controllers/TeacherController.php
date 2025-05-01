@@ -11,6 +11,10 @@ use HTTP_Request2_Exception;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\GradesImport;
+use App\Models\Grade;
+use App\Models\Announcement;
+use App\Models\Grades;
+use Illuminate\Support\Facades\DB;
 
 class TeacherController extends Controller
 {
@@ -102,5 +106,14 @@ class TeacherController extends Controller
         Excel::import(new GradesImport, $filePath);
 
         return back()->with('status', 'Grades uploaded successfully!');
+    }
+
+    public function showStatistics()
+    {
+        $statistics = Grades::select('student_name', 'matiere', DB::raw('AVG(grade) as average_grade'))
+            ->groupBy('student_name', 'matiere')
+            ->get();
+
+        return view('statistics', compact('statistics'));
     }
 }

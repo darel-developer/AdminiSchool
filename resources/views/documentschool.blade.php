@@ -77,7 +77,7 @@
 <body>
     <div class="sidebar">
         <div class="sidebar-title">ADMINISCHOOL</div>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
             Dashboard
         </a>
@@ -135,6 +135,7 @@
                     <tr>
                         <th>Nom du Parent</th>
                         <th>Document</th>
+                        <th>Type</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -143,6 +144,7 @@
                         <tr>
                             <td>{{ $item->tuteur->nom }}</td>
                             <td>{{ $item->file_path }}</td>
+                            <td>{{ $item->type}}</td>
                             <td>
                                 <a href="{{ route('school.viewDocument', $item->id) }}" class="btn btn-info" target="_blank">Visualiser</a>
                                 <a href="{{ route('school.downloadDocument', $item->id) }}" class="btn btn-success">Télécharger</a>

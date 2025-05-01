@@ -79,7 +79,7 @@
     <div class="sidebar">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
+            <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
             Dashboard
         </a>
         <a href="{{route('school')}}" class="sidebar-item">
