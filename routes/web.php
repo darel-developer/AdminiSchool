@@ -79,11 +79,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/documentschool', function () {
-    return view('Schooldocument');
-})->name('Schooldocument');
-
-
 
 //Route pour gerer les documents
 Route::get('/documentschool', [FichierController::class, 'index'])->name('documentschool');
@@ -277,5 +272,9 @@ Route::get('teacher', function(){
 Route::get('teacherchat', function(){
     return view ('teacherchat');
 })->name('teacherchat');
+
+Route::get('/documentschool', function () {
+    return view('Schooldocument');
+})->name('Schooldocument');
 
 
