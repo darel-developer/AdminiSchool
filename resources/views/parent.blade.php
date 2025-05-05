@@ -80,6 +80,16 @@
         .table {
             margin-top: 20px;
         }
+        .notification-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+        .notification-icon img {
+            width: 30px;
+            height: 30px;
+        }
     </style>
 </head>
 <body>
@@ -121,6 +131,13 @@
         </a>
     </div>
 
+    <!-- Notification Icon -->
+    <div class="notification-icon">
+        <a href="{{ route('notifications.page') }}">
+            <img src="https://img.icons8.com/ios-filled/50/000000/bell.png" alt="Notifications">
+        </a>
+    </div>
+
     <!-- Content -->
     <div class="content">
         <div class="container">
@@ -148,6 +165,24 @@
         </div>
     </div>
 
+    <!-- Notification Modal -->
+    <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="notificationList" class="list-group">
+                        <!-- Notifications will be dynamically loaded here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let selectedChildId = null;
 
@@ -279,6 +314,51 @@
                 .catch(error => {
                     console.error('Erreur lors de la récupération des données :', error);
                     document.getElementById('content').innerHTML = '<p>Erreur lors de la récupération des données.</p>';
+                });
+        }
+
+        function openNotificationModal() {
+            console.log('Ouverture du modal des notifications...');
+            fetch('/notifications')
+                .then(response => {
+                    console.log('Réponse reçue du serveur :', response);
+                    if (!response.ok) {
+                        throw new Error('Erreur HTTP: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Données des notifications reçues :', data);
+                    const notificationList = document.getElementById('notificationList');
+                    notificationList.innerHTML = '';
+
+                    if (data.notifications.length === 0) {
+                        notificationList.innerHTML = '<li class="list-group-item">Aucune notification disponible.</li>';
+                    } else {
+                        data.notifications.forEach(notification => {
+                            const listItem = document.createElement('li');
+                            listItem.className = 'list-group-item';
+                            listItem.innerHTML = `
+                                <strong>${notification.message}</strong>
+                                <br>
+                                <small>${new Date(notification.created_at).toLocaleString()}</small>
+                            `;
+                            notificationList.appendChild(listItem);
+                        });
+                    }
+
+                    // Afficher la fenêtre modale
+                    const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des notifications :', error);
+
+                    // Afficher un message d'erreur dans le modal
+                    const notificationList = document.getElementById('notificationList');
+                    notificationList.innerHTML = '<li class="list-group-item">Erreur lors de la récupération des notifications.</li>';
+                    const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                    modal.show();
                 });
         }
     </script>

@@ -80,6 +80,9 @@ class PaiementController extends Controller
                 'tuteur_id' => $tuteur->id,
                 'message' => 'Votre paiement a été mis à jour. Etat : ' . $paiement->etat,
             ]);
+            Log::info('Notification créée pour le tuteur ID: ' . $tuteur->id);
+        } else {
+            Log::error('Tuteur introuvable pour le paiement ID: ' . $paiement->id);
         }
 
         return redirect()->route('showpaiement', $paiement->id)->with('success', 'Paiement mis à jour avec succès. Facture générée.');
@@ -234,29 +237,78 @@ class PaiementController extends Controller
 
     public function getNotifications()
     {
-        $tuteur = Auth::user();
+        Log::info('Début de la récupération des notifications.');
+
+        $tuteur = Auth::guard('tuteur')->user();
 
         if (!$tuteur) {
+            Log::warning('Aucun tuteur connecté pour récupérer les notifications.');
             return response()->json(['notifications' => []]);
+        }
+
+        Log::info('Tuteur connecté : ', ['tuteur_id' => $tuteur->id, 'nom' => $tuteur->nom, 'prenom' => $tuteur->prenom]);
+
+        $notifications = Notification::where('tuteur_id', $tuteur->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if ($notifications->isEmpty()) {
+            Log::info('Aucune notification trouvée pour le tuteur.', ['tuteur_id' => $tuteur->id]);
+        } else {
+            Log::info('Notifications récupérées avec succès.', ['tuteur_id' => $tuteur->id, 'count' => $notifications->count()]);
+        }
+
+        return response()->json(['notifications' => $notifications]);
+    }
+
+    public function downloadInvoice($id)
+    {
+        $paiement = Paiement::findOrFail($id);
+        $filePath = storage_path('app/public/factures/' . $paiement->id . '_facture.pdf');
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'La facture n\'existe pas.');
+        }
+
+        return response()->download($filePath, 'facture_' . $paiement->id . '.pdf');
+    }
+
+    public function showNotifications()
+    {
+        $tuteur = Auth::guard('tuteur')->user();
+
+        if (!$tuteur) {
+            return redirect()->route('login')->with('error', 'Veuillez vous connecter.');
         }
 
         $notifications = Notification::where('tuteur_id', $tuteur->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return response()->json(['notifications' => $notifications]);
+        return view('notifications', compact('notifications'));
     }
 
-    public function downloadInvoice($id)
-{
-    $paiement = Paiement::findOrFail($id);
-    $filePath = storage_path('app/public/factures/' . $paiement->id . '_facture.pdf');
+    public function showNotificationsPage()
+    {
+        Log::info('Chargement de la page des notifications.');
 
-    if (!file_exists($filePath)) {
-        return redirect()->back()->with('error', 'La facture n\'existe pas.');
+        $tuteur = Auth::guard('tuteur')->user();
+
+        if (!$tuteur) {
+            Log::warning('Aucun tuteur connecté pour afficher les notifications.');
+            return redirect()->route('login')->with('error', 'Veuillez vous connecter pour voir vos notifications.');
+        }
+
+        $notifications = Notification::where('tuteur_id', $tuteur->id)
+            ->orderBy('created_at', 'desc')
+            ->get(['id', 'message', 'url', 'created_at']);
+
+        if ($notifications->isEmpty()) {
+            Log::info('Aucune notification trouvée pour le tuteur.', ['tuteur_id' => $tuteur->id]);
+        } else {
+            Log::info('Notifications récupérées avec succès.', ['tuteur_id' => $tuteur->id, 'count' => $notifications->count()]);
+        }
+
+        return view('notifications', compact('notifications'));
     }
-
-    return response()->download($filePath, 'facture_' . $paiement->id . '.pdf');
-}
-
 }

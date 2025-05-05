@@ -32,6 +32,7 @@ Route::get('/cahiertexte/{class}/download', [CahierDeTexteController::class, 'do
 
 //Route pour gérer les notifications
 Route::get('/notifications', [PaiementController::class, 'getNotifications'])->name('notifications');
+Route::get('/notifications/page', [PaiementController::class, 'showNotificationsPage'])->name('notifications.page')->middleware('auth:tuteur');
 
 // Routes pour les tuteurs (messagerie)
 Route::middleware(['auth:tuteur'])->group(function () {

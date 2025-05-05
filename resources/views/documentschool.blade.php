@@ -130,29 +130,36 @@
                     {{ session('success') }}
                 </div>
             @endif    
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nom du Parent</th>
-                        <th>Document</th>
-                        <th>Type</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($documents as $item)
+
+            @if($documents->isEmpty())
+                <div class="alert alert-info">
+                    Aucun document disponible pour le moment.
+                </div>
+            @else
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <td>{{ $item->tuteur->nom }}</td>
-                            <td>{{ $item->file_path }}</td>
-                            <td>{{ $item->type }}</td>
-                            <td>
-                                <a href="{{ route('school.viewDocument', $item->id) }}" class="btn btn-info" target="_blank">Visualiser</a>
-                                <a href="{{ route('school.downloadDocument', $item->id) }}" class="btn btn-success">Télécharger</a>
-                            </td>
+                            <th>Nom du Parent</th>
+                            <th>Document</th>
+                            <th>Type</th>
+                            <th>Actions</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($documents as $item)
+                            <tr>
+                                <td>{{ $item->tuteur->nom }}</td>
+                                <td>{{ $item->file_path }}</td>
+                                <td>{{ $item->type }}</td>
+                                <td>
+                                    <a href="{{ route('school.viewDocument', $item->id) }}" class="btn btn-info" target="_blank">Visualiser</a>
+                                    <a href="{{ route('school.downloadDocument', $item->id) }}" class="btn btn-success">Télécharger</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
         </div>
     </div>
     
