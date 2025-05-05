@@ -144,7 +144,7 @@
                         <tr>
                             <td>{{ $item->tuteur->nom }}</td>
                             <td>{{ $item->file_path }}</td>
-                            <td>{{ $item->type}}</td>
+                            <td>{{ $item->type }}</td>
                             <td>
                                 <a href="{{ route('school.viewDocument', $item->id) }}" class="btn btn-info" target="_blank">Visualiser</a>
                                 <a href="{{ route('school.downloadDocument', $item->id) }}" class="btn btn-success">Télécharger</a>

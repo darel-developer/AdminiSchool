@@ -273,9 +273,7 @@ Route::get('teacherchat', function(){
     return view ('teacherchat');
 })->name('teacherchat');
 
-Route::get('/documentschool', function () {
-    return view('documentschool');
-})->name('documentschool');
+
 
 
 

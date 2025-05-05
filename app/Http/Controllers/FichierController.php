@@ -12,8 +12,8 @@ class FichierController extends Controller
 
     public function index()
     {
-        $documents = Document::all();
-        return view('documentschool', compact('documents'));
+        $documents = Document::all(); // Récupération de tous les documents
+        return view('documentschool', compact('documents')); // Transmission à la vue
     }
 
     
