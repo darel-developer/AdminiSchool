@@ -26,7 +26,7 @@ class FichierController extends Controller
 
     $type = $request->input('type');
     if ($type === 'autre') {
-        $type = $request->input('custom_type'); // Récupérer le type personnalisé
+        $type = $request->input('custom_type'); 
     }
 
     // Store the uploaded file and get its path
