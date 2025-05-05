@@ -19,7 +19,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www/html
 
 # 5. Copie SÉLECTIVE des fichiers nécessaires
-COPY composer.json composer.lock package.json package-lock.json ./
+COPY composer.json composer.lock ./
 
 # 6. Vérification des fichiers copiés (debug)
 RUN ls -la && pwd
