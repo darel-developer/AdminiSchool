@@ -273,9 +273,3 @@ Route::get('teacher', function(){
 Route::get('teacherchat', function(){
     return view ('teacherchat');
 })->name('teacherchat');
-
-
-
-
-
-
