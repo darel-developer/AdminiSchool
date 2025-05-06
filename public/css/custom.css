@@ -1,0 +1,18 @@
+/* Styles pour les écrans de moins de 768px */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .notification-icon {
+        top: 10px;
+        right: 10px;
+    }
+}
