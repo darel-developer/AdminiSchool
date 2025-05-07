@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y \
 # Active mod_rewrite d'Apache
 RUN a2enmod rewrite
 
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+
 # Change le DocumentRoot vers /var/www/html/public
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
