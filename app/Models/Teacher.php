@@ -44,10 +44,9 @@ class Teacher extends Authenticatable
         return $this->belongsTo(Student::class, 'class_id', 'class_id');
     }
 
-        public function classe()
+    public function classe()
     {
         return $this->belongsTo(Classe::class, 'class_id', 'id');
     }
-    
 }
 

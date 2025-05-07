@@ -136,6 +136,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            
+
             const contactParentBtn = document.getElementById('contactParentBtn');
             const chatHeader = document.getElementById('chatHeader');
             const chatMessages = document.getElementById('chatMessages');
@@ -146,74 +148,91 @@
 
             // Charger les parents et afficher la fenêtre modale
             contactParentBtn.addEventListener('click', function () {
-           console.log("Chargement des parents...");
+                console.log("[Étape 1] Début du chargement des parents...");
 
-         fetch('/get-parents')
-        .then(response => response.json())
-        .then(data => {
-            console.log("Parents récupérés :", data);
+                fetch('/teacher/get-parents')
+                    .then(response => {
+                        console.log("[Étape 2] Réponse reçue du serveur :", response);
+                        if (!response.ok) {
+                            throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("[Étape 3] Données des parents reçues :", data);
 
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
+                        if (data.error) {
+                            console.error("[Erreur] Message d'erreur reçu :", data.error);
+                            alert(data.error);
+                            return;
+                        }
 
-            parentList.innerHTML = '';
-            data.parents.forEach(parent => {
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item list-group-item-action';
-                listItem.textContent = `${parent.nom} ${parent.prenom}`;
-                listItem.dataset.id = parent.id;
-                listItem.addEventListener('click', function () {
-                    selectedParentId = parent.id;
-                    chatHeader.textContent = `Discussion avec ${parent.nom} ${parent.prenom}`;
-                    sendMessageBtn.disabled = false;
-                    loadMessages();
-                    const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
-                    parentModal.hide();
-                });
-                parentList.appendChild(listItem);
+                        console.log("[Étape 4] Construction de la liste des parents...");
+                        parentList.innerHTML = '';
+                        data.parents.forEach(parent => {
+                            console.log(`[Étape 4.1] Ajout du parent : ${parent.nom} ${parent.prenom}`);
+                            const listItem = document.createElement('li');
+                            listItem.className = 'list-group-item list-group-item-action';
+                            listItem.textContent = `${parent.nom} ${parent.prenom}`;
+                            listItem.dataset.id = parent.id;
+                            listItem.addEventListener('click', function () {
+                                console.log(`[Étape 5] Parent sélectionné : ${parent.nom} ${parent.prenom}`);
+                                selectedParentId = parent.id;
+                                chatHeader.textContent = `Discussion avec ${parent.nom} ${parent.prenom}`;
+                                sendMessageBtn.disabled = false;
+                                loadMessages();
+                                const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
+                                parentModal.hide();
+                            });
+                            parentList.appendChild(listItem);
+                        });
+
+                        console.log("[Étape 6] Affichage de la fenêtre modale...");
+                        const parentModal = new bootstrap.Modal(document.getElementById('parentModal'));
+                        parentModal.show();
+                    })
+                    .catch(error => {
+                        console.error("[Erreur] Erreur lors du chargement des parents :", error);
+                        alert("Erreur lors du chargement des parents.");
+                    });
             });
-
-            const parentModal = new bootstrap.Modal(document.getElementById('parentModal'));
-            parentModal.show();
-        })
-        .catch(error => {
-            console.error("Erreur lors du chargement des parents :", error);
-            alert("Erreur lors du chargement des parents.");
-        });
-    });
 
             // Charger les messages
             function loadMessages() {
-    if (!selectedParentId) return;
+                if (!selectedParentId) return;
 
-    console.log("Chargement des messages pour le parent ID :", selectedParentId);
+                console.log(`[Étape 7] Chargement des messages pour le parent ID : ${selectedParentId}`);
 
-    fetch(`/get-messages/${selectedParentId}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log("Messages récupérés :", data);
+                fetch(`/get-messages/${selectedParentId}`)
+                    .then(response => {
+                        console.log("[Étape 8] Réponse reçue pour les messages :", response);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("[Étape 9] Données des messages reçues :", data);
 
-            chatMessages.innerHTML = '';
-            data.messages.forEach(message => {
-                const messageElement = document.createElement('div');
-                messageElement.textContent = message.message;
-                messageElement.className = 'mb-2 p-2 rounded ' + (message.teacher_id ? 'bg-primary text-white' : 'bg-light');
-                chatMessages.appendChild(messageElement);
-            });
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        })
-        .catch(error => {
-            console.error("Erreur lors de la récupération des messages :", error);
-            alert("Erreur lors de la récupération des messages.");
-        });
-}
+                        chatMessages.innerHTML = '';
+                        data.messages.forEach(message => {
+                            console.log(`[Étape 9.1] Ajout du message : ${message.message}`);
+                            const messageElement = document.createElement('div');
+                            messageElement.textContent = message.message;
+                            messageElement.className = 'mb-2 p-2 rounded ' + (message.teacher_id ? 'bg-primary text-white' : 'bg-light');
+                            chatMessages.appendChild(messageElement);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    })
+                    .catch(error => {
+                        console.error("[Erreur] Erreur lors de la récupération des messages :", error);
+                        alert("Erreur lors de la récupération des messages.");
+                    });
+            }
 
             // Envoyer un message
             sendMessageBtn.addEventListener('click', function () {
                 const message = messageInput.value.trim();
                 if (!message || !selectedParentId) return;
+
+                console.log(`[Étape 10] Envoi du message : "${message}" au parent ID : ${selectedParentId}`);
 
                 fetch('/send-message', {
                     method: 'POST',
@@ -226,16 +245,22 @@
                         message: message
                     })
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log("[Étape 11] Réponse reçue pour l'envoi du message :", response);
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.success) {
+                            console.log("[Étape 12] Message envoyé avec succès.");
                             messageInput.value = '';
                             loadMessages();
                         } else {
+                            console.error("[Erreur] Échec de l'envoi du message.");
                             alert("Erreur lors de l'envoi du message.");
                         }
                     })
                     .catch(error => {
+                        console.error("[Erreur] Erreur lors de l'envoi du message :", error);
                         alert("Erreur lors de l'envoi du message.");
                     });
             });

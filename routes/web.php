@@ -34,7 +34,7 @@ Route::get('/cahiertexte/{class}/download', [CahierDeTexteController::class, 'do
 Route::get('/notifications', [PaiementController::class, 'getNotifications'])->name('notifications');
 Route::get('/notifications/page', [PaiementController::class, 'showNotificationsPage'])->name('notifications.page')->middleware('auth:tuteur');
 
-// Routes pour les tuteurs (messagerie)
+// Routes pour les tuteurs
 Route::middleware(['auth:tuteur'])->group(function () {
     Route::get('/parentchat', [ChatController::class, 'parentChat'])->name('parentchat');
     Route::get('/get-teachers', [ChatController::class, 'getTeachers'])->name('get.teachers');
@@ -42,7 +42,7 @@ Route::middleware(['auth:tuteur'])->group(function () {
     Route::get('/get-messages/{teacherId}', [ChatController::class, 'fetchMessages'])->name('get.messages');
 });
 
-// Routes pour les enseignants (messagerie)
+// Routes pour les enseignants
 Route::middleware(['auth:teacher'])->prefix('teacher')->group(function () {
     Route::get('/teacher-chat', [ChatController::class, 'teacherChat'])->name('teacher.chat');
     Route::get('/get-parents', [ChatController::class, 'getParents'])->name('get.parents');
