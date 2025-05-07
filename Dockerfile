@@ -1,11 +1,12 @@
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 # Installe les extensions PHP nécessaires
 RUN apt-get update && apt-get install -y \
     libonig-dev libzip-dev unzip curl git zip \
     libpng-dev libjpeg-dev libfreetype6-dev \
-    libonig-dev libxml2-dev nodejs npm \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
+    libonig-dev libxml2-dev libwebp-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl gd
 
 # Active mod_rewrite d'Apache
 RUN a2enmod rewrite
