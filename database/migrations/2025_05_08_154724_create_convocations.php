@@ -1,30 +1,22 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
+return new class extends Migration {
     public function up(): void
     {
-        Schema::create('absences', function (Blueprint $table) {
+        Schema::create('convocations', function (Blueprint $table) {
             $table->id();
             $table->string('student_name');
-            $table->date('absence_date');
+            $table->date('convocation_date');
             $table->string('reason')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('absences');
+        Schema::dropIfExists('convocations');
     }
 };

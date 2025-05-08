@@ -22,6 +22,8 @@ class Tuteur extends Authenticatable
         'phone_number',
     ];
 
+    protected $guard = 'tuteur';
+
     public function students()
     {
         return $this->hasMany(Student::class, 'tuteur_id');
@@ -36,6 +38,4 @@ class Tuteur extends Authenticatable
     {
         return $this->hasMany(Message::class);
     }
-
-    protected $guard = 'tuteur';
 }

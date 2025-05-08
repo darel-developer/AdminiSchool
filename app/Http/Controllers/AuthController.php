@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Tuteur;
 use App\Models\School;
 use App\Models\Teacher;
@@ -11,47 +12,73 @@ use App\Models\Teacher;
 class AuthController extends Controller
 {
     public function loginTraitement(Request $request)
-{
-    
-    $request->validate([
-        'username' => 'required|email',
-        'password' => 'required',
-    ]);
+    {
+        Log::info('Début du processus d\'authentification.', ['username' => $request->username]);
 
-    $remember = $request->has('remember');
+        $request->validate([
+            'username' => 'required|email',
+            'password' => 'required',
+        ]);
 
-    // Vérification dans la table Tuteurs
-    $tuteur = Tuteur::where('email', $request->username)->first();
-    if ($tuteur && password_verify($request->password, $tuteur->password)) {
-        // Authentification réussie pour un Tuteur
-        Auth::loginUsingId($tuteur->id, $remember);
-        return redirect('parent')->with('success', 'Bienvenue, parent!');
+        $remember = $request->has('remember');
+
+        // Vérification dans la table Tuteurs
+        Log::info('Vérification dans la table Tuteurs.');
+        $tuteur = Tuteur::where('email', $request->username)->first();
+        if ($tuteur) {
+            Log::info('Tuteur trouvé.', ['tuteur_id' => $tuteur->id]);
+            if (password_verify($request->password, $tuteur->password)) {
+                Log::info('Mot de passe valide pour le Tuteur.');
+                Auth::guard('tuteur')->loginUsingId($tuteur->id, $remember); // Use the 'tuteur' guard explicitly
+                Log::info('Redirection vers la page parent.', ['route' => 'parent']);
+                return redirect()->route('parent')->with('success', 'Bienvenue, parent!'); // Use route helper for consistency
+            } else {
+                Log::warning('Mot de passe invalide pour le Tuteur.', ['tuteur_id' => $tuteur->id]);
+            }
+        } else {
+            Log::warning('Aucun Tuteur trouvé avec cet email.');
+        }
+
+        // Vérification dans la table Schools
+        Log::info('Vérification dans la table Schools.');
+        $school = School::where('email', $request->username)->first();
+        if ($school) {
+            Log::info('École trouvée.', ['school_id' => $school->id]);
+            if (password_verify($request->password, $school->password)) {
+                Log::info('Mot de passe valide pour l\'École.');
+                Auth::loginUsingId($school->id, $remember);
+                return redirect('dashboard')->with('success', 'Bienvenue, école!');
+            } else {
+                Log::warning('Mot de passe invalide pour l\'École.', ['school_id' => $school->id]);
+            }
+        } else {
+            Log::warning('Aucune École trouvée avec cet email.');
+        }
+
+        // Vérification dans la table Teachers
+        Log::info('Vérification dans la table Teachers.');
+        $teacher = Teacher::where('email', $request->username)->first();
+        if ($teacher) {
+            Log::info('Professeur trouvé.', ['teacher_id' => $teacher->id]);
+            if (password_verify($request->password, $teacher->password)) {
+                Log::info('Mot de passe valide pour le Professeur.');
+                Auth::loginUsingId($teacher->id, $remember);
+                return redirect('teacher')->with('success', 'Bienvenue, prof!');
+            } else {
+                Log::warning('Mot de passe invalide pour le Professeur.', ['teacher_id' => $teacher->id]);
+            }
+        } else {
+            Log::warning('Aucun Professeur trouvé avec cet email.');
+        }
+
+        // Si aucune correspondance
+        Log::error('Échec de l\'authentification. Identifiants incorrects.', ['username' => $request->username]);
+        return back()->withErrors(['error' => 'Identifiants incorrects.'])->withInput();
     }
-
-    // Vérification dans la table Schools
-    $school = School::where('email', $request->username)->first();
-    if ($school && password_verify($request->password, $school->password)) {
-        // Authentification réussie pour une École
-        Auth::loginUsingId($school->id, $remember);
-        return redirect('dashboard')->with('success', 'Bienvenue, école!');
-    }
-
-     // Vérification dans la table teacher
-     $teacher = Teacher::where('email', $request->username)->first();
-     if ($teacher && password_verify($request->password, $teacher->password)) {
-         // Authentification réussie pour une École
-         Auth::loginUsingId($teacher->id, $remember);
-         return redirect('teacher')->with('success', 'Bienvenue, prof!');
-     }
-
-    // Si aucune correspondance
-    return back()->withErrors(['error' => 'Identifiants incorrects.'])->withInput();
-}
 
     public function dashboard()
-{
-    $tuteur = Auth::user(); // Utilisateur actuellement connecté
-    return view('dashboard', compact('tuteur'));
-}
-
+    {
+        $tuteur = Auth::user(); // Utilisateur actuellement connecté
+        return view('dashboard', compact('tuteur'));
+    }
 }

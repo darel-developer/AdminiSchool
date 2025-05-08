@@ -85,7 +85,7 @@ Route::get('/', function () {
 Route::get('/documentschool', [FichierController::class, 'index'])->name('documentschool');
 Route::get('/documents/view/{id}', [FichierController::class, 'viewDocument'])->name('school.viewDocument');
 Route::get('/documents/download/{id}', [FichierController::class, 'downloadDocument'])->name('school.downloadDocument');
-Route::get('/parent', [TuteurController::class, 'enfants'])->name('parent;');
+Route::get('/parent', [TuteurController::class, 'dashboard'])->name('parent')->middleware('auth:tuteur');
   
     
 // Route pour gérer les utilisateurs
