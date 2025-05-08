@@ -13,7 +13,7 @@
             background-color: #f4f4f9;
         }
         .container {
-            width: 80%;
+            width: 82%;
             margin: 20px auto;
             background: #ffffff;
             padding: 30px;
