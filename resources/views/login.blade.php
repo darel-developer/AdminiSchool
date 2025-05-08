@@ -134,7 +134,7 @@
             // Simule un délai de 15 secondes avant de soumettre le formulaire
             setTimeout(function() {
                 event.target.submit(); // Soumet le formulaire après le délai
-            }, 9000); // 9000 millisecondes = 9 secondes
+            }, 5000); 
         });
       </script>
 </body>

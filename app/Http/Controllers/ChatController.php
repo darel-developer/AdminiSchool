@@ -25,7 +25,7 @@ class ChatController extends Controller
 
         Log::info('Données validées.', ['validated' => $validated]);
 
-        $user = Auth::user();
+        $user = Auth::guard('tuteur')->user() ?? Auth::guard('teacher')->user();
         Log::info('Utilisateur connecté.', ['user' => $user]);
 
         $message = new Message();
@@ -118,7 +118,7 @@ class ChatController extends Controller
     
         public function getParents(Request $request)
     {
-        $teacher = Auth::user();
+        $teacher = Auth::guard('teacher')->user();
 
         // Vérifiez si l'enseignant est authentifié
         if (!$teacher) {
@@ -166,6 +166,14 @@ class ChatController extends Controller
 
     public function teacherChat()
     {
-        return view('teacherchat'); 
+        $user = Auth::guard('teacher')->user();
+
+        if (!$user) {
+            Log::error('Utilisateur non authentifié pour accéder à teacherChat.');
+            return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
+        }
+
+        Log::info('Utilisateur authentifié pour teacherChat.', ['user_id' => $user->id]);
+        return view('teacherchat');
     }
 }

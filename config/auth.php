@@ -34,26 +34,22 @@ return [
     | Supported: "session"
     |
     */
-'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
-    ],
-    'tuteur' => [
-        'driver' => 'session',
-        'provider' => 'tuteurs',
-    ],
-    'api' => [
-        'driver' => 'token',
-        'provider' => 'users',
-        'hash' => false,
-    ],
-    'teacher' => [ // Ajoutez ce guard
-        'driver' => 'session',
-        'provider' => 'teachers',
-    ],
-],
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
 
+        'tuteur' => [
+            'driver' => 'session',
+            'provider' => 'tuteurs',
+        ],
+
+        'teacher' => [
+            'driver' => 'session',
+            'provider' => 'teachers',
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -72,23 +68,22 @@ return [
     |
     */
 
-   'providers' => [
-    'tuteurs' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\Tuteur::class,
-    ],
-    'teachers' => [ // Ajoutez ce provider
-        'driver' => 'eloquent',
-        'model' => App\Models\Teacher::class,
-    ],
-],
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
 
+        'tuteurs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Tuteur::class,
+        ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
-    
+        'teachers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Teacher::class,
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
