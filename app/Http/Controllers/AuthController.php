@@ -46,7 +46,7 @@ class AuthController extends Controller
             Log::info('École trouvée.', ['school_id' => $school->id]);
             if (password_verify($request->password, $school->password)) {
                 Log::info('Mot de passe valide pour l\'École.');
-                Auth::loginUsingId($school->id, $remember);
+                Auth::guard('school')->loginUsingId($school->id, $remember);
                 return redirect('dashboard')->with('success', 'Bienvenue, école!');
             } else {
                 Log::warning('Mot de passe invalide pour l\'École.', ['school_id' => $school->id]);
@@ -62,7 +62,7 @@ class AuthController extends Controller
             Log::info('Professeur trouvé.', ['teacher_id' => $teacher->id]);
             if (password_verify($request->password, $teacher->password)) {
                 Log::info('Mot de passe valide pour le Professeur.');
-                Auth::loginUsingId($teacher->id, $remember);
+                Auth::guard('teacher')->loginUsingId($teacher->id, $remember);
                 return redirect('teacher')->with('success', 'Bienvenue, prof!');
             } else {
                 Log::warning('Mot de passe invalide pour le Professeur.', ['teacher_id' => $teacher->id]);
