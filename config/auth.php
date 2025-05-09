@@ -45,6 +45,11 @@ return [
             'provider' => 'tuteurs',
         ],
 
+        'school' => [
+        'driver' => 'session',
+        'provider' => 'schools',
+     ],
+
         'teacher' => [
             'driver' => 'session',
             'provider' => 'teachers',
@@ -82,6 +87,11 @@ return [
         'teachers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Teacher::class,
+        ],
+
+        'schools' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\School::class,
         ],
     ],
 
