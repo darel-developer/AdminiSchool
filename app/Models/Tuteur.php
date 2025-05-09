@@ -20,6 +20,7 @@ class Tuteur extends Authenticatable
         'password',
         'child_name',
         'phone_number',
+        
     ];
 
     protected $guard = 'tuteur';

@@ -50,6 +50,11 @@
       z-index: 2;
     }
 
+    .navbar-brand img {
+      width: 50px; /* Adjust the width */
+      height: auto; /* Maintain aspect ratio */
+    }
+
     .about {
       background-color: #fff;
       padding: 40px 20px;
@@ -219,7 +224,8 @@
  <!-- Navbar -->
  <nav class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
-      <a class="navbar-brand" href="{{ asset('images/logo_title.png') }}">Logo</a>
+      <a class="navbar-brand" href="#">
+      <img src="{{ asset('images/logo_title.png') }}" alt="logo"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
       </button>
