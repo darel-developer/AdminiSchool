@@ -92,9 +92,16 @@
             width: 30px;
             height: 30px;
         }
+
+        
     </style>
 </head>
 <body>
+    <script>
+        if (window.innerWidth < 768) {
+            window.location.href = "/mobile-blocked";
+        }
+    </script>
     <!-- Sidebar -->
     <div class="sidebar d-flex flex-column">
         <div class="sidebar-title">ADMINISCHOOL</div>

@@ -189,6 +189,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::view('/offline', 'offline');
+
+Route::view('/mobile-blocked', 'mobile_blocked');
 
 Route::get('/profile', function(){
     return view('profile');

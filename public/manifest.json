@@ -2,7 +2,7 @@
     "name": "AdminiSchool",
     "short_name": "AdminiSchool",
     "description": "AdminiSchool - Gestion scolaire pour parents et enseignants.",
-    "start_url": "/",
+    "start_url": "/?source=pwa",
     "display": "standalone",
     "orientation": "portrait",
     "background_color": "#ffffff",
