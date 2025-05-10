@@ -23,6 +23,7 @@ class Teacher extends Authenticatable
         'subject',
         'type',
         'password',
+        'class_id', // Add class_id to fillable fields
     ];
 
     protected $hidden = [

@@ -15,12 +15,14 @@ use App\Models\Grade;
 use App\Models\Announcement;
 use App\Models\Grades;
 use Illuminate\Support\Facades\DB;
+use App\Models\Classe;
 
 class TeacherController extends Controller
 {
     public function create()
     {
-        return view('create-teacher');
+        $classes = Classe::all(); // Fetch all classes from the database
+        return view('create-teacher', compact('classes'));
     }
 
     public function store(Request $request)
@@ -32,6 +34,7 @@ class TeacherController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'subject' => 'required|string|max:255',
             'password' => 'required|string|min:8',
+            'class_id' => 'nullable|exists:classes,id', // Make class_id optional
         ]);
 
         $teacher = Teacher::create([
@@ -42,6 +45,7 @@ class TeacherController extends Controller
             'subject' => $request->subject,
             'type' => 'teacher',
             'password' => Hash::make($request->password),
+            'class_id' => $request->class_id, // Ensure class_id is provided
         ]);
 
         // Envoyer un SMS à l'enseignant avec les informations de connexion via Infobip

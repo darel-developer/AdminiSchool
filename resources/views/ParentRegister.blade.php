@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
         .gradient-custom-2 {
-            background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+            background: linear-gradient(to right, #38eb0b, #d8363a, #dd3675, #b44593);
         }
         @media (min-width: 768px) {
             .gradient-form {
@@ -34,7 +34,7 @@
                             <div class="col-lg-6">
                                 <div class="card-body p-md-5 mx-md-4">
                                     <div class="text-center">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
+                                        <img src="{{ asset('images/logo_title.png') }}" alt="logo"
                                              style="width: 185px;" alt="logo">
                                         <h4 class="mt-1 mb-5 pb-1">We are The AdminiSchool Team</h4>
                                     </div>

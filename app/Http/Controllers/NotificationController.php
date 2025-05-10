@@ -54,7 +54,14 @@ class NotificationController extends Controller
                     ? "Votre enfant {$eleve->name} est absent aujourd'hui. Type: {$type}, Heure: {$heure}." 
                     : "Votre enfant {$eleve->name} est convoqué pour une réunion. Motif: {$type}, Heure: {$heure}.";
 
+                // Send SMS notification
                 $this->sendSmsNotification($parent->phone, $message);
+
+                // Create in-app notification
+                Notification::create([
+                    'tuteur_id' => $parent->id,
+                    'message' => $message,
+                ]);
             } else {
                 Log::warning("Aucun tuteur trouvé pour l'élève {$eleve->name}");
             }

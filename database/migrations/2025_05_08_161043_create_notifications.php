@@ -1,23 +1,35 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    public function up(): void
+class CreateNotificationsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
     {
         Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // Ensure this is present and defines the auto-incrementing primary key
             $table->unsignedBigInteger('tuteur_id');
-            $table->string('message');
+            $table->text('message');
             $table->timestamps();
 
-            $table->foreign('tuteur_id')->references('id')->on('tuteurs')->onDelete('cascade');
+             $table->foreign('tuteur_id')->references('id')->on('tuteurs')->onDelete('cascade');
         });
     }
 
-    public function down(): void
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
     {
         Schema::dropIfExists('notifications');
     }
-};
+}

@@ -140,6 +140,15 @@
                     <label for="subject" class="form-label">Subject</label>
                     <input type="text" name="subject" id="subject" class="form-control" required>
                 </div>
+                <div class="mb-3">
+                    <label for="class_id" class="form-label">Class</label>
+                    <select name="class_id" id="class_id" class="form-select" required>
+                        <option value="" disabled selected>Select a class</option>
+                        @foreach ($classes as $class)
+                            <option value="{{ $class->id }}">{{ $class->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <input type="hidden" name="type" value="teacher">
                 <div class="mb-3">
                     <label for="subject" class="form-label">password</label>

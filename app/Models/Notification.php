@@ -9,11 +9,12 @@ class Notification extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'tuteur_id',
         'message',
-        'url', // Ajout de la colonne `url` dans les champs remplissables
-        'created_at', // Ajout du champ created_at
+        'url', // Optional: Add if notifications have specific URLs
     ];
 
     public function tuteur()

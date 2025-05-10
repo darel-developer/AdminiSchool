@@ -120,7 +120,7 @@
         </a>
         <a href="{{route('parentchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
-            Chat
+            Messagerie
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/notification.png') }}" alt="notification">
@@ -128,15 +128,15 @@
         </a>
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
-            Add Enfant
+            Ajouter Enfant
         </a>
         <a href="{{route('profileschool')}}" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
+           paramètre
         </a>
         <a href="{{route('helpsupport')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
-            Help Support
+            Aide
         </a>
     </div>
 
