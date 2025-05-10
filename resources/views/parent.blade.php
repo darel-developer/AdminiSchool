@@ -144,6 +144,9 @@
     <div class="notification-icon">
         <a href="{{ route('notifications.page') }}">
             <img src="https://img.icons8.com/ios-filled/50/000000/bell.png" alt="Notifications">
+            <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+            0
+        </span>
         </a>
     </div>
 
@@ -192,6 +195,32 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function updateNotificationBadge() {
+            fetch('/notifications/unread-count')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('notificationBadge');
+                    if (data.unreadNotificationsCount > 0) {
+                        badge.textContent = data.unreadNotificationsCount;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des notifications non lues :', error);
+                });
+        }
+
+        // Mettre à jour le badge toutes les 30 secondes
+        setInterval(updateNotificationBadge, 30000);
+
+        // Mise à jour initiale
+        updateNotificationBadge();
+    });
+</script>
     <script>
         let selectedChildId = null;
 
