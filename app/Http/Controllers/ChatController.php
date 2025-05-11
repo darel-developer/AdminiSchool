@@ -18,18 +18,18 @@ class ChatController extends Controller
         $validated = $request->validate([
             'teacher_id' => 'required|exists:teachers,id',
             'message' => 'required|string|max:1000',
-            'child_id' => 'required|exists:students,id'
+            'child_id' => 'required|exists:students,id',
         ]);
 
         $user = Auth::user();
-        $message = new Message();
-        $message->message = $validated['message'];
-        $message->teacher_id = $validated['teacher_id'];
-        $message->tuteur_id = $user->id;
-        $message->student_id = $validated['child_id']; // Link message to the child
-        $message->save();
+        $message = Message::create([
+            'message' => $validated['message'],
+            'teacher_id' => $validated['teacher_id'],
+            'tuteur_id' => $user->id,
+            'student_id' => $validated['child_id'],
+        ]);
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'message' => $message]);
     }
 
     public function fetchMessages($teacherId, Request $request)

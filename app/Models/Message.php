@@ -9,25 +9,27 @@ class Message extends Model
 {
     use HasFactory;
 
+    protected $table = 'messages'; // Specify the table name
+
     protected $fillable = [
         'message',
-        'tuteur_id',
         'teacher_id',
-        'reply',
+        'tuteur_id',
+        'student_id',
     ];
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
+    }
 
     public function tuteur()
     {
         return $this->belongsTo(Tuteur::class);
     }
 
-    public function school()
+    public function student()
     {
-        return $this->belongsTo(School::class);
-    }
-
-    public function teacher()
-    {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(Student::class);
     }
 }
