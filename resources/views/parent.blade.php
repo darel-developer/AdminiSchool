@@ -106,6 +106,9 @@
                 background: #2c3e50;
                 z-index: 1000;
             }
+            .sidebar-title, .sidebar-separator, .sidebar-item span {
+                display: none; /* Hide text and separators */
+            }
             .sidebar-item {
                 flex-direction: column;
                 padding: 5px;
@@ -114,6 +117,8 @@
             }
             .sidebar-item img {
                 margin: 0;
+                width: 24px; /* Adjust icon size */
+                height: 24px;
             }
             .content {
                 margin-left: 0;
@@ -134,35 +139,35 @@
         <div class="sidebar-separator"></div>
         <a href="{{route('parent')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
-            <span class="d-none d-md-inline">Dashboard</span>
+            <span>Dashboard</span>
         </a>
         <a href="{{route('parentdocument')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
-            <span class="d-none d-md-inline">Document</span>
+            <span>Document</span>
         </a>
         <a href="{{route('parentpaiement')}}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
-            <span class="d-none d-md-inline">Paiement</span>
+            <span>Paiement</span>
         </a>
         <a href="{{route('parentchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
-            <span class="d-none d-md-inline">Messagerie</span>
+            <span>Messagerie</span>
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/notification.png') }}" alt="notification">
-            <span class="d-none d-md-inline">Notification</span>
+            <span>Notification</span>
         </a>
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
-            <span class="d-none d-md-inline">Ajouter Enfant</span>
+            <span>Ajouter Enfant</span>
         </a>
         <a href="{{route('profileschool')}}" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
-            <span class="d-none d-md-inline">Paramètre</span>
+            <span>Paramètre</span>
         </a>
         <a href="{{route('helpsupport')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
-            <span class="d-none d-md-inline">Aide</span>
+            <span>Aide</span>
         </a>
     </div>
 
