@@ -125,7 +125,7 @@
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
-        <a href="#" class="sidebar-item">
+        <a href="{{ route('notifications.page') }}" class="sidebar-item">
             <img src="{{ asset('images/notification.png') }}" alt="help support">
             notification
         </a>
