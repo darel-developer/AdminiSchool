@@ -16,6 +16,7 @@ use App\Models\Announcement;
 use App\Models\Grades;
 use Illuminate\Support\Facades\DB;
 use App\Models\Classe;
+use Illuminate\Support\Facades\Mail;
 
 class TeacherController extends Controller
 {
@@ -31,7 +32,7 @@ class TeacherController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
-            'email' => 'required|string|email|max:255|unique:teachers,email', // Validate against the teachers table
+            'email' => 'required|string|email|max:255|unique:teachers,email',
             'subject' => 'required|string|max:255',
             'password' => 'required|string|min:8',
             'class_id' => 'nullable|exists:classes,id',
@@ -48,10 +49,25 @@ class TeacherController extends Controller
             'class_id' => $request->class_id,
         ]);
 
-        // Envoyer un SMS à l'enseignant avec les informations de connexion via Infobip
+        // Send email with login details
+        $platformLink = url('/login');
+        $emailData = [
+            'name' => $teacher->first_name . ' ' . $teacher->last_name,
+            'email' => $teacher->email,
+            'password' => $request->password,
+            'platformLink' => $platformLink,
+        ];
+
+        Mail::send('emails.teacher-login', $emailData, function ($message) use ($teacher) {
+            $message->from(config('mail.from.address'), config('mail.from.name')) // Use global "From" email
+                    ->to($teacher->email)
+                    ->subject('Vos informations de connexion - AdminiSchool');
+        });
+
+        // Send SMS with Infobip
         $this->sendSmsWithInfobip($teacher, $request->password);
 
-        return redirect()->route('login')->with('status', 'Teacher created successfully and SMS sent!');
+        return redirect()->route('login')->with('status', 'Teacher created successfully and email sent!');
     }
 
     private function sendSmsWithInfobip($teacher, $password)
