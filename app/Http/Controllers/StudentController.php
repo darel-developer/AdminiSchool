@@ -97,7 +97,7 @@ class StudentController extends Controller
                         break;
 
                     default:
-                        return response()->json(['success' => false, 'error' => 'Section inconnue.']);
+                        return response()->json(['success' => false, 'error' => 'La section demandée est inconnue ou invalide.']);
                 }
 
                 return response()->json(['success' => true, 'data' => $data]);
