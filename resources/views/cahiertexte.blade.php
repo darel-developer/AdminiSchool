@@ -99,7 +99,7 @@
         </a>
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
-            Utilisateurq
+            Utilisateurs
         </a>
         <a href="{{route('studentschool')}}" class="sidebar-item">
             <img src="{{ asset('images/action.png') }}" alt="user">
@@ -113,10 +113,7 @@
             <img src="{{ asset('images/Book.png') }}" alt="teacher">
             cahier de texte
         </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
-        </a>
+       
         <a href="{{ route('helpsupport') }}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support

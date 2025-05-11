@@ -115,10 +115,6 @@
             <img src="{{ asset('images/Book.png') }}" alt="teacher">
            cahier de texte
         </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Paramètres
-        </a>
         <a href="{{ route('helpsupport') }}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support
