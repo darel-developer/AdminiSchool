@@ -95,27 +95,23 @@
         </a>
         <a href="{{ route('schoolpaiement') }}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
-            Payments
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/chat.png') }}" alt="chat">
-            Chat
+            Paiements
         </a>
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
-            Users
+            Utilisateurq
         </a>
         <a href="{{route('studentschool')}}" class="sidebar-item">
             <img src="{{ asset('images/action.png') }}" alt="user">
-            student
+            Etudiants
         </a>
         <a href="{{ route('create.teacher') }}" class="sidebar-item">
             <img src="{{ asset('images/teacher.png') }}" alt="teacher">
-            Create Teacher
+            Créer Enseignant
         </a>
         <a href="{{ route('cahiertexte') }}" class="sidebar-item">
             <img src="{{ asset('images/Book.png') }}" alt="teacher">
-            Book Text
+            cahier de texte
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
