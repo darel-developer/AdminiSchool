@@ -34,6 +34,7 @@ Route::get('/cahiertexte/{class}/download', [CahierDeTexteController::class, 'do
 Route::get('/notifications', [PaiementController::class, 'getNotifications'])->name('notifications');
 Route::get('/notifications/page', [NotificationController::class, 'getNotifications'])->name('notifications.page')->middleware('auth:tuteur');
 Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadNotificationCount'])->name('notifications.unread-count');
+Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-as-read')->middleware('auth:tuteur');
 
 // Routes pour les tuteurs
 Route::middleware(['auth:tuteur'])->group(function () {

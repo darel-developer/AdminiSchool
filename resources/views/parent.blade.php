@@ -176,8 +176,8 @@
         <a href="#" onclick="openNotificationModal(); return false;">
             <img src="https://img.icons8.com/ios-filled/50/000000/bell.png" alt="Notifications">
             <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
-            0
-        </span>
+                0
+            </span>
         </a>
     </div>
 
@@ -243,13 +243,69 @@
                 });
         }
 
-       
-        setInterval(updateNotificationBadge, 30000);
+        // Update the badge every 10 seconds
+        setInterval(updateNotificationBadge, 10000);
 
-        
+        // Initial badge update
         updateNotificationBadge();
     });
-</script>
+
+    function openNotificationModal() {
+        fetch('{{ route("notifications.page") }}')
+            .then(response => response.json())
+            .then(data => {
+                const notificationList = document.getElementById('notificationList');
+                notificationList.innerHTML = '';
+
+                if (data.notifications.length === 0) {
+                    notificationList.innerHTML = '<li class="list-group-item">Aucune notification disponible.</li>';
+                } else {
+                    data.notifications.forEach(notification => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item';
+                        listItem.innerHTML = `
+                            <strong>${notification.message}</strong>
+                            <br>
+                            <small>${new Date(notification.created_at).toLocaleString()}</small>
+                        `;
+                        notificationList.appendChild(listItem);
+                    });
+                }
+
+                const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                modal.show();
+
+                // Mark notifications as read after opening the modal
+                markNotificationsAsRead();
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des notifications :', error);
+                const notificationList = document.getElementById('notificationList');
+                notificationList.innerHTML = '<li class="list-group-item">Erreur lors de la récupération des notifications.</li>';
+                const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                modal.show();
+            });
+    }
+
+    function markNotificationsAsRead() {
+        fetch('{{ route("notifications.mark-as-read") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateNotificationBadge();
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la mise à jour des notifications :', error);
+        });
+    }
+    </script>
     <script>
         let selectedChildId = {{ $students->first()->id ?? 'null' }}; 
 

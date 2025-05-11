@@ -141,6 +141,14 @@ class NotificationController extends Controller
         return response()->json(['success' => true, 'unreadCount' => $unreadCount]);
     }
 
+    public function markAllAsRead()
+    {
+        $userId = Auth::id();
+        Notification::where('tuteur_id', $userId)->where('is_read', false)->update(['is_read' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
     public function getUnreadNotificationCount()
     {
         $userId = Auth::id();
