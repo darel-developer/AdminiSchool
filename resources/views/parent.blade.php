@@ -173,7 +173,7 @@
 
     <!-- Notification Icon -->
     <div class="notification-icon">
-        <a href="{{ route('notifications.page') }}">
+        <a href="#" onclick="openNotificationModal(); return false;">
             <img src="https://img.icons8.com/ios-filled/50/000000/bell.png" alt="Notifications">
             <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
             0
@@ -430,7 +430,7 @@
             .then(data => {
                 if (data.success) {
                     alert('Données mises à jour avec succès.');
-                    loadSection('general'); // Reload general section after update
+                    loadSection('general'); 
                 } else {
                     alert('Erreur lors de la mise à jour des données.');
                 }
