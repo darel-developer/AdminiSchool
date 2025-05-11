@@ -187,13 +187,13 @@
             <div class="row mt-5">
                 <div class="col-md-6">
                     <div class="card p-4">
-                        <h5 class="text-center">Comparative Payment Types</h5>
+                        <h5 class="text-center">Comparaison type de paiement</h5>
                         <canvas id="paymentChart" width="200" height="200"></canvas>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card p-4">
-                        <h5 class="text-center">Monthly Convocations</h5>
+                        <h5 class="text-center">Convocations par mois</h5>
                         <canvas id="registrationChart" width="200" height="200"></canvas>
                     </div>
                 </div>
