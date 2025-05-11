@@ -198,13 +198,7 @@ Route::get('/', function () {
 });
 
 Route::get('/email/teacher-login', function () {
-    $emailData = [
-        'name' => 'John Doe',
-        'email' => 'john.doe@example.com',
-        'password' => 'password123',
-        'platformLink' => url('/login'),
-    ];
-    return view('emails.teacher-login', $emailData);
+    return view('emails.teacher-login');
 })->name('email.teacher-login');
 
 Route::view('/offline', 'offline');
