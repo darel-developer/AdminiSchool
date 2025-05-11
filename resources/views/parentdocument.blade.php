@@ -185,7 +185,7 @@
             notification
         </a>
         <a href="{{route('parentchild')}}" class="sidebar-item">
-            <img src="{{ asset('images/notification.png') }}" alt="help support">
+            <img src="{{ asset('images/Add_User.png') }}" alt="help support">
             Ajouter Enfant
         </a>
         <a href="{{route('profileschool')}}" class="sidebar-item">
