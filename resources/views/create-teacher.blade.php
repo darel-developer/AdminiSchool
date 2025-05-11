@@ -89,13 +89,10 @@
             <img src="{{ asset('images/paiement.png') }}" alt="paiement">
             Paiement
         </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/chat.png') }}" alt="chat">
-            Chat
-        </a>
+        
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
+            paramètres
         </a>
         <a href="{{route('helpsupport')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
@@ -103,15 +100,15 @@
         </a>
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
-            Users
+            Utilisateurs
         </a>
         <a href="{{route('studentschool')}}" class="sidebar-item">
             <img src="{{ asset('images/action.png') }}" alt="user">
-            student
+            Etudiants
         </a>
         <a href="{{ route('create.teacher') }}" class="sidebar-item">
             <img src="{{ asset('images/teacher.png') }}" alt="teacher">
-            Create Teacher
+            Créer enseignant
         </a>
     </div>
 

@@ -193,7 +193,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card p-4">
-                        <h5 class="text-center">Monthly Registrations</h5>
+                        <h5 class="text-center">Monthly Convocations</h5>
                         <canvas id="registrationChart" width="200" height="200"></canvas>
                     </div>
                 </div>
@@ -238,10 +238,10 @@
             data: {
                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 datasets: [{
-                    label: 'Registrations',
-                    data: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65], // Example data, replace with dynamic values
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    label: 'Convocations envoyées',
+                    data: [{{ implode(',', $monthlyConvocations) }}], // Dynamic data from the controller
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
                 }]
             },
@@ -249,6 +249,12 @@
                 scales: {
                     y: {
                         beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
                     }
                 }
             }
