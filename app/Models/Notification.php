@@ -14,7 +14,8 @@ class Notification extends Model
     protected $fillable = [
         'tuteur_id',
         'message',
-        'url', // Optional: Add if notifications have specific URLs
+        'url', 
+        'is_read',// Optional: Add if notifications have specific URLs
     ];
 
     public function tuteur()

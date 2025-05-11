@@ -13,110 +13,66 @@ use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
 {
-       
     public function sendMessage(Request $request)
     {
-        Log::info('Début de l\'envoi du message.');
-
         $validated = $request->validate([
             'teacher_id' => 'required|exists:teachers,id',
             'message' => 'required|string|max:1000',
+            'child_id' => 'required|exists:students,id'
         ]);
 
-        Log::info('Données validées.', ['validated' => $validated]);
-
-        $user = Auth::guard('tuteur')->user() ?? Auth::guard('teacher')->user();
-        Log::info('Utilisateur connecté.', ['user' => $user]);
-
+        $user = Auth::user();
         $message = new Message();
         $message->message = $validated['message'];
-
-        if ($user instanceof Tuteur) {
-            $message->teacher_id = $validated['teacher_id'];
-            $message->tuteur_id = $user->id;
-            Log::info('Message envoyé par un tuteur.', ['tuteur_id' => $user->id, 'teacher_id' => $validated['teacher_id']]);
-        } elseif ($user instanceof Teacher) {
-            $message->tuteur_id = $validated['tuteur_id'] ?? null;
-            $message->teacher_id = $user->id;
-            Log::info('Message envoyé par un enseignant.', ['teacher_id' => $user->id, 'tuteur_id' => $validated['tuteur_id'] ?? null]);
-        } else {
-            Log::error('Utilisateur non autorisé.');
-            return response()->json(['error' => 'Utilisateur non autorisé.'], 403);
-        }
-
+        $message->teacher_id = $validated['teacher_id'];
+        $message->tuteur_id = $user->id;
+        $message->student_id = $validated['child_id']; // Link message to the child
         $message->save();
-        Log::info('Message sauvegardé.', ['message_id' => $message->id]);
 
         return response()->json(['success' => true]);
     }
 
-
-    public function fetchMessages($id)
+    public function fetchMessages($teacherId, Request $request)
     {
-        $user = Auth::user();
+        $childId = $request->query('child_id');
+        $student = Student::find($childId);
 
-        if ($user instanceof Tuteur) {
-            $messages = Message::where('tuteur_id', $user->id)
-                ->where('teacher_id', $id)
-                ->orderBy('created_at', 'asc') // Trier les messages par date
-                ->get();
-        } elseif ($user instanceof Teacher) {
-            $messages = Message::where('teacher_id', $user->id)
-                ->where('tuteur_id', $id)
-                ->orderBy('created_at', 'asc') // Trier les messages par date
-                ->get();
-        } else {
-            Log::error('Utilisateur non autorisé pour récupérer les messages.');
-            return response()->json(['error' => 'Utilisateur non autorisé.'], 403);
+        if (!$student) {
+            return response()->json(['error' => 'Enfant non trouvé.'], 404);
         }
 
-        Log::info('Messages récupérés.', ['user_id' => $user->id, 'conversation_with' => $id, 'messages' => $messages->toArray()]);
+        $user = Auth::user();
+        if ($user instanceof Tuteur) {
+            $messages = Message::where('tuteur_id', $user->id)
+                ->where('teacher_id', $teacherId)
+                ->orderBy('created_at', 'asc')
+                ->get();
+        } else {
+            return response()->json(['error' => 'Utilisateur non autorisé.'], 403);
+        }
 
         return response()->json(['messages' => $messages]);
     }
 
-        public function getTeachers(Request $request)
-        {
-            $tuteur = Auth::user();
-        
-            // Étape 1 : Récupérer le nom de l'enfant associé au tuteur
-            $childName = $tuteur->child_name;
-            Log::info('Étape 1 : Tuteur connecté', ['tuteur_id' => $tuteur->id, 'child_name' => $childName]);
-        
-            if (!$childName) {
-                return response()->json(['error' => 'Aucun enfant associé à ce tuteur.'], 404);
-            }
-        
-            // Étape 2 : Trouver l'étudiant correspondant dans la table `students`
-            $student = Student::where('name', $childName)->first();
-            Log::info('Étape 2 : Étudiant trouvé', ['student' => $student]);
-        
-            if (!$student) {
-                return response()->json(['error' => 'Aucun étudiant trouvé pour cet enfant.'], 404);
-            }
-        
-            // Étape 3 : Trouver l'identifiant de la classe correspondant au nom de la classe
-            $classe = Classe::where('name', $student->class)->first();
-            Log::info('Étape 3 : Classe trouvée', ['classe' => $classe]);
-        
-            if (!$classe) {
-                return response()->json(['error' => 'Aucune classe trouvée pour cet étudiant.'], 404);
-            }
-        
-            // Étape 4 : Trouver les enseignants associés à cette classe
-            $teachers = Teacher::where('class_id', $classe->id)->get();
-            Log::info('Étape 4 : Enseignants trouvés', ['teachers' => $teachers]);
-        
-            if ($teachers->isEmpty()) {
-                return response()->json(['error' => 'Aucun enseignant trouvé pour cette classe.'], 404);
-            }
-        
-            // Étape 5 : Retourner les enseignants trouvés
-            Log::info('Étape 5 : Liste des enseignants retournée', ['teachers' => $teachers->toArray()]);
-            return response()->json(['teachers' => $teachers->toArray()]);
+    public function getTeachers(Request $request)
+    {
+        $childId = $request->query('child_id');
+        $student = Student::find($childId);
+
+        if (!$student) {
+            return response()->json(['error' => 'Enfant non trouvé.'], 404);
         }
-    
-        public function getParents(Request $request)
+
+        $classe = Classe::where('name', $student->class)->first();
+        if (!$classe) {
+            return response()->json(['error' => 'Classe non trouvée.'], 404);
+        }
+
+        $teachers = Teacher::where('class_id', $classe->id)->get();
+        return response()->json(['teachers' => $teachers]);
+    }
+
+    public function getParents(Request $request)
     {
         $teacher = Auth::guard('teacher')->user();
 

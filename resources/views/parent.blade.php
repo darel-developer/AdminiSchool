@@ -198,15 +198,15 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         function updateNotificationBadge() {
-            fetch('/notifications/unread-count')
+            fetch('{{ route("notifications.unread-count") }}') // Use Laravel helper to generate URL
                 .then(response => response.json())
                 .then(data => {
                     const badge = document.getElementById('notificationBadge');
                     if (data.unreadNotificationsCount > 0) {
-                        badge.textContent = data.unreadNotificationsCount;
-                        badge.style.display = 'inline-block';
+                        badge.textContent = data.unreadNotificationsCount; // Update badge text
+                        badge.style.display = 'inline-block'; // Show badge
                     } else {
-                        badge.style.display = 'none';
+                        badge.style.display = 'none'; // Hide badge if no unread notifications
                     }
                 })
                 .catch(error => {
@@ -214,146 +214,160 @@
                 });
         }
 
-        // Mettre à jour le badge toutes les 30 secondes
+        // Update badge every 30 seconds
         setInterval(updateNotificationBadge, 30000);
 
-        // Mise à jour initiale
+        // Initial update on page load
         updateNotificationBadge();
     });
 </script>
     <script>
-        let selectedChildId = null;
+        let selectedChildId = {{ $students->first()->id ?? 'null' }}; // Set the first child as default
 
-        document.getElementById('childSelector').addEventListener('change', function () {
-            selectedChildId = this.value;
-            document.getElementById('content').innerHTML = '<p>Sélectionnez une section pour afficher les données.</p>';
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const childSelector = document.getElementById('childSelector');
+            const content = document.getElementById('content');
 
-        function loadSection(section) {
-            if (!selectedChildId) {
-                alert('Veuillez sélectionner un enfant.');
-                return;
+            // Set the default child in the dropdown
+            if (childSelector && selectedChildId) {
+                childSelector.value = selectedChildId;
+                content.innerHTML = '<p>Sélectionnez une section pour afficher les données.</p>';
             }
 
-            fetch(`/child/${section}/${selectedChildId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        let htmlContent = '';
-                        switch (section) {
-                            case 'general':
-                                htmlContent = `
-                                    <h2>Informations Générales</h2>
-                                    <p><strong>Nom :</strong> ${data.data.name}</p>
-                                    <p><strong>Classe :</strong> ${data.data.class}</p>
-                                    <p><strong>Date d'inscription :</strong> ${data.data.enrollment_date || 'Non disponible'}</p>
-                                    <p><strong>Absences :</strong> ${data.data.absences}</p>
-                                    <p><strong>Convocations :</strong> ${data.data.convocations}</p>
-                                    <p><strong>Avertissements :</strong> ${data.data.warnings}</p>
-                                `;
-                                break;
+            // Update selected child on dropdown change
+            childSelector.addEventListener('change', function () {
+                selectedChildId = this.value;
+                content.innerHTML = '<p>Sélectionnez une section pour afficher les données.</p>';
+            });
 
-                            case 'planning':
-                                if (data.data.planning.length > 0) {
+            // Function to load section data
+            window.loadSection = function (section) {
+                if (!selectedChildId) {
+                    alert('Veuillez sélectionner un enfant.');
+                    return;
+                }
+
+                fetch(`/child/${section}/${selectedChildId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            let htmlContent = '';
+                            switch (section) {
+                                case 'general':
                                     htmlContent = `
-                                        <h2>Planning</h2>
-                                        <a href="/child/planning/download/${selectedChildId}" class="btn btn-success mb-3 float-end" target="_blank">
-                                            <img src="https://img.icons8.com/ios-filled/50/ffffff/download.png" alt="Download" style="width: 20px; height: 20px; margin-right: 5px;">
-                                            Télécharger le PDF
-                                        </a>
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Heure Début</th>
-                                                    <th>Heure Fin</th>
-                                                    <th>Code</th>
-                                                    <th>Enseignant</th>
-                                                    <th>Salle</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                ${data.data.planning.map(planning => `
-                                                    <tr>
-                                                        <td>${planning.date}</td>
-                                                        <td>${planning.start_time}</td>
-                                                        <td>${planning.end_time}</td>
-                                                        <td>${planning.code}</td>
-                                                        <td>${planning.teacher}</td>
-                                                        <td>${planning.room}</td>
-                                                    </tr>
-                                                `).join('')}
-                                            </tbody>
-                                        </table>
+                                        <h2>Informations Générales</h2>
+                                        <p><strong>Nom :</strong> ${data.data.name}</p>
+                                        <p><strong>Classe :</strong> ${data.data.class}</p>
+                                        <p><strong>Date d'inscription :</strong> ${data.data.enrollment_date || 'Non disponible'}</p>
+                                        <p><strong>Absences :</strong> ${data.data.absences}</p>
+                                        <p><strong>Convocations :</strong> ${data.data.convocations}</p>
+                                        <p><strong>Avertissements :</strong> ${data.data.warnings}</p>
                                     `;
-                                } else {
-                                    htmlContent = '<p>Aucun planning disponible.</p>';
-                                }
-                                break;
+                                    break;
+
+                                case 'planning':
+                                    if (data.data.planning.length > 0) {
+                                        htmlContent = `
+                                            <h2>Planning</h2>
+                                            <a href="/child/planning/download/${selectedChildId}" class="btn btn-success mb-3 float-end" target="_blank">
+                                                <img src="https://img.icons8.com/ios-filled/50/ffffff/download.png" alt="Download" style="width: 20px; height: 20px; margin-right: 5px;">
+                                                Télécharger le PDF
+                                            </a>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Heure Début</th>
+                                                        <th>Heure Fin</th>
+                                                        <th>Code</th>
+                                                        <th>Enseignant</th>
+                                                        <th>Salle</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${data.data.planning.map(planning => `
+                                                        <tr>
+                                                            <td>${planning.date}</td>
+                                                            <td>${planning.start_time}</td>
+                                                            <td>${planning.end_time}</td>
+                                                            <td>${planning.code}</td>
+                                                            <td>${planning.teacher}</td>
+                                                            <td>${planning.room}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        `;
+                                    } else {
+                                        htmlContent = '<p>Aucun planning disponible.</p>';
+                                    }
+                                    break;
+
                                 case 'absence':
-                        htmlContent = `
-                            <h2>Absences</h2>
-                            <p><strong>Nombre d'absences :</strong> ${data.data.absences}</p>
-                        `;
-                        break;
-
-                    case 'convocation':
-                        htmlContent = `
-                            <h2>Convocations</h2>
-                            <p><strong>Nombre de convocations :</strong> ${data.data.convocations}</p>
-                        `;
-                        break;
-
-                    case 'warnings':
-                        htmlContent = `
-                            <h2>Avertissements</h2>
-                            <p><strong>Nombre d'avertissements :</strong> ${data.data.warnings}</p>
-                        `;
-                        break;
-
-                            case 'notes':
-                                if (data.data.notes && data.data.notes.length > 0) {
                                     htmlContent = `
-                                        <h2>Notes</h2>
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Matière</th>
-                                                    <th>Note</th>
-                                                    <th>Commentaire</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                ${data.data.notes.map(note => `
-                                                    <tr>
-                                                        <td>${note.matiere}</td>
-                                                        <td>${note.grade}</td>
-                                                        <td>${note.comment || 'Aucun commentaire'}</td>
-                                                    </tr>
-                                                `).join('')}
-                                            </tbody>
-                                        </table>
+                                        <h2>Absences</h2>
+                                        <p><strong>Nombre d'absences :</strong> ${data.data.absences}</p>
                                     `;
-                                } else {
-                                    htmlContent = '<p>Aucune note disponible.</p>';
-                                }
-                                break;
+                                    break;
 
-                            default:
-                                htmlContent = `<p>Section ${section} chargée avec succès.</p>`;
-                                break;
+                                case 'convocation':
+                                    htmlContent = `
+                                        <h2>Convocations</h2>
+                                        <p><strong>Nombre de convocations :</strong> ${data.data.convocations}</p>
+                                    `;
+                                    break;
+
+                                case 'warnings':
+                                    htmlContent = `
+                                        <h2>Avertissements</h2>
+                                        <p><strong>Nombre d'avertissements :</strong> ${data.data.warnings}</p>
+                                    `;
+                                    break;
+
+                                case 'notes':
+                                    if (data.data.notes && data.data.notes.length > 0) {
+                                        htmlContent = `
+                                            <h2>Notes</h2>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Matière</th>
+                                                        <th>Note</th>
+                                                        <th>Commentaire</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${data.data.notes.map(note => `
+                                                        <tr>
+                                                            <td>${note.matiere}</td>
+                                                            <td>${note.grade}</td>
+                                                            <td>${note.comment || 'Aucun commentaire'}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        `;
+                                    } else {
+                                        htmlContent = '<p>Aucune note disponible.</p>';
+                                    }
+                                    break;
+
+                                default:
+                                    htmlContent = `<p>Section ${section} chargée avec succès.</p>`;
+                                    break;
+                            }
+
+                            document.getElementById('content').innerHTML = htmlContent;
+                        } else {
+                            document.getElementById('content').innerHTML = `<p>${data.error}</p>`;
                         }
-
-                        document.getElementById('content').innerHTML = htmlContent;
-                    } else {
-                        document.getElementById('content').innerHTML = `<p>${data.error}</p>`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des données :', error);
-                    document.getElementById('content').innerHTML = '<p>Erreur lors de la récupération des données.</p>';
-                });
-        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des données :', error);
+                        document.getElementById('content').innerHTML = '<p>Erreur lors de la récupération des données.</p>';
+                    });
+            };
+        });
 
         function openNotificationModal() {
             console.log('Ouverture du modal des notifications...');

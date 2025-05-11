@@ -1,4 +1,3 @@
-<!-- filepath: c:\xampp\htdocs\Adminischool\resources\views\parentchat.blade.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -182,138 +181,128 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    const contactTeacherBtn = document.getElementById('contactTeacherBtn');
-    const chatHeader = document.getElementById('chatHeader');
-    const chatMessages = document.getElementById('chatMessages');
-    const messageInput = document.getElementById('messageInput');
-    const sendMessageBtn = document.getElementById('sendMessageBtn');
-    const teacherList = document.getElementById('teacherList');
-    let selectedTeacherId = null;
+            let selectedChildId = {{ $students->first()->id ?? 'null' }}; // Set the first child as default
 
-    // Charger les enseignants et afficher la fenêtre modale
-    contactTeacherBtn.addEventListener('click', function () {
-        console.log("Bouton 'Contactez un enseignant' cliqué.");
-        fetch('/get-teachers')
-            .then(response => {
-                console.log("Réponse reçue du serveur pour '/get-teachers'.");
-                return response.json();
-            })
-            .then(data => {
-                console.log("Données des enseignants reçues :", data.teachers);
-                if (data.error) {
-                    console.error("Erreur reçue :", data.error);
-                    alert(data.error);
+            const contactTeacherBtn = document.getElementById('contactTeacherBtn');
+            const chatHeader = document.getElementById('chatHeader');
+            const chatMessages = document.getElementById('chatMessages');
+            const messageInput = document.getElementById('messageInput');
+            const sendMessageBtn = document.getElementById('sendMessageBtn');
+            const teacherList = document.getElementById('teacherList');
+            let selectedTeacherId = null;
+
+            // Load teachers and open modal
+            contactTeacherBtn.addEventListener('click', function () {
+                if (!selectedChildId) {
+                    alert('Veuillez sélectionner un enfant.');
                     return;
                 }
 
-                teacherList.innerHTML = '';
-                data.teachers.forEach(teacher => {
-                    console.log("Ajout de l'enseignant :", teacher);
-                    const listItem = document.createElement('li');
-                    listItem.className = 'list-group-item list-group-item-action';
-                    listItem.textContent = `${teacher.first_name} ${teacher.last_name}`;
-                    listItem.dataset.id = teacher.id;
-                    listItem.addEventListener('click', function () {
-                        console.log(`Enseignant sélectionné : ${teacher.first_name} ${teacher.last_name} (ID: ${teacher.id})`);
-                        selectedTeacherId = teacher.id;
-                        chatHeader.textContent = `Discussion avec ${teacher.first_name} ${teacher.last_name}`;
-                        sendMessageBtn.disabled = false;
-                        loadMessages();
-                        const teacherModal = bootstrap.Modal.getInstance(document.getElementById('teacherModal'));
-                        teacherModal.hide();
+                fetch(`/get-teachers?child_id=${selectedChildId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Données des enseignants reçues :", data.teachers);
+                        if (data.error) {
+                            console.error("Erreur reçue :", data.error);
+                            alert(data.error);
+                            return;
+                        }
+
+                        teacherList.innerHTML = '';
+                        data.teachers.forEach(teacher => {
+                            console.log("Ajout de l'enseignant :", teacher);
+                            const listItem = document.createElement('li');
+                            listItem.className = 'list-group-item list-group-item-action';
+                            listItem.textContent = `${teacher.first_name} ${teacher.last_name}`;
+                            listItem.dataset.id = teacher.id;
+                            listItem.addEventListener('click', function () {
+                                console.log(`Enseignant sélectionné : ${teacher.first_name} ${teacher.last_name} (ID: ${teacher.id})`);
+                                selectedTeacherId = teacher.id;
+                                chatHeader.textContent = `Discussion avec ${teacher.first_name} ${teacher.last_name}`;
+                                sendMessageBtn.disabled = false;
+                                loadMessages();
+                                const teacherModal = bootstrap.Modal.getInstance(document.getElementById('teacherModal'));
+                                teacherModal.hide();
+                            });
+                            teacherList.appendChild(listItem);
+                        });
+
+                        const teacherModal = new bootstrap.Modal(document.getElementById('teacherModal'));
+                        console.log("Affichage de la fenêtre modale des enseignants.");
+                        teacherModal.show();
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des enseignants :', error);
+                        alert('Erreur lors du chargement des enseignants.');
                     });
-                    teacherList.appendChild(listItem);
-                });
-
-                const teacherModal = new bootstrap.Modal(document.getElementById('teacherModal'));
-                console.log("Affichage de la fenêtre modale des enseignants.");
-                teacherModal.show();
-            })
-            .catch(error => {
-                console.error("Erreur lors du chargement des enseignants :", error);
-                alert("Erreur lors du chargement des enseignants.");
             });
-    });
 
-    // Charger les messages
-    function loadMessages() {
-        if (!selectedTeacherId) return;
+            // Load messages
+            function loadMessages() {
+                if (!selectedTeacherId) return;
 
-        console.log(`Chargement des messages pour l'enseignant ID: ${selectedTeacherId}`);
-        fetch(`/get-messages/${selectedTeacherId}`)
-            .then(response => {
-                console.log("Réponse reçue du serveur pour '/get-messages/'.");
-                return response.json();
-            })
-            .then(data => {
-                console.log("Messages reçus :", data);
-                chatMessages.innerHTML = '';
-                data.messages.forEach(message => {
-                    console.log("Ajout du message :", message);
-                    const messageElement = document.createElement('div');
-                    messageElement.textContent = message.message;
-                    messageElement.className = 'mb-2 p-2 rounded ' + (message.tuteur_id ? 'bg-primary text-white' : 'bg-light');
-                    chatMessages.appendChild(messageElement);
+                fetch(`/get-messages/${selectedTeacherId}?child_id=${selectedChildId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Messages reçus :", data);
+                        chatMessages.innerHTML = '';
+                        data.messages.forEach(message => {
+                            console.log("Ajout du message :", message);
+                            const messageElement = document.createElement('div');
+                            messageElement.textContent = message.message;
+                            messageElement.className = 'mb-2 p-2 rounded ' + (message.tuteur_id ? 'bg-primary text-white' : 'bg-light');
+                            chatMessages.appendChild(messageElement);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des messages :', error);
+                        alert('Erreur lors de la récupération des messages.');
+                    });
+            }
+
+            // Send message
+            sendMessageBtn.addEventListener('click', function () {
+                const message = messageInput.value.trim();
+                if (!message || !selectedTeacherId || !selectedChildId) {
+                    alert('Veuillez remplir tous les champs.');
+                    return;
+                }
+
+                fetch('/send-message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        teacher_id: selectedTeacherId,
+                        message: message,
+                        child_id: selectedChildId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log("Message envoyé avec succès.");
+                        messageInput.value = '';
+                        loadMessages();
+                    } else {
+                        console.error("Erreur signalée par le serveur :", data);
+                        alert("Erreur lors de l'envoi du message.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de l\'envoi du message :', error);
+                    alert('Erreur lors de l\'envoi du message.');
                 });
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            })
-            .catch(error => {
-                console.error("Erreur lors de la récupération des messages :", error);
-                alert("Erreur lors de la récupération des messages.");
             });
-    }
 
-    // Envoyer un message
-sendMessageBtn.addEventListener('click', function () {
-    const message = messageInput.value.trim();
-    if (!message || !selectedTeacherId) {
-        console.warn("Message ou ID de l'enseignant manquant.");
-        return;
-    }
-
-    console.log(`Préparation de l'envoi du message : "${message}" à l'enseignant ID: ${selectedTeacherId}`);
-
-    fetch('/send-message', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                teacher_id: selectedTeacherId,
-                message: message
-            })
-        })
-        .then(response => {
-            console.log("Réponse brute reçue du serveur :", response);
-            if (!response.ok) {
-                console.error(`Erreur HTTP : ${response.status} ${response.statusText}`);
-                throw new Error("Erreur lors de l'envoi du message.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Données JSON reçues :", data);
-            if (data.success) {
-                console.log("Message envoyé avec succès.");
-                messageInput.value = '';
-                loadMessages();
-            } else {
-                console.error("Erreur signalée par le serveur :", data);
-                alert("Erreur lors de l'envoi du message.");
-            }
-        })
-        .catch(error => {
-            console.error("Erreur lors de l'envoi du message :", error);
-            alert("Erreur lors de l'envoi du message.");
+            // Activer le bouton d'envoi si le champ de message n'est pas vide
+            messageInput.addEventListener('input', function () {
+                sendMessageBtn.disabled = !messageInput.value.trim();
+            });
         });
-});
-
-        // Activer le bouton d'envoi si le champ de message n'est pas vide
-        messageInput.addEventListener('input', function () {
-            sendMessageBtn.disabled = !messageInput.value.trim();
-        });
-    });
     </script>
 </body>
 </html>

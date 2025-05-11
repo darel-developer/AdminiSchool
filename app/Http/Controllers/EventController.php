@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Support\Facades\Log;
+use App\Models\Notification;
 
 
 
@@ -37,6 +38,8 @@ class EventController extends Controller
             'event_time' => $request->event_time,
             'class' => $request->class,
         ]);
+
+        Log::info("Événement créé: {$event->title} pour la classe {$event->class}");
     
         // Rechercher tous les élévès associés à laclasse sélectionner
         $students = \App\Models\Student::where('class', $request->class)->get();
@@ -55,6 +58,14 @@ class EventController extends Controller
     
                 // Envoi
                 $this->sendSmsNotification($parent->phone_number, $message);
+
+                // Create in-app notification
+                Notification::create([
+                    'tuteur_id' => $parent->id,
+                    'message' => $message,
+                ]);
+
+                Log::info("Notification envoyée au parent {$parent->name} pour l'élève {$student->name}");
             } else {
                 Log::warning("Aucun tuteur trouvé pour l'élève {$student->name}");
             }
