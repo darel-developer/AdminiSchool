@@ -118,7 +118,7 @@
     <div class="content">
         <div class="container mt-5">
             <h2 class="text-center">Create Teacher</h2>
-            <form action="{{ route('store.teacher') }}" method="POST">
+            <form id="createTeacherForm" action="{{ route('store.teacher') }}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <label for="first_name" class="form-label">First Name</label>
@@ -151,12 +151,44 @@
                 </div>
                 <input type="hidden" name="type" value="teacher">
                 <div class="mb-3">
-                    <label for="subject" class="form-label">password</label>
+                    <label for="password" class="form-label">Password</label>
                     <input type="password" name="password" id="password" class="form-control" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Create Teacher</button>
+                <button type="submit" class="btn btn-primary" onclick="sendEmail(event)">Create Teacher</button>
             </form>
         </div>
     </div>
+
+    <script>
+        function sendEmail(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const firstName = document.getElementById('first_name').value;
+            const lastName = document.getElementById('last_name').value;
+            const platformLink = "{{ url('/login') }}"; // Link to the platform login page
+
+            const emailBody = `
+                Bonjour ${firstName} ${lastName},\n\n
+                Votre compte a été créé avec succès sur la plateforme AdminiSchool.\n\n
+                Voici vos informations de connexion :\n
+                Email : ${email}\n
+                Mot de passe : ${password}\n\n
+                Vous pouvez vous connecter en cliquant sur le lien suivant : ${platformLink}\n\n
+                Cordialement,\n
+                L'équipe AdminiSchool
+            `;
+
+            // Simulate sending an email (replace with actual email sending logic if needed)
+            console.log("Sending email to:", email);
+            console.log("Email body:", emailBody);
+
+            alert("Un email contenant les informations de connexion a été envoyé à " + email);
+
+            // Submit the form after sending the email
+            document.getElementById('createTeacherForm').submit();
+        }
+    </script>
 </body>
 </html>
