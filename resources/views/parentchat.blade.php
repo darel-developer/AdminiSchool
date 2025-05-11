@@ -181,7 +181,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            let selectedChildId = {{ $students->first()->id ?? 'null' }}; // Set the first child as default
+            let selectedChildId = {{ $students->isNotEmpty() ? $students->first()->id : 'null' }}; // Ensure $students is not empty
 
             const contactTeacherBtn = document.getElementById('contactTeacherBtn');
             const chatHeader = document.getElementById('chatHeader');

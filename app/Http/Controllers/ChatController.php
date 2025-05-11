@@ -117,7 +117,9 @@ class ChatController extends Controller
 
     public function parentChat()
     {
-        return view('parentchat'); 
+        $tuteur = Auth::guard('tuteur')->user();
+        $students = $tuteur ? $tuteur->students : collect(); // Fetch associated students or return an empty collection
+        return view('parentchat', compact('students'));
     }
 
     public function teacherChat()
