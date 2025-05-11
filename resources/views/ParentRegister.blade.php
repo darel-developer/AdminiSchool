@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
         .gradient-custom-2 {
-            background: linear-gradient(to right, #38eb0b, #d8363a, #dd3675, #b44593);
+            background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
         }
         @media (min-width: 768px) {
             .gradient-form {
