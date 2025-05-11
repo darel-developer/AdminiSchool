@@ -2,18 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Middleware\Authenticate;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Teacher extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'teachers';
+    protected $table = 'teachers'; // Specify the custom table name
 
     protected $fillable = [
         'first_name',
@@ -23,7 +19,7 @@ class Teacher extends Authenticatable
         'subject',
         'type',
         'password',
-        'class_id', // Add class_id to fillable fields
+        'class_id',
     ];
 
     protected $hidden = [

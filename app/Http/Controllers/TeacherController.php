@@ -31,10 +31,10 @@ class TeacherController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:teachers,email', // Validate against the teachers table
             'subject' => 'required|string|max:255',
             'password' => 'required|string|min:8',
-            'class_id' => 'nullable|exists:classes,id', // Make class_id optional
+            'class_id' => 'nullable|exists:classes,id',
         ]);
 
         $teacher = Teacher::create([
@@ -45,7 +45,7 @@ class TeacherController extends Controller
             'subject' => $request->subject,
             'type' => 'teacher',
             'password' => Hash::make($request->password),
-            'class_id' => $request->class_id, // Ensure class_id is provided
+            'class_id' => $request->class_id,
         ]);
 
         // Envoyer un SMS à l'enseignant avec les informations de connexion via Infobip

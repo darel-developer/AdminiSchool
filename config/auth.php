@@ -37,7 +37,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'teachers', // Use the custom provider for teachers
         ],
 
         'tuteur' => [
@@ -84,9 +84,9 @@ return [
             'model' => App\Models\Tuteur::class,
         ],
 
-        'teachers' => [
+        'teachers' => [ // Define a custom provider for teachers
             'driver' => 'eloquent',
-            'model' => App\Models\Teacher::class,
+            'model' => App\Models\Teacher::class, // Point to the Teacher model
         ],
 
         'schools' => [
