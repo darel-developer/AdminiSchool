@@ -63,12 +63,12 @@
     <div class="sidebar">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
-            <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
+            <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
             Dashboard
         </a>
         <a href="{{route('school')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
-            Données
+            DONNEES
         </a>
         <a href="{{ route('documentschool') }}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
@@ -76,31 +76,32 @@
         </a>
         <a href="{{ route('eventschool') }}" class="sidebar-item">
             <img src="{{ asset('images/Event.png') }}" alt="event">
-            Events
+            Evenements
         </a>
         <a href="{{ route('schoolpaiement') }}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
             Payments
         </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/chat.png') }}" alt="chat">
-            Chat
-        </a>
+        
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
-            Users
+            Utilisateur
         </a>
         <a href="{{route('studentschool')}}" class="sidebar-item">
             <img src="{{ asset('images/action.png') }}" alt="user">
-            student
+            Etudiant
         </a>
         <a href="{{ route('create.teacher') }}" class="sidebar-item">
             <img src="{{ asset('images/teacher.png') }}" alt="teacher">
-            Create Teacher
+            Créer enseignant
+        </a>
+        <a href="{{ route('cahiertexte') }}" class="sidebar-item">
+            <img src="{{ asset('images/Book.png') }}" alt="teacher">
+           cahier de texte
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
+            Paramètres
         </a>
         <a href="{{ route('helpsupport') }}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">

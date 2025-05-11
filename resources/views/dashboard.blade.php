@@ -92,35 +92,32 @@
         </a>
         <a href="{{ route('eventschool') }}" class="sidebar-item">
             <img src="{{ asset('images/Event.png') }}" alt="event">
-            Events
+            Evenements
         </a>
         <a href="{{ route('schoolpaiement') }}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
             Payments
         </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/chat.png') }}" alt="chat">
-            Chat
-        </a>
+        
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
-            Users
+            Utilisateur
         </a>
         <a href="{{route('studentschool')}}" class="sidebar-item">
             <img src="{{ asset('images/action.png') }}" alt="user">
-            student
+            Etudiant
         </a>
         <a href="{{ route('create.teacher') }}" class="sidebar-item">
             <img src="{{ asset('images/teacher.png') }}" alt="teacher">
-            Create Teacher
+            Créer enseignant
         </a>
         <a href="{{ route('cahiertexte') }}" class="sidebar-item">
             <img src="{{ asset('images/Book.png') }}" alt="teacher">
-            Book Text
+           cahier de texte
         </a>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
+            Paramètres
         </a>
         <a href="{{ route('helpsupport') }}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">

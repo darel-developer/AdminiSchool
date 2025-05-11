@@ -186,6 +186,7 @@
             </div>
             <div class="chat-input">
                 <textarea id="messageInput" rows="1" placeholder="Écrivez votre message ici..."></textarea>
+                <input type="file" id="attachmentInput" class="form-control" style="max-width: 200px; margin-left: 10px;">
                 <button class="btn btn-primary" id="sendMessageBtn" disabled>Envoyer</button>
             </div>
         </div>
@@ -200,6 +201,7 @@
             const chatHeader = document.getElementById('chatHeader');
             const chatMessages = document.getElementById('chatMessages');
             const messageInput = document.getElementById('messageInput');
+            const attachmentInput = document.getElementById('attachmentInput');
             const sendMessageBtn = document.getElementById('sendMessageBtn');
             const teacherList = document.getElementById('teacherList');
             let selectedTeacherId = null;
@@ -273,30 +275,29 @@
                     });
             }
 
-            // Send message
+            // Send message with attachment
             sendMessageBtn.addEventListener('click', function () {
-                const message = messageInput.value.trim();
-                if (!message || !selectedTeacherId || !selectedChildId) {
-                    alert('Veuillez remplir tous les champs.');
-                    return;
+                const formData = new FormData();
+                formData.append('teacher_id', selectedTeacherId);
+                formData.append('child_id', selectedChildId);
+                formData.append('message', messageInput.value.trim());
+                if (attachmentInput.files.length) {
+                    formData.append('attachment', attachmentInput.files[0]);
                 }
 
                 fetch('/send-message', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     },
-                    body: JSON.stringify({
-                        teacher_id: selectedTeacherId,
-                        message: message,
-                        child_id: selectedChildId
-                    })
+                    body: formData,
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         messageInput.value = '';
+                        attachmentInput.value = '';
+                        toggleSendButton();
                         loadMessages();
                     } else {
                         alert('Erreur lors de l\'envoi du message.');
@@ -307,10 +308,13 @@
                 });
             });
 
-            // Enable send button if message input is not empty
-            messageInput.addEventListener('input', function () {
-                sendMessageBtn.disabled = !messageInput.value.trim();
-            });
+            // Enable send button if message or attachment is provided
+            function toggleSendButton() {
+                sendMessageBtn.disabled = !messageInput.value.trim() && !attachmentInput.files.length;
+            }
+
+            messageInput.addEventListener('input', toggleSendButton);
+            attachmentInput.addEventListener('change', toggleSendButton);
         });
     </script>
 </body>

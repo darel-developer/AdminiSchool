@@ -17,17 +17,28 @@ class ChatController extends Controller
     {
         $validated = $request->validate([
             'teacher_id' => 'required|exists:teachers,id',
-            'message' => 'required|string|max:1000',
+            'message' => 'nullable|string|max:1000',
             'child_id' => 'required|exists:students,id',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,wmv,pdf,doc,docx|max:10240', // Max 10MB
         ]);
 
         $user = Auth::user();
-        $message = Message::create([
-            'message' => $validated['message'],
+
+        $messageData = [
+            'message' => $validated['message'] ?? null,
             'teacher_id' => $validated['teacher_id'],
             'tuteur_id' => $user->id,
             'student_id' => $validated['child_id'],
-        ]);
+        ];
+
+        // Handle file upload
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $filePath = $file->store('attachments', 'public'); // Store in the 'public/attachments' directory
+            $messageData['attachment'] = $filePath;
+        }
+
+        $message = Message::create($messageData);
 
         return response()->json(['success' => true, 'message' => $message]);
     }
