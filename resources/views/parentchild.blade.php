@@ -112,13 +112,13 @@
             <div class="mb-3">
                 <label for="class" class="form-label">Classe</label>
                 <select class="form-control" id="class" name="class_id" required>
-                    <option value="6ème">6ème</option>
-                    <option value="5ème">5 ème</option>
-                    <option value="4ème">4ème</option>
-                    <option value="3ème">3ème</option>
-                    <option value="2nde">2 nd</option>
-                    <option value="1ère">1 ère</option>
-                    <option value="Terminale">Tle</option>
+                    @if($classes->isEmpty())
+                        <option value="" disabled>Aucune classe disponible</option>
+                    @else
+                        @foreach($classes as $class)
+                            <option value="{{ $class->name }}">{{ $class->name }}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
             <input type="hidden" name="tuteur_id" value="{{ auth()->guard('tuteur')->user()->id }}">

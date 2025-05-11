@@ -57,7 +57,7 @@ class TuteurController extends Controller
 
     public function showAddChildForm()
     {
-        $classes = Classe::all();
+        $classes = Classe::all(); // Fetch all classes from the database
         return view('parentchild', compact('classes'));
     }
 
