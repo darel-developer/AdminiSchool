@@ -96,6 +96,14 @@ class StudentController extends Controller
                         $data = ['warnings' => $student->warnings];
                         break;
 
+                    case 'edit': // New case for editing child data
+                        $data = [
+                            'name' => $student->name,
+                            'class' => $student->class,
+                            'id' => $student->id,
+                        ];
+                        break;
+
                     default:
                         return response()->json(['success' => false, 'error' => 'La section demandée est inconnue ou invalide.']);
                 }

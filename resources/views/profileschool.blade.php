@@ -104,12 +104,69 @@
                                 <td>{{ $student->class }}</td>
                                 <td>{{ $student->enrollment_date }}</td>
                                 <td>
-                                    <a href="{{ route('child.edit', $student->id) }}" class="btn btn-warning btn-sm">Modifier</a>
+                                    <button class="btn btn-warning btn-sm" onclick="editChild({{ $student->id }}, '{{ $student->name }}', '{{ $student->class }}')">Modifier</button>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+
+                <!-- Formulaire de modification des données de l'enfant -->
+                <div id="editChildFormContainer" class="mt-5" style="display: none;">
+                    <h2>Modifier les données de l'enfant</h2>
+                    <form id="editChildForm" method="POST">
+                        @csrf
+                        <input type="hidden" id="childId" name="child_id">
+                        <div class="mb-3">
+                            <label for="childName" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="childName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="childClass" class="form-label">Classe</label>
+                            <select class="form-control" id="childClass" name="class_id" required>
+                                @foreach($classes as $class)
+                                    <option value="{{ $class->name }}">{{ $class->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="submitEditChildForm()">Mettre à jour</button>
+                    </form>
+                </div>
+
+                <script>
+                    function editChild(id, name, className) {
+                        document.getElementById('editChildFormContainer').style.display = 'block';
+                        document.getElementById('childId').value = id;
+                        document.getElementById('childName').value = name;
+                        document.getElementById('childClass').value = className;
+                    }
+
+                    function submitEditChildForm() {
+                        const form = document.getElementById('editChildForm');
+                        const formData = new FormData(form);
+                        const childId = document.getElementById('childId').value;
+
+                        fetch(`/child/update/${childId}`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
+                            body: formData,
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Données mises à jour avec succès.');
+                                location.reload(); // Reload the page to reflect changes
+                            } else {
+                                alert('Erreur lors de la mise à jour des données.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la mise à jour des données :', error);
+                        });
+                    }
+                </script>
             </div>
         </div>
     </div>

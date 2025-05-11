@@ -169,6 +169,7 @@
                 <button type="button" class="btn btn-primary" onclick="loadSection('warnings')">Avertissements</button>
                 <button type="button" class="btn btn-primary" onclick="loadSection('planning')">Planning</button>
                 <button type="button" class="btn btn-primary" onclick="loadSection('notes')">Notes</button>
+                <button type="button" class="btn btn-primary" onclick="loadSection('edit')">Modifier les données</button>
             </div>
 
             <div id="content" class="section-content">
@@ -352,6 +353,23 @@
                                     }
                                     break;
 
+                                case 'edit':
+                                    htmlContent = `
+                                        <h2>Modifier les données de l'enfant</h2>
+                                        <form id="editChildForm">
+                                            <div class="mb-3">
+                                                <label for="name" class="form-label">Nom</label>
+                                                <input type="text" class="form-control" id="name" name="name" value="${data.data.name}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="class" class="form-label">Classe</label>
+                                                <input type="text" class="form-control" id="class" name="class" value="${data.data.class}" required>
+                                            </div>
+                                            <button type="button" class="btn btn-primary" onclick="updateChild(${data.data.id})">Mettre à jour</button>
+                                        </form>
+                                    `;
+                                    break;
+
                                 default:
                                     htmlContent = `<p>Section ${section} chargée avec succès.</p>`;
                                     break;
@@ -368,6 +386,31 @@
                     });
             };
         });
+
+        function updateChild(childId) {
+            const form = document.getElementById('editChildForm');
+            const formData = new FormData(form);
+
+            fetch(`/child/update/${childId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Données mises à jour avec succès.');
+                    loadSection('general'); // Reload general section after update
+                } else {
+                    alert('Erreur lors de la mise à jour des données.');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la mise à jour des données :', error);
+            });
+        }
 
         function openNotificationModal() {
             console.log('Ouverture du modal des notifications...');

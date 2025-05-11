@@ -99,7 +99,8 @@ class TuteurController extends Controller
     {
         $tuteur = Auth::guard('tuteur')->user();
         $students = $tuteur->students;
-        return view('profileschool', compact('tuteur', 'students'));
+        $classes = Classe::all(); // Fetch all classes for the dropdown
+        return view('profileschool', compact('tuteur', 'students', 'classes'));
     }
 
     public function editChild($id)
