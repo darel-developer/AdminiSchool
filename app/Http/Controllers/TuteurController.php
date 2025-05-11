@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Tuteur;
 use App\Models\Student;
 use App\Models\Classe;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
 
 class TuteurController extends Controller
@@ -71,7 +72,8 @@ class TuteurController extends Controller
     public function index()
     {
         $tuteurs = Tuteur::all();
-        return view('userschool', compact('tuteurs'));
+        $teachers = Teacher::with('classe')->get(); // Fetch teachers with their associated classes
+        return view('userschool', compact('tuteurs', 'teachers'));
     }
 
     public function edit($id)

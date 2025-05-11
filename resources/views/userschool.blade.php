@@ -1,4 +1,3 @@
-<!-- filepath: /c:/xampp/htdocs/Adminischool/resources/views/showpaiement.blade.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -110,14 +109,15 @@
     </div>
     <div class="content">
         <div class="container mt-5">
-            <h1>Liste des Tuteurs</h1>
+            <h1>Liste des Utilisateurs</h1>
             @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
             @endif
-    
+
             <!-- Table des tuteurs -->
+            <h2>Tuteurs</h2>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -147,9 +147,44 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <!-- Table des enseignants -->
+            <h2>Enseignants</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Numéro de Téléphone</th>
+                        <th>Matière</th>
+                        <th>Classe</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($teachers as $teacher)
+                        <tr>
+                            <td>{{ $teacher->first_name }}</td>
+                            <td>{{ $teacher->last_name }}</td>
+                            <td>{{ $teacher->email }}</td>
+                            <td>{{ $teacher->phone }}</td>
+                            <td>{{ $teacher->subject }}</td>
+                            <td>{{ $teacher->classe ? $teacher->classe->name : 'Aucune' }}</td>
+                            <td>
+                                <a href="{{ route('users.edit', $teacher->id) }}" class="btn btn-warning">Modifier</a>
+                                <form action="{{ route('users.delete', $teacher->id) }}" method="POST" style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
-   
 
     <!-- Fenêtre modale -->
     
