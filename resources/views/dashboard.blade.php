@@ -132,7 +132,7 @@
                 <div class="col-md-3">
                     <a href="{{ route('students.details') }}" class="text-decoration-none">
                         <div class="card dashboard-card p-3 text-center">
-                            <div class="dashboard-title">Students <i class="fas fa-user-graduate"></i></div>
+                            <div class="dashboard-title">Etudiants <i class="fas fa-user-graduate"></i></div>
                             <div class="dashboard-value">{{ $studentCount }}</div>
                         </div>
                     </a>
@@ -165,11 +165,11 @@
             <div class="row mt-4">
                 <div class="col-md-6">
                     <div class="card p-3">
-                        <h5>Recent Activities</h5>
+                        <h5>Activités récentes</h5>
                         <ul>
-                            <li>New student enrolled</li>
-                            <li>Teacher added to the system</li>
-                            <li>Event created</li>
+                            <li>Nouveau étudaint inscrit</li>
+                            <li>Etudiant Devas nya ajouté au système</li>
+                            <li>Evenement Créer</li>
                         </ul>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                     <div class="card p-3">
                         <h5>Notifications</h5>
                         <ul>
-                            <li>Payment due for 5 students</li>
+                            <li>Paiement de 5 étudiants</li>
                             <li>3 absences reported today</li>
                             <li>Convocation scheduled for tomorrow</li>
                         </ul>

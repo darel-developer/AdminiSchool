@@ -116,7 +116,7 @@
     <div class="row mb-4" id="nameFields">
         <div class="col">
             <div class="form-outline">
-                <input type="text" id="firstName" name="nom" class="form-control" placeholder="First Name" value="{{ old('nom') }}" required />
+                <input type="text" id="firstName" name="nom" class="form-control" placeholder="First Name" value="{{ Auth::user()->nom }}" readonly />
                 <label class="form-label" for="firstName">First Name</label>
                 @error('nom')
                     <div class="text-danger">{{ $message }}</div>
@@ -125,7 +125,7 @@
         </div>
         <div class="col">
             <div class="form-outline">
-                <input type="text" id="secondName" name="prenom" class="form-control" placeholder="Second Name" value="{{ old('prenom') }}" required />
+                <input type="text" id="secondName" name="prenom" class="form-control" placeholder="Second Name" value="{{ Auth::user()->prenom }}" readonly />
                 <label class="form-label" for="secondName">Second Name</label>
                 @error('prenom')
                     <div class="text-danger">{{ $message }}</div>
