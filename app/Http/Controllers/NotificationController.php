@@ -143,7 +143,7 @@ class NotificationController extends Controller
 
     public function getUnreadNotificationCount()
     {
-        $userId = Auth::id(); // Ensure authenticated user's ID is retrieved correctly
+        $userId = Auth::id();
         $unreadNotificationsCount = Notification::where('tuteur_id', $userId)->where('is_read', false)->count();
 
         return response()->json(['unreadNotificationsCount' => $unreadNotificationsCount]);

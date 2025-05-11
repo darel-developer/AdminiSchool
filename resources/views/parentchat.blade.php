@@ -126,8 +126,9 @@
             Messagerie
         </a>
         <a href="{{ route('notifications.page') }}" class="sidebar-item">
-            <img src="{{ asset('images/notification.png') }}" alt="help support">
-            notification
+            <img src="{{ asset('images/notification.png') }}" alt="notification">
+            <span>Notification</span>
+            <span id="notificationBadge" class="badge bg-danger ms-2" style="display: none;">0</span>
         </a>
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="help support">
@@ -315,6 +316,29 @@
 
             messageInput.addEventListener('input', toggleSendButton);
             attachmentInput.addEventListener('change', toggleSendButton);
+
+            function updateNotificationBadge() {
+                fetch('{{ route("notifications.unread-count") }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        const badge = document.getElementById('notificationBadge');
+                        if (data.unreadNotificationsCount > 0) {
+                            badge.textContent = data.unreadNotificationsCount;
+                            badge.style.display = 'inline-block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des notifications non lues :', error);
+                    });
+            }
+
+            // Update the badge every 30 seconds
+            setInterval(updateNotificationBadge, 30000);
+
+            // Initial badge update
+            updateNotificationBadge();
         });
     </script>
 </body>
