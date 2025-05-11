@@ -95,6 +95,8 @@ Route::get('/tuteurschool/edit/{id}', [TuteurController::class, 'edit'])->name('
 Route::post('/tuteurschool/update/{id}', [TuteurController::class, 'update'])->name('users.update');
 Route::delete('/tuteurschool/delete/{id}', [TuteurController::class, 'destroy'])->name('users.delete');
 
+// Add this route to resolve the error
+Route::get('/users', [TuteurController::class, 'index'])->name('users');
 
 //Route pour gérer les élèves
 Route::post('student/upload', [StudentController::class, 'upload'])->name('student.upload');
