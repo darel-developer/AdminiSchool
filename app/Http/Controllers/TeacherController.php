@@ -136,4 +136,11 @@ class TeacherController extends Controller
 
         return view('statistics', compact('statistics'));
     }
+
+    public function destroy($id)
+    {
+        $teacher = Teacher::findOrFail($id); // Find the teacher by ID
+        $teacher->delete(); // Delete the teacher
+        return redirect()->route('users')->with('success', 'Enseignant supprimé avec succès.');
+    }
 }

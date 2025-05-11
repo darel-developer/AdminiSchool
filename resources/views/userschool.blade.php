@@ -173,10 +173,10 @@
                             <td>{{ $teacher->classe ? $teacher->classe->name : 'Aucune' }}</td>
                             <td>
                                 <a href="{{ route('users.edit', $teacher->id) }}" class="btn btn-warning">Modifier</a>
-                                <form action="{{ route('users.delete', $teacher->id) }}" method="POST" style="display:inline-block;">
+                                <form action="{{ route('teachers.delete', $teacher->id) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet enseignant ?')">Supprimer</button>
                                 </form>
                             </td>
                         </tr>

@@ -171,6 +171,9 @@ Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('
 Route::get('/create-teacher', [TeacherController::class, 'create'])->name('create.teacher');
 Route::post('/store-teacher', [TeacherController::class, 'store'])->name('store.teacher');
 
+// Route for deleting a teacher
+Route::delete('/teachers/delete/{id}', [TeacherController::class, 'destroy'])->name('teachers.delete');
+
 //Route du dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/students/details', [StudentController::class, 'details'])->name('students.details');
