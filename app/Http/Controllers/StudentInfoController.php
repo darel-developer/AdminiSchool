@@ -113,7 +113,7 @@ class StudentController extends Controller
                         break;
                     case 'notes':
                         $data = [
-                            'notes' => $student->notes, // Assurez-vous que la relation 'notes' est définie dans le modèle Student
+                            'notes' => $student->notes, 
                         ];
                         break;
                     case 'convocation':

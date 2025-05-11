@@ -41,23 +41,23 @@ class EventController extends Controller
 
         Log::info("Événement créé: {$event->title} pour la classe {$event->class}");
     
-        // Rechercher tous les élévès associés à laclasse sélectionner
+        // Rechercher tous les élévès associés à la classe sélectionnée
         $students = \App\Models\Student::where('class', $request->class)->get();
     
         foreach ($students as $student) {
-            // Recherhcer le parent de l'élève
-            $parent = \App\Models\Tuteur::where('child_name', $student->name)->first();
-    
+            // Rechercher le parent de l'élève
+            $parent = $student->tuteur; // Use the relationship if defined in the Student model
+
             if ($parent) {
-                // préparation du sms
+                // Préparation du SMS
                 $message = "Événement: {$event->title}\n"
                     . "Description: {$event->description}\n"
                     . "Date: {$event->event_date}\n"
                     . "Heure: {$event->event_time}\n"
                     . "Classe: {$event->class}";
-    
+
                 // Envoi
-                $this->sendSmsNotification($parent->phone_number, $message);
+                $this->sendSmsNotification($parent->phone, $message);
 
                 // Create in-app notification
                 Notification::create([

@@ -123,7 +123,7 @@
         </a>
         <a href="{{route('parentchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
-            Chat
+            Messagerie
         </a>
         <a href="{{ route('notifications.page') }}" class="sidebar-item">
             <img src="{{ asset('images/notification.png') }}" alt="help support">
@@ -131,11 +131,11 @@
         </a>
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="help support">
-            add enfant
+            Ajouter Enfant
         </a>
         <a href="{{route('profileschool')}}" class="sidebar-item">
             <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
+            Paramètres
         </a>
         <a href="{{route('helpsupport')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
@@ -195,7 +195,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            let selectedChildId = {{ $students->isNotEmpty() ? $students->first()->id : 'null' }}; // Default to the first child if available
+            let selectedChildId = {{ $students->isNotEmpty() ? $students->first()->id : 'null' }}; 
             const childSelector = document.getElementById('childSelector');
             const contactTeacherBtn = document.getElementById('contactTeacherBtn');
             const chatHeader = document.getElementById('chatHeader');
@@ -206,7 +206,7 @@
             const teacherList = document.getElementById('teacherList');
             let selectedTeacherId = null;
 
-            // Update selected child when dropdown changes
+           
             childSelector.addEventListener('change', function () {
                 selectedChildId = this.value;
                 chatHeader.textContent = 'Sélectionnez un enseignant pour commencer';
@@ -214,7 +214,7 @@
                 sendMessageBtn.disabled = true;
             });
 
-            // Load teachers and open modal
+            
             contactTeacherBtn.addEventListener('click', function () {
                 if (!selectedChildId) {
                     alert('Veuillez sélectionner un enfant.');
@@ -254,7 +254,7 @@
                     });
             });
 
-            // Load messages
+           
             function loadMessages() {
                 if (!selectedTeacherId) return;
 
@@ -275,7 +275,7 @@
                     });
             }
 
-            // Send message with attachment
+            
             sendMessageBtn.addEventListener('click', function () {
                 const formData = new FormData();
                 formData.append('teacher_id', selectedTeacherId);
@@ -308,7 +308,7 @@
                 });
             });
 
-            // Enable send button if message or attachment is provided
+           
             function toggleSendButton() {
                 sendMessageBtn.disabled = !messageInput.value.trim() && !attachmentInput.files.length;
             }

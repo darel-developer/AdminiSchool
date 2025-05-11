@@ -115,6 +115,10 @@
                     <label for="heure" class="form-label">Heure</label>
                     <input type="time" class="form-control" id="heure" name="heure" required>
                 </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="date" name="date" required>
+                </div>
                 <div class="mb-3" id="customTypeContainer" style="display: none;">
                     <label for="customType" class="form-label">Type personnalisé</label>
                     <input type="text" class="form-control" id="customType" name="customType">
@@ -220,6 +224,7 @@
             event.preventDefault();
             const type = document.getElementById('type').value;
             const heure = document.getElementById('heure').value;
+            const date = document.getElementById('date').value;
             const customType = document.getElementById('customType').value;
 
             const form = document.getElementById('notificationForm');
@@ -234,6 +239,12 @@
             heureInput.name = 'heure';
             heureInput.value = heure;
             form.appendChild(heureInput);
+
+            const dateInput = document.createElement('input');
+            dateInput.type = 'hidden';
+            dateInput.name = 'date';
+            dateInput.value = date;
+            form.appendChild(dateInput);
 
             form.submit();
         });

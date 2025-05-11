@@ -23,11 +23,11 @@ class Tuteur extends Authenticatable
         
     ];
 
-    protected $guard = 'tuteur';
+    protected $guard = 'tuteurs';
 
     public function students()
     {
-        return $this->hasMany(Student::class, 'tuteur_id');
+        return $this->hasMany(Student::class, 'tuteur_id'); 
     }
 
     public function documents()

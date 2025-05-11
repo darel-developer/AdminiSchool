@@ -153,7 +153,7 @@
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             <span>Messagerie</span>
         </a>
-        <a href="{{ route('notifications.page') }}" class="sidebar-item">
+        <a href="#" class="sidebar-item" onclick="openNotificationModal()">
             <img src="{{ asset('images/notification.png') }}" alt="notification">
             <span>Notification</span>
         </a>
@@ -195,9 +195,6 @@
 
             <div class="btn-group mb-4" role="group" aria-label="Sections">
                 <button type="button" class="btn btn-primary" onclick="loadSection('general')">Informations Générales</button>
-                <button type="button" class="btn btn-primary" onclick="loadSection('absence')">Absences</button>
-                <button type="button" class="btn btn-primary" onclick="loadSection('convocation')">Convocations</button>
-                <button type="button" class="btn btn-primary" onclick="loadSection('warnings')">Avertissements</button>
                 <button type="button" class="btn btn-primary" onclick="loadSection('planning')">Planning</button>
                 <button type="button" class="btn btn-primary" onclick="loadSection('notes')">Notes</button>
                 <button type="button" class="btn btn-primary" onclick="loadSection('edit')">Modifier les données</button>
@@ -230,15 +227,15 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         function updateNotificationBadge() {
-            fetch('{{ route("notifications.unread-count") }}') // Use Laravel helper to generate URL
+            fetch('{{ route("notifications.unread-count") }}') 
                 .then(response => response.json())
                 .then(data => {
                     const badge = document.getElementById('notificationBadge');
                     if (data.unreadNotificationsCount > 0) {
-                        badge.textContent = data.unreadNotificationsCount; // Update badge text
-                        badge.style.display = 'inline-block'; // Show badge
+                        badge.textContent = data.unreadNotificationsCount; 
+                        badge.style.display = 'inline-block'; 
                     } else {
-                        badge.style.display = 'none'; // Hide badge if no unread notifications
+                        badge.style.display = 'none'; 
                     }
                 })
                 .catch(error => {
@@ -246,33 +243,33 @@
                 });
         }
 
-        // Update badge every 30 seconds
+       
         setInterval(updateNotificationBadge, 30000);
 
-        // Initial update on page load
+        
         updateNotificationBadge();
     });
 </script>
     <script>
-        let selectedChildId = {{ $students->first()->id ?? 'null' }}; // Set the first child as default
+        let selectedChildId = {{ $students->first()->id ?? 'null' }}; 
 
         document.addEventListener('DOMContentLoaded', function () {
             const childSelector = document.getElementById('childSelector');
             const content = document.getElementById('content');
 
-            // Set the default child in the dropdown
+            
             if (childSelector && selectedChildId) {
                 childSelector.value = selectedChildId;
                 content.innerHTML = '<p>Sélectionnez une section pour afficher les données.</p>';
             }
 
-            // Update selected child on dropdown change
+            
             childSelector.addEventListener('change', function () {
                 selectedChildId = this.value;
                 content.innerHTML = '<p>Sélectionnez une section pour afficher les données.</p>';
             });
 
-            // Function to load section data
+            
             window.loadSection = function (section) {
                 if (!selectedChildId) {
                     alert('Veuillez sélectionner un enfant.');
@@ -444,17 +441,9 @@
         }
 
         function openNotificationModal() {
-            console.log('Ouverture du modal des notifications...');
-            fetch('/notifications')
-                .then(response => {
-                    console.log('Réponse reçue du serveur :', response);
-                    if (!response.ok) {
-                        throw new Error('Erreur HTTP: ' + response.status);
-                    }
-                    return response.json();
-                })
+            fetch('{{ route("notifications.page") }}')
+                .then(response => response.json())
                 .then(data => {
-                    console.log('Données des notifications reçues :', data);
                     const notificationList = document.getElementById('notificationList');
                     notificationList.innerHTML = '';
 
@@ -473,14 +462,11 @@
                         });
                     }
 
-                    // Afficher la fenêtre modale
                     const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
                     modal.show();
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération des notifications :', error);
-
-                    // Afficher un message d'erreur dans le modal
                     const notificationList = document.getElementById('notificationList');
                     notificationList.innerHTML = '<li class="list-group-item">Erreur lors de la récupération des notifications.</li>';
                     const modal = new bootstrap.Modal(document.getElementById('notificationModal'));

@@ -21,7 +21,7 @@ class Student extends Model
 
     public function tuteur()
     {
-        return $this->belongsTo(Tuteur::class, 'tuteur_id');
+        return $this->belongsTo(Tuteur::class, 'tuteur_id'); // Adjust the foreign key if necessary
     }
 
     public function classe()

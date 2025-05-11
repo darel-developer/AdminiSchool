@@ -40,19 +40,21 @@ class NotificationController extends Controller
             'motif' => 'required|string|in:absence,convocation',
             'type' => 'required|string',
             'heure' => 'required|string',
+            'date' => 'required|date',
         ]);
 
         $eleves = Student::whereIn('id', $request->eleves)->get();
         $motif = $request->motif;
         $type = $request->type;
         $heure = $request->heure;
+        $date = $request->date;
 
         foreach ($eleves as $eleve) {
             $parent = $eleve->tuteur;
             if ($parent) {
                 $message = $motif == 'absence' 
-                    ? "Votre enfant {$eleve->name} est absent aujourd'hui. Type: {$type}, Heure: {$heure}." 
-                    : "Votre enfant {$eleve->name} est convoqué pour une réunion. Motif: {$type}, Heure: {$heure}.";
+                    ? "Votre enfant {$eleve->name} est absent le {$date}. Type: {$type}, Heure: {$heure}." 
+                    : "Votre enfant {$eleve->name} est convoqué pour une réunion le {$date}. Motif: {$type}, Heure: {$heure}.";
 
                 // Send SMS notification
                 $this->sendSmsNotification($parent->phone, $message);
@@ -111,16 +113,12 @@ class NotificationController extends Controller
 
     public function getNotifications()
     {
-        $userId = Auth::id(); // Récupérer l'ID de l'utilisateur connecté
-
-        // Récupérer les notifications de l'utilisateur connecté
+        $userId = Auth::id();
         $notifications = Notification::where('tuteur_id', $userId)->orderBy('created_at', 'desc')->get();
 
-        // Compter les notifications non lues
-        $unreadNotificationsCount = $notifications->where('is_read', false)->count();
-
-        // Retourner la vue avec les données nécessaires
-        return view('parent', compact('notifications', 'unreadNotificationsCount'));
+        return response()->json([
+            'notifications' => $notifications,
+        ]);
     }
 
     public function markAsRead($id)
