@@ -130,6 +130,8 @@ Route::middleware(['auth:tuteur'])->group(function () {
     Route::post('/register/traitement/enfant', [TuteurController::class, 'addChild'])->name('parent.addChild');
     Route::post('/upload/document', [FichierController::class, 'uploadDocument'])->name('parent.uploadDocument');
     Route::get('/parent', [TuteurController::class, 'dashboard'])->name('parent');
+    Route::get('/child/edit/{id}', [TuteurController::class, 'editChild'])->name('child.edit');
+    Route::post('/child/update/{id}', [TuteurController::class, 'updateChild'])->name('child.update');
 });
 
 // Route pour traiter la connexion

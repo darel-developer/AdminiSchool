@@ -101,4 +101,30 @@ class TuteurController extends Controller
         $students = $tuteur->students;
         return view('profileschool', compact('tuteur', 'students'));
     }
+
+    public function editChild($id)
+    {
+        $tuteur = auth()->guard('tuteur')->user();
+        $student = Student::where('id', $id)->where('tuteur_id', $tuteur->id)->firstOrFail();
+        $classes = Classe::all();
+        return view('editchild', compact('student', 'classes'));
+    }
+
+    public function updateChild(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'class_id' => 'required|string|max:255',
+        ]);
+
+        $tuteur = auth()->guard('tuteur')->user();
+        $student = Student::where('id', $id)->where('tuteur_id', $tuteur->id)->firstOrFail();
+
+        $student->update([
+            'name' => $validatedData['name'],
+            'class' => $validatedData['class_id'],
+        ]);
+
+        return redirect()->route('parent')->with('success', 'Données de l\'enfant mises à jour avec succès.');
+    }
 }

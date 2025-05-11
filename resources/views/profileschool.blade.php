@@ -1,4 +1,3 @@
-<!-- filepath: c:\xampp\htdocs\AdminiSchool\resources\views\profileschool.blade.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -95,14 +94,18 @@
                             <th>Nom</th>
                             <th>Classe</th>
                             <th>Date d'inscription</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($students as $student)
                             <tr>
                                 <td>{{ $student->name }}</td>
-                                <td>{{ $student->class_id }}</td>
+                                <td>{{ $student->class }}</td>
                                 <td>{{ $student->enrollment_date }}</td>
+                                <td>
+                                    <a href="{{ route('child.edit', $student->id) }}" class="btn btn-warning btn-sm">Modifier</a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
