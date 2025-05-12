@@ -143,4 +143,28 @@ class TeacherController extends Controller
         $teacher->delete(); // Delete the teacher
         return redirect()->route('users')->with('success', 'Enseignant supprimé avec succès.');
     }
+
+    public function edit($id)
+    {
+        $teacher = Teacher::findOrFail($id); // Find the teacher by ID
+        $classes = Classe::all(); // Fetch all classes for the dropdown
+        return view('edit-teacher', compact('teacher', 'classes'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:teachers,email,' . $id,
+            'phone' => 'required|string|max:15',
+            'subject' => 'required|string|max:255',
+            'class_id' => 'nullable|exists:classes,id',
+        ]);
+
+        $teacher = Teacher::findOrFail($id);
+        $teacher->update($request->only('first_name', 'last_name', 'email', 'phone', 'subject', 'class_id'));
+
+        return redirect()->route('users')->with('success', 'Enseignant mis à jour avec succès.');
+    }
 }

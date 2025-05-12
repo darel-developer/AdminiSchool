@@ -175,6 +175,12 @@ Route::post('/store-teacher', [TeacherController::class, 'store'])->name('store.
 // Route for deleting a teacher
 Route::delete('/teachers/delete/{id}', [TeacherController::class, 'destroy'])->name('teachers.delete');
 
+// Route for editing a teacher
+Route::get('/teachers/edit/{id}', [TeacherController::class, 'edit'])->name('teachers.edit');
+
+// Route for updating a teacher
+Route::put('/teachers/update/{id}', [TeacherController::class, 'update'])->name('teachers.update');
+
 //Route du dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/students/details', [StudentController::class, 'details'])->name('students.details');
