@@ -194,6 +194,11 @@ Route::post('/send-announcement', [TeacherController::class, 'storeAnnouncement'
 //Route pour les statistiques des enseignants
 Route::get('/statistics', [TeacherController::class, 'showStatistics'])->name('teacher.statistics');
 
+// Routes pour générer les rapports mensuels
+Route::get('/reports/absences', [DashboardController::class, 'generateAbsenceReport'])->name('reports.absences');
+Route::get('/reports/convocations', [DashboardController::class, 'generateConvocationReport'])->name('reports.convocations');
+Route::get('/reports/paiements', [DashboardController::class, 'generatePaiementReport'])->name('reports.paiements');
+
 Route::get('/', function () {
     return view('welcome');
 });

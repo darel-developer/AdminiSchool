@@ -180,6 +180,18 @@
                     </div>
                 </div>
             </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card p-3">
+                        <h5>Actions Rapides</h5>
+                        <div class="d-flex justify-content-around">
+                            <a href="{{ route('reports.absences') }}" class="btn btn-primary">Rapport des Absences</a>
+                            <a href="{{ route('reports.convocations') }}" class="btn btn-warning">Rapport des Convocations</a>
+                            <a href="{{ route('reports.paiements') }}" class="btn btn-success">Rapport des Paiements</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row mt-5">
                 <div class="col-md-6">
                     <div class="card p-4">
