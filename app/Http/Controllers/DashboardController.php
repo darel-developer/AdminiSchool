@@ -6,7 +6,7 @@ use App\Models\Student;
 use App\Models\Paiement;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\PDF;  
+use Barryvdh\DomPDF\Facade\Pdf;  
 
 class DashboardController extends Controller
 {
@@ -46,7 +46,7 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
-        $pdf = PDF::loadView('reports.absences', compact('absences'));
+        $pdf = Pdf::loadView('reports.absences', compact('absences'));
         return $pdf->download('rapport_absences.pdf');
     }
 
@@ -57,7 +57,7 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
-        $pdf = PDF::loadView('reports.convocations', compact('convocations'));
+        $pdf = Pdf::loadView('reports.convocations', compact('convocations'));
         return $pdf->download('rapport_convocations.pdf');
     }
 
@@ -68,7 +68,7 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
-        $pdf = PDF::loadView('reports.paiements', compact('paiements'));
+        $pdf = Pdf::loadView('reports.paiements', compact('paiements'));
         return $pdf->download('rapport_paiements.pdf');
     }
 }
