@@ -139,15 +139,15 @@ class TeacherController extends Controller
 
     public function destroy($id)
     {
-        $teacher = Teacher::findOrFail($id); // Find the teacher by ID
-        $teacher->delete(); // Delete the teacher
+        $teacher = Teacher::findOrFail($id);
+        $teacher->delete(); 
         return redirect()->route('users')->with('success', 'Enseignant supprimé avec succès.');
     }
 
     public function edit($id)
     {
-        $teacher = Teacher::findOrFail($id); // Find the teacher by ID
-        $classes = Classe::all(); // Fetch all classes for the dropdown
+        $teacher = Teacher::findOrFail($id); 
+        $classes = Classe::all(); 
         return view('edit-teacher', compact('teacher', 'classes'));
     }
 
