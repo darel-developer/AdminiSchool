@@ -220,11 +220,7 @@
 </head>
 
 <body>
-<script>
-    if (window.innerWidth < 768) {
-        window.location.href = "/mobile-blocked";
-    }
-</script>
+
 
  <!-- Navbar -->
  <nav class="navbar navbar-expand-lg navbar-light">
