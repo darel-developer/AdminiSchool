@@ -23,6 +23,8 @@
             top: 0;
             left: 0;
             height: 100vh;
+            z-index: 1000;
+            transition: transform 0.3s ease;
         }
         .sidebar-title {
             font-family: 'Lemonada', sans-serif;
@@ -56,53 +58,61 @@
             padding: 20px;
             flex-grow: 1;
             background: #fff;
+            width: 100%;
+            transition: margin-left 0.3s;
         }
-        .form-section {
+        /* Hamburger styles */
+        .hamburger {
             display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1100;
+            width: 35px;
+            height: 35px;
+            background: #2c3e50;
+            border: none;
+            border-radius: 5px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-        .form-section.active {
+        .hamburger span {
             display: block;
-            opacity: 1;
+            width: 22px;
+            height: 3px;
+            background: #fff;
+            margin: 4px 0;
+            border-radius: 2px;
+            transition: all 0.3s;
         }
-        .form-header {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .form-description {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 15px;
-        }
-        .form-label {
-            font-weight: bold;
-        }
-        .form-control {
-            border-radius: 5px;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+            }
+            .hamburger {
+                display: flex;
+            }
+            body.sidebar-open {
+                overflow: hidden;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
+    <button class="hamburger" id="hamburgerBtn" aria-label="Ouvrir le menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
@@ -124,7 +134,6 @@
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
             Payments
         </a>
-        
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
             Utilisateur
@@ -214,6 +223,25 @@
     </div>
 
     <script>
+        // Hamburger toggle
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebarMenu = document.getElementById('sidebarMenu');
+
+        hamburgerBtn.addEventListener('click', function() {
+            sidebarMenu.classList.toggle('open');
+            document.body.classList.toggle('sidebar-open');
+        });
+
+        // Optional: close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 900) {
+                if (!sidebarMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                    sidebarMenu.classList.remove('open');
+                    document.body.classList.remove('sidebar-open');
+                }
+            }
+        });
+
         document.getElementById('nextBtn').addEventListener('click', function() {
             document.getElementById('form1').classList.remove('active');
             document.getElementById('form2').classList.add('active');
