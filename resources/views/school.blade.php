@@ -59,6 +59,17 @@
             background: #fff;
             width: 100%;
             transition: margin-left 0.3s;
+            /* Animation initiale */
+            opacity: 0;
+            transform: translateY(30px);
+            transition:
+                margin-left 0.3s,
+                opacity 0.7s cubic-bezier(.4,0,.2,1),
+                transform 0.7s cubic-bezier(.4,0,.2,1);
+        }
+        .content.animated {
+            opacity: 1;
+            transform: translateY(0);
         }
         @media (max-width: 991.98px) {
             .sidebar {
@@ -245,6 +256,13 @@
         document.getElementById('backBtn2').addEventListener('click', function() {
             document.getElementById('form3').classList.remove('active');
             document.getElementById('form2').classList.add('active');
+        });
+
+        // Animation du contenu principal à l'affichage
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('mainContent').classList.add('animated');
+            }, 100); // petit délai pour un effet plus fluide
         });
     </script>
 </body>
