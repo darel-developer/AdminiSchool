@@ -569,7 +569,7 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="event-tab" data-bs-toggle="tab" data-bs-target="#event" type="button" role="tab" aria-controls="event" aria-selected="true">
                     Événement
-                </button>
+                </button> 
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="announcement-tab" data-bs-toggle="tab" data-bs-target="#announcement" type="button" role="tab" aria-controls="announcement" aria-selected="false">
