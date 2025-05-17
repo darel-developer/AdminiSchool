@@ -188,7 +188,7 @@
     <!-- Notification Icon -->
     <div class="notification-icon" id="notificationIcon">
         <a href="#" onclick="openNotificationModal(); return false;">
-            <img src="https://img.icons8.com/ios-filled/50/000000/bell.png" alt="Notifications">
+            <img id="notificationBell" src="https://img.icons8.com/ios-filled/50/000000/bell.png" alt="Notifications">
             <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
                 0
             </span>
@@ -249,14 +249,16 @@
                 .then(response => response.json())
                 .then(data => {
                     const badge = document.getElementById('notificationBadge');
-                    const icon = document.getElementById('notificationIcon');
+                    const bell = document.getElementById('notificationBell');
                     if (data.unreadNotificationsCount > 0) {
                         badge.textContent = data.unreadNotificationsCount; 
                         badge.style.display = 'inline-block'; 
-                        // Animation si nouvelle notification
+                        // Animation GIF si nouvelle notification
                         if (data.unreadNotificationsCount > lastUnreadCount) {
-                            icon.classList.add('notification-new');
-                            setTimeout(() => icon.classList.remove('notification-new'), 1000);
+                            const originalSrc = "https://img.icons8.com/ios-filled/50/000000/bell.png";
+                            const gifSrc = "https://img.icons8.com/fluency/48/000000/bell.gif";
+                            bell.src = gifSrc;
+                            setTimeout(() => { bell.src = originalSrc; }, 1200);
                         }
                     } else {
                         badge.style.display = 'none'; 
