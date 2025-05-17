@@ -92,6 +92,20 @@
             width: 30px;
             height: 30px;
         }
+        .notification-icon .notification-new img {
+            animation: bell-shake 0.7s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes bell-shake {
+            0% { transform: rotate(0); }
+            10% { transform: rotate(-15deg); }
+            20% { transform: rotate(10deg); }
+            30% { transform: rotate(-10deg); }
+            40% { transform: rotate(6deg); }
+            50% { transform: rotate(-4deg); }
+            60% { transform: rotate(2deg); }
+            70% { transform: rotate(-1deg); }
+            80%, 100% { transform: rotate(0); }
+        }
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -172,7 +186,7 @@
     </div>
 
     <!-- Notification Icon -->
-    <div class="notification-icon">
+    <div class="notification-icon" id="notificationIcon">
         <a href="#" onclick="openNotificationModal(); return false;">
             <img src="https://img.icons8.com/ios-filled/50/000000/bell.png" alt="Notifications">
             <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
@@ -229,17 +243,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
+        let lastUnreadCount = 0;
         function updateNotificationBadge() {
             fetch('{{ route("notifications.unread-count") }}') 
                 .then(response => response.json())
                 .then(data => {
                     const badge = document.getElementById('notificationBadge');
+                    const icon = document.getElementById('notificationIcon');
                     if (data.unreadNotificationsCount > 0) {
                         badge.textContent = data.unreadNotificationsCount; 
                         badge.style.display = 'inline-block'; 
+                        // Animation si nouvelle notification
+                        if (data.unreadNotificationsCount > lastUnreadCount) {
+                            icon.classList.add('notification-new');
+                            setTimeout(() => icon.classList.remove('notification-new'), 1000);
+                        }
                     } else {
                         badge.style.display = 'none'; 
                     }
+                    lastUnreadCount = data.unreadNotificationsCount;
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération des notifications non lues :', error);
