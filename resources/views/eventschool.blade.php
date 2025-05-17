@@ -663,6 +663,15 @@
                             <label for="announcement_message" class="form-label">Contenu</label>
                             <textarea class="form-control" id="announcement_message" name="message" rows="4" required></textarea>
                         </div>
+                        <div class="mb-3">
+                            <label for="announcement_classes" class="form-label">Classe(s) concernée(s) <span class="text-muted">(optionnel, laisser vide pour tous les parents)</span></label>
+                            <select class="form-control" id="announcement_classes" name="classes[]" multiple>
+                                @foreach($classes as $classe)
+                                    <option value="{{ $classe->name }}">{{ $classe->name }}</option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-muted">Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs classes.</small>
+                        </div>
                         <button type="submit" class="btn btn-primary">Publier l'annonce</button>
                     </form>
                 </div>
