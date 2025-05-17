@@ -164,7 +164,7 @@
             const password = document.getElementById('password').value;
             const firstName = document.getElementById('first_name').value;
             const lastName = document.getElementById('last_name').value;
-            const platformLink = "{{ url('/login') }}"; // Link to the platform login page
+            const platformLink = "{{ url('/login') }}"; // Lien vers la plateforme AdminiSchool
 
             const emailBody = `
                 Bonjour ${firstName} ${lastName},\n\n
@@ -177,13 +177,13 @@
                 L'équipe AdminiSchool
             `;
 
-            // Simulate sending an email (replace with actual email sending logic if needed)
+        
             console.log("Sending email to:", email);
             console.log("Email body:", emailBody);
 
             alert("Un email contenant les informations de connexion a été envoyé à " + email);
 
-            // Submit the form after sending the email
+            // Envoi du mail
             document.getElementById('createTeacherForm').submit();
         }
     </script>

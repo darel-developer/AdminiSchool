@@ -84,7 +84,7 @@
         </a>
         <a href="{{route('school')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
-            DONNEES
+            Données
         </a>
         <a href="{{ route('documentschool') }}" class="sidebar-item">
             <img src="{{ asset('images/Add_Document.png') }}" alt="document">
@@ -96,7 +96,7 @@
         </a>
         <a href="{{ route('schoolpaiement') }}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
-            Payments
+            Paiements
         </a>
         
         <a href="{{route('userschool')}}" class="sidebar-item">
@@ -215,7 +215,7 @@
         const paymentChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Pension', 'Other'],
+                labels: ['Pension', 'Autre'],
                 datasets: [{
                     label: 'Payment Types',
                     data: [{{ $pensionCount }}, {{ $otherCount }}],
@@ -244,10 +244,10 @@
         const registrationChart = new Chart(registrationCtx, {
             type: 'bar',
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                labels: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
                 datasets: [{
                     label: 'Convocations envoyées',
-                    data: [{{ implode(',', $monthlyConvocations) }}], // Dynamic data from the controller
+                    data: [{{ implode(',', $monthlyConvocations) }}], 
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1

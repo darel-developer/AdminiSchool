@@ -121,7 +121,7 @@
                 z-index: 1000;
             }
             .sidebar-title, .sidebar-separator, .sidebar-item span {
-                display: none; /* Hide text and separators */
+                display: none; 
             }
             .sidebar-item {
                 flex-direction: column;
@@ -131,12 +131,12 @@
             }
             .sidebar-item img {
                 margin: 0;
-                width: 24px; /* Adjust icon size */
+                width: 24px; 
                 height: 24px;
             }
             .content {
                 margin-left: 0;
-                padding-bottom: 60px; /* Add space for the bottom bar */
+                padding-bottom: 60px; 
             }
         }
     </style>
@@ -233,7 +233,7 @@
                 </div>
                 <div class="modal-body p-0">
                     <ul id="notificationList" class="list-group list-group-flush">
-                        <!-- Notifications will be dynamically loaded here -->
+                        <!-- Notifications seront chargés ici -->
                     </ul>
                 </div>
             </div>
@@ -270,10 +270,10 @@
                 });
         }
 
-        // Update the badge every 10 seconds
+        // mise à jour du badge toutes les 10 secondes
         setInterval(updateNotificationBadge, 10000);
 
-        // Initial badge update
+        // badge initial
         updateNotificationBadge();
     });
 
@@ -311,7 +311,7 @@
                 const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
                 modal.show();
 
-                // Mark notifications as read after opening the modal
+                // Marquer les notifications lues
                 markNotificationsAsRead();
             })
             .catch(error => {
@@ -566,7 +566,6 @@
                     const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
                     modal.show();
 
-                    // Mark notifications as read after opening the modal
                     markNotificationsAsRead();
                 })
                 .catch(error => {
