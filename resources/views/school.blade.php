@@ -11,6 +11,7 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
+            display: flex;
             min-height: 100vh;
         }
         .sidebar {
@@ -22,8 +23,6 @@
             top: 0;
             left: 0;
             height: 100vh;
-            z-index: 1000;
-            transition: transform 0.3s ease;
         }
         .sidebar-title {
             font-family: 'Lemonada', sans-serif;
@@ -57,60 +56,54 @@
             padding: 20px;
             flex-grow: 1;
             background: #fff;
-            width: 100%;
-            transition: margin-left 0.3s;
-            /* Animation initiale */
+        }
+        .form-section {
+            display: none;
             opacity: 0;
-            transform: translateY(30px);
-            transition:
-                margin-left 0.3s,
-                opacity 0.7s cubic-bezier(.4,0,.2,1),
-                transform 0.7s cubic-bezier(.4,0,.2,1);
+            transition: opacity 0.5s ease-in-out;
         }
-        .content.animated {
+        .form-section.active {
+            display: block;
             opacity: 1;
-            transform: translateY(0);
         }
-        @media (max-width: 991.98px) {
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100vh;
-                width: 220px;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-            .sidebar.show {
-                transform: translateX(0);
-            }
-            .content {
-                margin-left: 0 !important;
-                padding: 10px;
-            }
-            .navbar-toggler {
-                display: block !important;
-            }
+        .form-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
         }
-        @media (min-width: 992px) {
-            .navbar-toggler {
-                display: none !important;
-            }
+        .form-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
         }
     </style>
 </head>
 <body>
-    <!-- Bootstrap Navbar for Hamburger -->
-    <nav class="navbar navbar-dark bg-dark d-lg-none">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" id="sidebarToggle" aria-label="Ouvrir le menu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <span class="navbar-brand ms-2">ADMINISCHOOL</span>
-        </div>
-    </nav>
-    <div class="sidebar" id="sidebarMenu">
-        <div class="sidebar-title d-none d-lg-block">ADMINISCHOOL</div>
+    <div class="sidebar">
+        <div class="sidebar-title">ADMINISCHOOL</div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
             Dashboard
@@ -131,6 +124,7 @@
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
             Payments
         </a>
+        
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
             Utilisateur
@@ -156,7 +150,8 @@
             Help Support
         </a>
     </div>
-    <div class="content" id="mainContent">
+
+    <div class="content">
         <div class="container mt-5">
             <h1 id="main-title" class="text-center">Téléversement des données</h1>
             <div class="mt-4">
@@ -217,27 +212,8 @@
             </div>
         </div>
     </div>
+
     <script>
-        // Sidebar toggle for Bootstrap hamburger
-        const sidebar = document.getElementById('sidebarMenu');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const mainContent = document.getElementById('mainContent');
-
-        function closeSidebarOnClickOutside(e) {
-            if (window.innerWidth < 992 && sidebar.classList.contains('show')) {
-                if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-                    sidebar.classList.remove('show');
-                }
-            }
-        }
-
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('show');
-            });
-            document.addEventListener('click', closeSidebarOnClickOutside);
-        }
-
         document.getElementById('nextBtn').addEventListener('click', function() {
             document.getElementById('form1').classList.remove('active');
             document.getElementById('form2').classList.add('active');
@@ -256,13 +232,6 @@
         document.getElementById('backBtn2').addEventListener('click', function() {
             document.getElementById('form3').classList.remove('active');
             document.getElementById('form2').classList.add('active');
-        });
-
-        // Animation du contenu principal à l'affichage
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                document.getElementById('mainContent').classList.add('animated');
-            }, 100); // petit délai pour un effet plus fluide
         });
     </script>
 </body>

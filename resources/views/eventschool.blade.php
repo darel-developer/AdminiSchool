@@ -648,6 +648,25 @@
 
                 <button type="submit" class="btn btn-primary">Soumettre</button>
             </form>
+            </div>
+            <div class="tab-pane fade" id="announcement" role="tabpanel" aria-labelledby="announcement-tab">
+                <!-- Contenu de l'onglet Annonce -->
+                <div class="p-3">
+                    <h2>Créer une annonce</h2>
+                    <form id="announcementForm" method="POST" action="{{ route('announcements.store') }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="announcement_title" class="form-label">Titre de l'annonce</label>
+                            <input type="text" class="form-control" id="announcement_title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="announcement_content" class="form-label">Contenu</label>
+                            <textarea class="form-control" id="announcement_content" name="content" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Publier l'annonce</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
     <script>
