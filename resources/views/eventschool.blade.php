@@ -565,45 +565,45 @@
 
        <div class="content">
         <h1 id="main-title">Ajouter un événement</h1>
-        <div class="mt-4">
-            @if(session('success'))
-                <div class="alert alert-success show" role="alert">
-                    {{ session('success') }}
-                </div>
-            @endif
-            <form id="eventForm" method="POST" action="{{ route('events.store') }}" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-3">
-                    <label for="title" class="form-label">Type d'événement</label>
-                    <select class="form-control" id="title" name="title" required>
-                        <option value="">-- Sélectionnez un événement --</option>
-                        <optgroup label="Réunions">
-                            <option value="Réunion des parents d'élèves">Réunion des parents d'élèves</option>
-                            <option value="Réunion du conseil de classe">Réunion du conseil de classe</option>
-                            <option value="Réunion des professeurs">Réunion des professeurs</option>
-                            <option value="Réunion du personnel">Réunion du personnel</option>
-                        </optgroup>
+        <ul class="nav nav-tabs mb-4" id="eventTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="event-tab" data-bs-toggle="tab" data-bs-target="#event" type="button" role="tab" aria-controls="event" aria-selected="true">
+                    Événement
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="announcement-tab" data-bs-toggle="tab" data-bs-target="#announcement" type="button" role="tab" aria-controls="announcement" aria-selected="false">
+                    Annonce
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="eventTabsContent">
+            <div class="tab-pane fade show active" id="event" role="tabpanel" aria-labelledby="event-tab">
+                <!-- Formulaire événement existant -->
+                @if(session('success'))
+                    <div class="alert alert-success show" role="alert">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                <form id="eventForm" method="POST" action="{{ route('events.store') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Type d'événement</label>
+                        <select class="form-control" id="title" name="title" required>
+                            <option value="">-- Sélectionnez un événement --</option>
+                            <optgroup label="Réunions">
+                                <option value="Réunion des parents d'élèves">Réunion des parents d'élèves</option>
+                                <option value="Réunion du conseil de classe">Réunion du conseil de classe</option>
+                                <option value="Réunion des professeurs">Réunion des professeurs</option>
+                                <option value="Réunion du personnel">Réunion du personnel</option>
+                            </optgroup>
 
-                        <optgroup label="Événements scolaires">
-                            <option value="Journée portes ouvertes">Journée portes ouvertes</option>
-                            <option value="Journée culturelle">Journée culturelle</option>
-                            <option value="Journée sportive">Journée sportive</option>
-                            <option value="Cérémonie de remise des diplômes">Cérémonie de remise des diplômes</option>
-                            <option value="Spectacle de fin d'année">Spectacle de fin d'année</option>
-                        </optgroup>
-
-                        <optgroup label="Examens et évaluations">
-                            <option value="Session d'examens">Session d'examens</option>
-                            <option value="Devoirs surveillés">Devoirs surveillés</option>
-                            <option value="Baccalauréat blanc">Baccalauréat blanc</option>
-                            <option value="Brevet blanc">Brevet blanc</option>
-                        </optgroup>
-
-                        <optgroup label="Sorties et voyages">
-                            <option value="Sortie pédagogique">Sortie pédagogique</option>
-                            <option value="Voyage scolaire">Voyage scolaire</option>
-                            <option value="Classe de découverte">Classe de découverte</option>
-                            <option value="Visite musée/exposition">Visite musée/exposition</option>
+                            <optgroup label="Événements scolaires">
+                                <option value="Journée portes ouvertes">Journée portes ouvertes</option>
+                                <option value="Journée culturelle">Journée culturelle</option>
+                                <option value="Journée sportive">Journée sportive</option>
+                                <option value="Cérémonie de remise des diplômes">Cérémonie de remise des diplômes</option>
+                                <option value="Spectacle de fin d'année">Spectacle de fin d'année</option
                         </optgroup>
 
                         <optgroup label="Administratif">

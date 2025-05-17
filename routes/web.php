@@ -22,6 +22,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ConvocationController;
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\CahierDeTexteController;
+use App\Http\Controllers\AnnouncementController;
 
 //Route pour gérer les cahiers de textes
 Route::get('/cahierexte', [CahierDeTexteController::class, 'index'])->name('cahiertexte');
