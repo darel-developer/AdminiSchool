@@ -58,11 +58,40 @@ class TeacherController extends Controller
             'platformLink' => $platformLink,
         ];
 
-        Mail::send('emails.teacher-login', $emailData, function ($message) use ($teacher) {
-            $message->from(config('mail.from.address'), config('mail.from.name')) // Use global "From" email
+        // Préparer les informations de l'email pour le log
+        $fromAddress = config('mail.from.address');
+        $fromName = config('mail.from.name');
+        $toAddress = $teacher->email;
+        $subject = 'Vos informations de connexion - AdminiSchool';
+
+        // Générer le contenu de l'email (en utilisant la vue Blade)
+        $emailContent = view('emails.teacher-login', $emailData)->render();
+
+        // Log des informations d'envoi d'email
+        Log::info('Tentative d\'envoi d\'email au professeur', [
+            'from' => $fromAddress . ' (' . $fromName . ')',
+            'to' => $toAddress,
+            'subject' => $subject,
+            'content' => $emailContent
+        ]);
+
+        Mail::send('emails.teacher-login', $emailData, function ($message) use ($teacher, $fromAddress, $fromName, $subject) {
+            $message->from($fromAddress, $fromName)
                     ->to($teacher->email)
-                    ->subject('Vos informations de connexion - AdminiSchool');
+                    ->subject($subject);
         });
+
+        // Vérifier si l'email a bien été envoyé
+        if (count(Mail::failures()) > 0) {
+            Log::error('Echec de l\'envoi de l\'email au professeur', [
+                'to' => $toAddress,
+                'failures' => Mail::failures()
+            ]);
+        } else {
+            Log::info('Email envoyé avec succès au professeur', [
+                'to' => $toAddress
+            ]);
+        }
 
         // Send SMS with Infobip
         $this->sendSmsWithInfobip($teacher, $request->password);
