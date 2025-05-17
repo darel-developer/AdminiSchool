@@ -210,12 +210,15 @@
     <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="notificationModalLabel">
+                        <img src="https://img.icons8.com/ios-filled/24/ffffff/bell.png" alt="Notifications" style="margin-right:8px;">
+                        Notifications
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <ul id="notificationList" class="list-group">
+                <div class="modal-body p-0">
+                    <ul id="notificationList" class="list-group list-group-flush">
                         <!-- Notifications will be dynamically loaded here -->
                     </ul>
                 </div>
@@ -258,17 +261,26 @@
                 notificationList.innerHTML = '';
 
                 if (data.notifications.length === 0) {
-                    notificationList.innerHTML = '<li class="list-group-item">Aucune notification disponible.</li>';
+                    notificationList.innerHTML = '<li class="list-group-item text-center text-muted py-4"><img src="https://img.icons8.com/ios-filled/50/cccccc/bell.png" style="width:32px;height:32px;"><br>Aucune notification disponible.</li>';
                 } else {
                     data.notifications.forEach(notification => {
                         const listItem = document.createElement('li');
-                        listItem.className = 'list-group-item';
+                        listItem.className = 'list-group-item d-flex align-items-start py-3';
                         listItem.innerHTML = `
-                            <strong>${notification.message}</strong>
-                            <br>
-                            <small>${new Date(notification.created_at).toLocaleString()}</small>
+                            <div class="me-3">
+                                <img src="https://img.icons8.com/color/36/000000/appointment-reminders--v2.png" alt="Notif" style="width:32px;height:32px;">
+                            </div>
+                            <div style="flex:1;">
+                                <div class="fw-bold mb-1" style="color:#0d6efd;">${notification.title || 'Notification'}</div>
+                                <div class="mb-1">${notification.message}</div>
+                                <div class="text-muted small">${new Date(notification.created_at).toLocaleString()}</div>
+                            </div>
                         `;
                         notificationList.appendChild(listItem);
+                        // Optionally, add a separator except for the last item
+                        // if (i < data.notifications.length - 1) {
+                        //     notificationList.appendChild(document.createElement('hr'));
+                        // }
                     });
                 }
 
@@ -281,7 +293,7 @@
             .catch(error => {
                 console.error('Erreur lors de la récupération des notifications :', error);
                 const notificationList = document.getElementById('notificationList');
-                notificationList.innerHTML = '<li class="list-group-item">Erreur lors de la récupération des notifications.</li>';
+                notificationList.innerHTML = '<li class="list-group-item text-danger text-center">Erreur lors de la récupération des notifications.</li>';
                 const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
                 modal.show();
             });
@@ -504,27 +516,39 @@
                     notificationList.innerHTML = '';
 
                     if (data.notifications.length === 0) {
-                        notificationList.innerHTML = '<li class="list-group-item">Aucune notification disponible.</li>';
+                        notificationList.innerHTML = '<li class="list-group-item text-center text-muted py-4"><img src="https://img.icons8.com/ios-filled/50/cccccc/bell.png" style="width:32px;height:32px;"><br>Aucune notification disponible.</li>';
                     } else {
                         data.notifications.forEach(notification => {
                             const listItem = document.createElement('li');
-                            listItem.className = 'list-group-item';
+                            listItem.className = 'list-group-item d-flex align-items-start py-3';
                             listItem.innerHTML = `
-                                <strong>${notification.message}</strong>
-                                <br>
-                                <small>${new Date(notification.created_at).toLocaleString()}</small>
+                                <div class="me-3">
+                                    <img src="https://img.icons8.com/color/36/000000/appointment-reminders--v2.png" alt="Notif" style="width:32px;height:32px;">
+                                </div>
+                                <div style="flex:1;">
+                                    <div class="fw-bold mb-1" style="color:#0d6efd;">${notification.title || 'Notification'}</div>
+                                    <div class="mb-1">${notification.message}</div>
+                                    <div class="text-muted small">${new Date(notification.created_at).toLocaleString()}</div>
+                                </div>
                             `;
                             notificationList.appendChild(listItem);
+                            // Optionally, add a separator except for the last item
+                            // if (i < data.notifications.length - 1) {
+                            //     notificationList.appendChild(document.createElement('hr'));
+                            // }
                         });
                     }
 
                     const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
                     modal.show();
+
+                    // Mark notifications as read after opening the modal
+                    markNotificationsAsRead();
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération des notifications :', error);
                     const notificationList = document.getElementById('notificationList');
-                    notificationList.innerHTML = '<li class="list-group-item">Erreur lors de la récupération des notifications.</li>';
+                    notificationList.innerHTML = '<li class="list-group-item text-danger text-center">Erreur lors de la récupération des notifications.</li>';
                     const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
                     modal.show();
                 });
