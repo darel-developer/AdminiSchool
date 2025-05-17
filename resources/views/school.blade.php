@@ -11,7 +11,6 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
-            display: flex;
             min-height: 100vh;
         }
         .sidebar {
@@ -61,59 +60,46 @@
             width: 100%;
             transition: margin-left 0.3s;
         }
-        /* Hamburger styles */
-        .hamburger {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1100;
-            width: 35px;
-            height: 35px;
-            background: #2c3e50;
-            border: none;
-            border-radius: 5px;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .hamburger span {
-            display: block;
-            width: 22px;
-            height: 3px;
-            background: #fff;
-            margin: 4px 0;
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-        /* Responsive */
-        @media (max-width: 900px) {
+        @media (max-width: 991.98px) {
             .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 220px;
                 transform: translateX(-100%);
+                transition: transform 0.3s ease;
             }
-            .sidebar.open {
+            .sidebar.show {
                 transform: translateX(0);
             }
             .content {
-                margin-left: 0;
+                margin-left: 0 !important;
+                padding: 10px;
             }
-            .hamburger {
-                display: flex;
+            .navbar-toggler {
+                display: block !important;
             }
-            body.sidebar-open {
-                overflow: hidden;
+        }
+        @media (min-width: 992px) {
+            .navbar-toggler {
+                display: none !important;
             }
         }
     </style>
 </head>
 <body>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Ouvrir le menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
+    <!-- Bootstrap Navbar for Hamburger -->
+    <nav class="navbar navbar-dark bg-dark d-lg-none">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" id="sidebarToggle" aria-label="Ouvrir le menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <span class="navbar-brand ms-2">ADMINISCHOOL</span>
+        </div>
+    </nav>
     <div class="sidebar" id="sidebarMenu">
-        <div class="sidebar-title">ADMINISCHOOL</div>
+        <div class="sidebar-title d-none d-lg-block">ADMINISCHOOL</div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
             Dashboard
@@ -159,8 +145,7 @@
             Help Support
         </a>
     </div>
-
-    <div class="content">
+    <div class="content" id="mainContent">
         <div class="container mt-5">
             <h1 id="main-title" class="text-center">Téléversement des données</h1>
             <div class="mt-4">
@@ -221,26 +206,26 @@
             </div>
         </div>
     </div>
-
     <script>
-        // Hamburger toggle
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        const sidebarMenu = document.getElementById('sidebarMenu');
+        // Sidebar toggle for Bootstrap hamburger
+        const sidebar = document.getElementById('sidebarMenu');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mainContent = document.getElementById('mainContent');
 
-        hamburgerBtn.addEventListener('click', function() {
-            sidebarMenu.classList.toggle('open');
-            document.body.classList.toggle('sidebar-open');
-        });
-
-        // Optional: close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth <= 900) {
-                if (!sidebarMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-                    sidebarMenu.classList.remove('open');
-                    document.body.classList.remove('sidebar-open');
+        function closeSidebarOnClickOutside(e) {
+            if (window.innerWidth < 992 && sidebar.classList.contains('show')) {
+                if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                    sidebar.classList.remove('show');
                 }
             }
-        });
+        }
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+            });
+            document.addEventListener('click', closeSidebarOnClickOutside);
+        }
 
         document.getElementById('nextBtn').addEventListener('click', function() {
             document.getElementById('form1').classList.remove('active');
