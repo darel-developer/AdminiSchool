@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\GradesImport;
 use App\Models\Grade;
-use App\Models\Announcement;
+use App\Models\Annonces;
 use App\Models\Grades;
 use Illuminate\Support\Facades\DB;
 use App\Models\Classe;

@@ -660,8 +660,8 @@
                             <input type="text" class="form-control" id="announcement_title" name="title" required>
                         </div>
                         <div class="mb-3">
-                            <label for="announcement_content" class="form-label">Contenu</label>
-                            <textarea class="form-control" id="announcement_content" name="content" rows="4" required></textarea>
+                            <label for="announcement_message" class="form-label">Contenu</label>
+                            <textarea class="form-control" id="announcement_message" name="message" rows="4" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Publier l'annonce</button>
                     </form>

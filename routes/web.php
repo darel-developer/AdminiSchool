@@ -195,8 +195,8 @@ Route::get('/parentchild', [TuteurController::class, 'showAddChildForm'])->name(
 
 //Route pour les statistiques de classe et annonces
 Route::get('/class-statistics', [TeacherController::class, 'showStatistics'])->name('class.statistics');
-Route::get('/send-announcement', [TeacherController::class, 'createAnnouncement'])->name('announcements.create');
-Route::post('/send-announcement', [TeacherController::class, 'storeAnnouncement'])->name('announcements.store');
+Route::get('/send-announcement', [AnnouncementController::class, 'createAnnouncement'])->name('announcements.create');
+Route::post('/send-announcement', [AnnouncementController::class, 'storeAnnouncement'])->name('announcements.store');
 
 //Route pour les statistiques des enseignants
 Route::get('/statistics', [TeacherController::class, 'showStatistics'])->name('teacher.statistics');
