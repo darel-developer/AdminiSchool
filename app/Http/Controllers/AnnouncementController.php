@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Announcement;
+use App\Models\Annonces;
 use App\Models\Tuteur;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +17,7 @@ class AnnouncementController extends Controller
             'message' => 'required|string|max:2000',
         ]);
 
-        $announcement = Announcement::create([
+        $announcement = Annonces::create([
             'title' => $request->title,
             'message' => $request->message,
         ]);
