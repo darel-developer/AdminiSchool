@@ -75,21 +75,19 @@ class TeacherController extends Controller
             'content' => $emailContent
         ]);
 
-        Mail::send('emails.teacher-login', $emailData, function ($message) use ($teacher, $fromAddress, $fromName, $subject) {
-            $message->from($fromAddress, $fromName)
-                    ->to($teacher->email)
-                    ->subject($subject);
-        });
-
-        // Vérifier si l'email a bien été envoyé
-        if (count(Mail::failures()) > 0) {
-            Log::error('Echec de l\'envoi de l\'email au professeur', [
-                'to' => $toAddress,
-                'failures' => Mail::failures()
-            ]);
-        } else {
+        try {
+            Mail::send('emails.teacher-login', $emailData, function ($message) use ($teacher, $fromAddress, $fromName, $subject) {
+                $message->from($fromAddress, $fromName)
+                        ->to($teacher->email)
+                        ->subject($subject);
+            });
             Log::info('Email envoyé avec succès au professeur', [
                 'to' => $toAddress
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Echec de l\'envoi de l\'email au professeur', [
+                'to' => $toAddress,
+                'error' => $e->getMessage()
             ]);
         }
 
