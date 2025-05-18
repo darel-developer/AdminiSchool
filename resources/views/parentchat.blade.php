@@ -285,7 +285,9 @@
                 const formData = new FormData();
                 formData.append('teacher_id', selectedTeacherId);
                 formData.append('student_id', selectedChildId); // Doit être student_id, pas child_id
-                formData.append('message', messageInput.value.trim());
+                if (messageInput.value.trim()) {
+                    formData.append('message', messageInput.value.trim());
+                }
                 if (attachmentInput.files.length) {
                     formData.append('attachment', attachmentInput.files[0]);
                 }

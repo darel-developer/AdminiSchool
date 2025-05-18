@@ -125,8 +125,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="parentsList" class="list-group">
-                            <div id="loadingParents" class="text-center">
+                        <div id="parentsListModal" class="list-group">
+                            <div id="loadingParentsModal" class="text-center">
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="visually-hidden">Chargement...</span>
                                 </div>
@@ -212,6 +212,9 @@
             const sendMessageBtn = document.getElementById('sendMessageBtn');
             const loadingSpinner = document.getElementById('loadingSpinner');
             const loadingParents = document.getElementById('loadingParents');
+            const contactParentBtn = document.getElementById('contactParentBtn');
+            const loadingParentsModal = document.getElementById('loadingParentsModal');
+            const parentsListModal = document.getElementById('parentsListModal');
 
             let selectedParentId = null;
             let isLoadingMessages = false;
@@ -388,6 +391,60 @@
                         attachmentInput.disabled = false;
                     });
             });
+
+            // Charger la liste des parents dans le modal
+            function loadParentsModal() {
+                loadingParentsModal.style.display = 'block';
+                parentsListModal.innerHTML = '';
+                parentsListModal.appendChild(loadingParentsModal);
+
+                fetch('{{ route("teacher.get-parents") }}', fetchConfig)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Erreur HTTP: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        loadingParentsModal.style.display = 'none';
+                        parentsListModal.innerHTML = '';
+
+                        if (!data.parents || data.parents.length === 0) {
+                            parentsListModal.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé pour votre classe.</div>';
+                            return;
+                        }
+
+                        data.parents.forEach(parent => {
+                            const listItem = document.createElement('button');
+                            listItem.type = 'button';
+                            listItem.className = 'list-group-item list-group-item-action';
+                            listItem.innerHTML = `
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">${parent.nom} ${parent.prenom}</h6>
+                                </div>
+                                <small class="text-muted">
+                                    ${parent.children ? parent.children.map(child => child.name).join(', ') : 'Aucun enfant'}
+                                </small>
+                            `;
+                            listItem.addEventListener('click', function() {
+                                selectParent(parent);
+                                const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
+                                parentModal.hide();
+                            });
+                            parentsListModal.appendChild(listItem);
+                        });
+                    })
+                    .catch(error => {
+                        loadingParentsModal.style.display = 'none';
+                        parentsListModal.innerHTML = `<div class="alert alert-danger m-3">Erreur lors du chargement des parents: ${error.message}</div>`;
+                    });
+            }
+
+            // Ouvre le modal et charge la liste des parents
+            contactParentBtn.addEventListener('click', function() {
+                loadParentsModal();
+            });
+
 
             // Activer/désactiver le bouton d'envoi
             function toggleSendButton() {
