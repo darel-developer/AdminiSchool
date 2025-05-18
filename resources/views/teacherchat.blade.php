@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messagerie Enseignant</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Chat Enseignant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -43,41 +44,51 @@
             flex-grow: 1;
         }
         .chat-container {
+            height: 70vh;
             display: flex;
             flex-direction: column;
-            height: 80vh;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .chat-header {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
         }
         .chat-messages {
             flex-grow: 1;
-            padding: 10px;
             overflow-y: auto;
-            background-color: #f8f9fa;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
         }
-        .chat-input {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #ddd;
-            background-color: #fff;
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            max-width: 75%;
         }
-        .chat-input textarea {
-            flex-grow: 1;
-            resize: none;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
+        .message.sent {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
         }
-        .chat-input button {
-            margin-left: 10px;
+        .message.received {
+            background-color: #e9ecef;
+            margin-right: auto;
+        }
+        .message .sender {
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+        .message .time {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+        .message .attachment {
+            margin-top: 0.5rem;
+        }
+        .message .attachment a {
+            color: inherit;
+            text-decoration: underline;
+        }
+        #loadingSpinner {
+            display: none;
+            text-align: center;
+            padding: 1rem;
         }
     </style>
 </head>
@@ -101,7 +112,9 @@
     <!-- Contenu principal -->
     <div class="content">
         <h1>Messagerie Enseignant</h1>
-        <button class="btn btn-primary mb-3" id="contactParentBtn">Contactez un parent</button>
+        <button class="btn btn-primary mb-3" id="contactParentBtn" data-bs-toggle="modal" data-bs-target="#parentModal">
+            Contactez un parent
+        </button>
 
         <!-- Modal pour la sélection du parent -->
         <div class="modal fade" id="parentModal" tabindex="-1" aria-labelledby="parentModalLabel" aria-hidden="true">
@@ -112,158 +125,281 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <ul id="parentList" class="list-group">
-                            <!-- Les parents seront chargés ici dynamiquement -->
-                        </ul>
+                        <div id="parentsList" class="list-group">
+                            <div id="loadingParents" class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Zone de messagerie -->
-        <div class="chat-container">
-            <div class="chat-header" id="chatHeader">Sélectionnez un parent pour commencer</div>
-            <div class="chat-messages" id="chatMessages">
-                <!-- Les messages seront chargés ici -->
-            </div>
-            <div class="chat-input">
-                <textarea id="messageInput" rows="1" placeholder="Écrivez votre message ici..."></textarea>
-                <button class="btn btn-primary" id="sendMessageBtn" disabled>Envoyer</button>
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Parents d'élèves
+                        </div>
+                        <div class="card-body">
+                            <div id="parentsList" class="list-group">
+                                <div id="loadingParents" class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Chargement...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card chat-container">
+                        <div class="card-header" id="chatHeader">
+                            Sélectionnez un parent pour commencer la conversation
+                        </div>
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="text-center text-muted">
+                                Sélectionnez un parent pour voir les messages
+                            </div>
+                        </div>
+                        <div id="loadingSpinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <form id="messageForm" class="d-flex flex-column gap-2">
+                                @csrf
+                                <div class="input-group">
+                                    <input type="text" id="messageInput" class="form-control" placeholder="Votre message..." disabled>
+                                    <input type="file" id="attachmentInput" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" disabled>
+                                    <button type="submit" id="sendMessageBtn" class="btn btn-primary" disabled>
+                                        Envoyer
+                                    </button>
+                                </div>
+                                <small class="text-muted">Formats acceptés: jpg, jpeg, png, pdf, doc, docx (max 10MB)</small>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ajouter le token CSRF à toutes les requêtes fetch
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-            const contactParentBtn = document.getElementById('contactParentBtn');
-            const chatHeader = document.getElementById('chatHeader');
+            // Configuration par défaut pour fetch
+            const fetchConfig = {
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            };
+
+            const parentsList = document.getElementById('parentsList');
             const chatMessages = document.getElementById('chatMessages');
+            const chatHeader = document.getElementById('chatHeader');
+            const messageForm = document.getElementById('messageForm');
             const messageInput = document.getElementById('messageInput');
+            const attachmentInput = document.getElementById('attachmentInput');
             const sendMessageBtn = document.getElementById('sendMessageBtn');
-            const parentList = document.getElementById('parentList');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const loadingParents = document.getElementById('loadingParents');
+
             let selectedParentId = null;
+            let isLoadingMessages = false;
 
-            // Charger les parents et afficher la fenêtre modale
-            contactParentBtn.addEventListener('click', function () {
-                console.log("[Étape 1] Début du chargement des parents...");
-
-                fetch('/teacher/get-parents')
+            // Charger la liste des parents
+            function loadParents() {
+                fetch('{{ route("teacher.get-parents") }}', fetchConfig)
                     .then(response => {
-                        console.log("[Étape 2] Réponse reçue du serveur :", response);
                         if (!response.ok) {
-                            throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
+                            throw new Error(`Erreur HTTP: ${response.status}`);
                         }
                         return response.json();
                     })
                     .then(data => {
-                        console.log("[Étape 3] Données des parents reçues :", data);
+                        loadingParents.style.display = 'none';
+                        parentsList.innerHTML = '';
 
-                        if (data.error) {
-                            console.error("[Erreur] Message d'erreur reçu :", data.error);
-                            alert(data.error);
+                        if (!data.parents || data.parents.length === 0) {
+                            parentsList.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé pour votre classe.</div>';
                             return;
                         }
 
-                        console.log("[Étape 4] Construction de la liste des parents...");
-                        parentList.innerHTML = '';
                         data.parents.forEach(parent => {
-                            console.log(`[Étape 4.1] Ajout du parent : ${parent.nom} ${parent.prenom}`);
-                            const listItem = document.createElement('li');
+                            const listItem = document.createElement('button');
+                            listItem.type = 'button';
                             listItem.className = 'list-group-item list-group-item-action';
-                            listItem.textContent = `${parent.nom} ${parent.prenom}`;
-                            listItem.dataset.id = parent.id;
-                            listItem.addEventListener('click', function () {
-                                console.log(`[Étape 5] Parent sélectionné : ${parent.nom} ${parent.prenom}`);
-                                selectedParentId = parent.id;
-                                chatHeader.textContent = `Discussion avec ${parent.nom} ${parent.prenom}`;
-                                sendMessageBtn.disabled = false;
-                                loadMessages();
-                                const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
-                                parentModal.hide();
-                            });
-                            parentList.appendChild(listItem);
+                            listItem.innerHTML = `
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">${parent.nom} ${parent.prenom}</h6>
+                                </div>
+                                <small class="text-muted">
+                                    ${parent.children ? parent.children.map(child => child.name).join(', ') : 'Aucun enfant'}
+                                </small>
+                            `;
+                            listItem.addEventListener('click', () => selectParent(parent));
+                            parentsList.appendChild(listItem);
                         });
-
-                        console.log("[Étape 6] Affichage de la fenêtre modale...");
-                        const parentModal = new bootstrap.Modal(document.getElementById('parentModal'));
-                        parentModal.show();
                     })
                     .catch(error => {
-                        console.error("[Erreur] Erreur lors du chargement des parents :", error);
-                        alert("Erreur lors du chargement des parents.");
+                        console.error('Erreur lors du chargement des parents:', error);
+                        loadingParents.style.display = 'none';
+                        parentsList.innerHTML = `
+                            <div class="alert alert-danger m-3">
+                                Erreur lors du chargement des parents: ${error.message}
+                            </div>
+                        `;
                     });
-            });
+            }
+
+            // Sélectionner un parent
+            function selectParent(parent) {
+                selectedParentId = parent.id;
+                chatHeader.textContent = `Discussion avec ${parent.nom} ${parent.prenom}`;
+                messageInput.disabled = false;
+                attachmentInput.disabled = false;
+                document.querySelectorAll('#parentsList button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.currentTarget.classList.add('active');
+                loadMessages();
+            }
 
             // Charger les messages
             function loadMessages() {
-                if (!selectedParentId) return;
+                if (!selectedParentId || isLoadingMessages) return;
 
-                console.log(`[Étape 7] Chargement des messages pour le parent ID : ${selectedParentId}`);
+                isLoadingMessages = true;
+                loadingSpinner.style.display = 'block';
+                chatMessages.style.opacity = '0.5';
 
-                fetch(`/get-messages/${selectedParentId}`)
+                fetch(`{{ route('teacher.messages', '') }}/${selectedParentId}`, fetchConfig)
                     .then(response => {
-                        console.log("[Étape 8] Réponse reçue pour les messages :", response);
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                throw new Error(data.error || `Erreur HTTP: ${response.status}`);
+                            });
+                        }
                         return response.json();
                     })
                     .then(data => {
-                        console.log("[Étape 9] Données des messages reçues :", data);
-
                         chatMessages.innerHTML = '';
+
+                        if (!data.messages || data.messages.length === 0) {
+                            chatMessages.innerHTML = '<div class="text-center text-muted">Aucun message dans cette conversation.</div>';
+                            return;
+                        }
+
                         data.messages.forEach(message => {
-                            console.log(`[Étape 9.1] Ajout du message : ${message.message}`);
                             const messageElement = document.createElement('div');
-                            messageElement.textContent = message.message;
-                            messageElement.className = 'mb-2 p-2 rounded ' + (message.teacher_id ? 'bg-primary text-white' : 'bg-light');
+                            messageElement.className = `message ${message.sender.type === 'teacher' ? 'sent' : 'received'}`;
+
+                            let content = `
+                                <div class="sender">${message.sender.name}</div>
+                                <div class="content">${message.message || ''}</div>
+                            `;
+
+                            if (message.attachment) {
+                                const extension = message.attachment.split('.').pop().toLowerCase();
+                                const isImage = ['jpg', 'jpeg', 'png', 'gif'].includes(extension);
+
+                                content += `
+                                    <div class="attachment">
+                                        ${isImage
+                                            ? `<img src="${message.attachment}" class="img-fluid" style="max-height: 200px;" alt="Pièce jointe">`
+                                            : `<a href="${message.attachment}" target="_blank">Voir la pièce jointe</a>`
+                                        }
+                                    </div>
+                                `;
+                            }
+
+                            content += `<div class="time">${new Date(message.created_at).toLocaleString()}</div>`;
+                            messageElement.innerHTML = content;
                             chatMessages.appendChild(messageElement);
                         });
+
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     })
                     .catch(error => {
-                        console.error("[Erreur] Erreur lors de la récupération des messages :", error);
-                        alert("Erreur lors de la récupération des messages.");
+                        chatMessages.innerHTML = `
+                            <div class="alert alert-danger">
+                                Erreur lors du chargement des messages: ${error.message}
+                            </div>
+                        `;
+                    })
+                    .finally(() => {
+                        isLoadingMessages = false;
+                        loadingSpinner.style.display = 'none';
+                        chatMessages.style.opacity = '1';
                     });
             }
 
             // Envoyer un message
-            sendMessageBtn.addEventListener('click', function () {
+            messageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
                 const message = messageInput.value.trim();
-                if (!message || !selectedParentId) return;
+                const attachment = attachmentInput.files[0];
 
-                console.log(`[Étape 10] Envoi du message : "${message}" au parent ID : ${selectedParentId}`);
+                if ((!message && !attachment) || !selectedParentId) return;
 
-                fetch('/send-message', {
+                const formData = new FormData();
+                formData.append('parent_id', selectedParentId);
+                if (message) formData.append('message', message);
+                if (attachment) formData.append('attachment', attachment);
+
+                sendMessageBtn.disabled = true;
+                messageInput.disabled = true;
+                attachmentInput.disabled = true;
+
+                const sendConfig = {
+                    ...fetchConfig,
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        parent_id: selectedParentId,
-                        message: message
-                    })
-                })
-                    .then(response => {
-                        console.log("[Étape 11] Réponse reçue pour l'envoi du message :", response);
-                        return response.json();
-                    })
+                    body: formData
+                };
+
+                fetch('{{ route("teacher.send-message") }}', sendConfig)
+                    .then(response => response.json())
                     .then(data => {
-                        if (data.success) {
-                            console.log("[Étape 12] Message envoyé avec succès.");
-                            messageInput.value = '';
-                            loadMessages();
-                        } else {
-                            console.error("[Erreur] Échec de l'envoi du message.");
-                            alert("Erreur lors de l'envoi du message.");
+                        if (data.error) {
+                            console.error('Erreur serveur:', data.error);
+                            throw new Error(typeof data.error === 'string' ? data.error : 'Une erreur est survenue');
                         }
+                        messageInput.value = '';
+                        attachmentInput.value = '';
+                        loadMessages();
                     })
                     .catch(error => {
-                        console.error("[Erreur] Erreur lors de l'envoi du message :", error);
-                        alert("Erreur lors de l'envoi du message.");
+                        console.error('Erreur:', error);
+                        alert(`Erreur lors de l'envoi du message: ${error.message}`);
+                    })
+                    .finally(() => {
+                        sendMessageBtn.disabled = false;
+                        messageInput.disabled = false;
+                        attachmentInput.disabled = false;
                     });
             });
+
+            // Activer/désactiver le bouton d'envoi
+            function toggleSendButton() {
+                sendMessageBtn.disabled = !selectedParentId ||
+                    (!messageInput.value.trim() && !attachmentInput.files.length);
+            }
+
+            messageInput.addEventListener('input', toggleSendButton);
+            attachmentInput.addEventListener('change', toggleSendButton);
+
+            // Charger les parents au démarrage
+            loadParents();
         });
     </script>
 </body>

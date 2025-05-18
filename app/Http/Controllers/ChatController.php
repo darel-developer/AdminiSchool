@@ -15,54 +15,126 @@ class ChatController extends Controller
 {
     public function sendMessage(Request $request)
     {
-        $validated = $request->validate([
-            'teacher_id' => 'required|exists:teachers,id',
-            'message' => 'nullable|string|max:1000',
-            'child_id' => 'required|exists:students,id',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,wmv,pdf,doc,docx|max:10240', // Max 10MB
-        ]);
+        try {
+            $validated = $request->validate([
+                'message' => 'required_without:attachment|string|nullable',
+                'teacher_id' => 'required|exists:teachers,id',
+                'student_id' => 'nullable|exists:students,id',
+                'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240'
+            ]);
 
-        $user = Auth::user();
+            $tuteur = Auth::guard('tuteur')->user();
+            if (!$tuteur) {
+                return response()->json(['error' => 'Non autorisé'], 403);
+            }
 
-        $messageData = [
-            'message' => $validated['message'] ?? null,
-            'teacher_id' => $validated['teacher_id'],
-            'tuteur_id' => $user->id,
-            'student_id' => $validated['child_id'],
-        ];
+            // Vérifier si l'enseignant est lié à un des enfants du tuteur
+            $teacher = Teacher::whereIn('class_id', function($query) use ($tuteur) {
+                $query->select('class_id')
+                    ->from('students')
+                    ->where('tuteur_id', $tuteur->id);
+            })->find($validated['teacher_id']);
 
-        // Handle file upload
-        if ($request->hasFile('attachment')) {
-            $file = $request->file('attachment');
-            $filePath = $file->store('attachments', 'public'); // Store in the 'public/attachments' directory
-            $messageData['attachment'] = $filePath;
+            if (!$teacher) {
+                return response()->json(['error' => 'Enseignant non autorisé'], 403);
+            }
+
+            $messageData = [
+                'teacher_id' => $validated['teacher_id'],
+                'tuteur_id' => $tuteur->id,
+                'student_id' => $validated['student_id'] ?? null,
+                'message' => $validated['message'] ?? null
+            ];
+
+            if ($request->hasFile('attachment')) {
+                $path = $request->file('attachment')->store('attachments/messages', 'public');
+                $messageData['attachment'] = $path;
+            }
+
+            $message = Message::create($messageData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Message envoyé avec succès',
+                'data' => [
+                    'id' => $message->id,
+                    'message' => $message->message,
+                    'attachment' => $message->attachment ? asset('storage/' . $message->attachment) : null,
+                    'created_at' => $message->created_at->format('Y-m-d H:i:s')
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de l\'envoi du message: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Une erreur est survenue lors de l\'envoi du message',
+                'success' => false
+            ], 500);
         }
-
-        $message = Message::create($messageData);
-
-        return response()->json(['success' => true, 'message' => $message]);
     }
 
-    public function fetchMessages($teacherId, Request $request)
+    public function fetchMessages($teacherId)
     {
-        $childId = $request->query('child_id');
-        $student = Student::find($childId);
+        try {
+            $tuteur = Auth::guard('tuteur')->user();
+            if (!$tuteur) {
+                Log::error('Tuteur non authentifié');
+                return response()->json(['error' => 'Non autorisé'], 403);
+            }
 
-        if (!$student) {
-            return response()->json(['error' => 'Enfant non trouvé.'], 404);
-        }
+            // Vérifier si l'enseignant existe et est lié à un des enfants du tuteur
+            $teacher = Teacher::whereIn('class_id', function($query) use ($tuteur) {
+                $query->select('class_id')
+                    ->from('students')
+                    ->where('tuteur_id', $tuteur->id);
+            })->find($teacherId);
 
-        $user = Auth::user();
-        if ($user instanceof Tuteur) {
-            $messages = Message::where('tuteur_id', $user->id)
-                ->where('teacher_id', $teacherId)
+            if (!$teacher) {
+                Log::error('Enseignant non trouvé ou non autorisé', [
+                    'teacher_id' => $teacherId,
+                    'tuteur_id' => $tuteur->id
+                ]);
+                return response()->json(['error' => 'Enseignant non trouvé ou non autorisé'], 404);
+            }
+
+            // Récupérer tous les messages entre le tuteur et l'enseignant
+            $messages = Message::with(['teacher:id,first_name,last_name', 'tuteur:id,nom,prenom'])
+                ->where(function($query) use ($tuteur, $teacherId) {
+                    $query->where('tuteur_id', $tuteur->id)
+                          ->where('teacher_id', $teacherId);
+                })
                 ->orderBy('created_at', 'asc')
-                ->get();
-        } else {
-            return response()->json(['error' => 'Utilisateur non autorisé.'], 403);
-        }
+                ->get()
+                ->map(function ($message) {
+                    return [
+                        'id' => $message->id,
+                        'message' => $message->message,
+                        'attachment' => $message->attachment ? asset('storage/' . $message->attachment) : null,
+                        'sender' => $message->teacher_id ? [
+                            'id' => $message->teacher->id,
+                            'name' => $message->teacher->first_name . ' ' . $message->teacher->last_name,
+                            'type' => 'teacher'
+                        ] : [
+                            'id' => $message->tuteur->id,
+                            'name' => $message->tuteur->nom . ' ' . $message->tuteur->prenom,
+                            'type' => 'parent'
+                        ],
+                        'created_at' => $message->created_at->format('Y-m-d H:i:s')
+                    ];
+                });
 
-        return response()->json(['messages' => $messages]);
+            Log::info('Messages récupérés avec succès', [
+                'count' => $messages->count(),
+                'teacher_id' => $teacherId,
+                'tuteur_id' => $tuteur->id
+            ]);
+
+            return response()->json(['messages' => $messages]);
+
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la récupération des messages: ' . $e->getMessage());
+            return response()->json(['error' => 'Une erreur est survenue lors de la récupération des messages'], 500);
+        }
     }
 
     public function getTeachers(Request $request)
@@ -129,8 +201,21 @@ class ChatController extends Controller
     public function parentChat()
     {
         $tuteur = Auth::guard('tuteur')->user();
-        $students = $tuteur ? $tuteur->students : collect(); // Fetch associated students or return an empty collection
-        return view('parentchat', compact('students'));
+
+        // Récupérer les étudiants avec leurs classes
+        $students = Student::where('tuteur_id', $tuteur->id)
+            ->with('classe')
+            ->get();
+
+        // Récupérer les enseignants pour toutes les classes des étudiants
+        $teachers = Teacher::whereIn('class_id', $students->pluck('class_id')->unique())
+            ->get();
+
+        // Ajouter des logs pour le débogage
+        Log::info('Students data:', ['students' => $students->toArray()]);
+        Log::info('Teachers data:', ['teachers' => $teachers->toArray()]);
+
+        return view('parentchat', compact('students', 'teachers'));
     }
 
     public function teacherChat()
@@ -142,7 +227,16 @@ class ChatController extends Controller
             return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
         }
 
+        // Récupérer la classe de l'enseignant
+        $classe = $user->classe;
+
+        // Récupérer tous les élèves de la classe
+        $students = Student::where('class', $classe->name)->with('tuteur')->get();
+
+        // Récupérer tous les parents des élèves de la classe
+        $parents = Tuteur::whereIn('id', $students->pluck('tuteur_id'))->get();
+
         Log::info('Utilisateur authentifié pour teacherChat.', ['user_id' => $user->id]);
-        return view('teacherchat');
+        return view('teacherchat', compact('parents', 'students'));
     }
 }

@@ -16,6 +16,8 @@ class Message extends Model
         'teacher_id',
         'tuteur_id',
         'student_id',
+        'attachment',
+        'reply'
     ];
 
     public function teacher()
