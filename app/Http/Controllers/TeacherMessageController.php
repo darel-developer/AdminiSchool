@@ -30,13 +30,18 @@ class TeacherMessageController extends Controller
                 return response()->json(['error' => 'Non autorisé'], 403);
             }
 
-            $classe = $teacher->classe()->with(['students.tuteur'])->first();
+            // Correction ici : accès à la relation sans parenthèses
+            $classe = $teacher->classe;
             if (!$classe) {
                 Log::error('Classe non trouvée pour l\'enseignant ID: ' . $teacher->id);
                 return response()->json(['error' => 'Classe non trouvée'], 404);
             }
 
-            $parents = $classe->students
+            // Récupérer les étudiants de la classe
+            $students = Student::where('class', $classe->name)->with('tuteur')->get();
+
+            // Grouper les parents par tuteur_id
+            $parents = $students
                 ->groupBy('tuteur_id')
                 ->map(function ($students, $tuteurId) {
                     $tuteur = $students->first()->tuteur;
@@ -50,7 +55,7 @@ class TeacherMessageController extends Controller
                         'children' => $students->map(function ($student) {
                             return [
                                 'id' => $student->id,
-                                'name' => $student->first_name . ' ' . $student->last_name
+                                'name' => $student->name
                             ];
                         })->values()->toArray()
                     ];

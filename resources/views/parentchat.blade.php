@@ -278,9 +278,13 @@
 
             
             sendMessageBtn.addEventListener('click', function () {
+                if (!selectedTeacherId || !selectedChildId) {
+                    alert('Veuillez sélectionner un enseignant et un enfant.');
+                    return;
+                }
                 const formData = new FormData();
                 formData.append('teacher_id', selectedTeacherId);
-                formData.append('child_id', selectedChildId);
+                formData.append('student_id', selectedChildId); // Doit être student_id, pas child_id
                 formData.append('message', messageInput.value.trim());
                 if (attachmentInput.files.length) {
                     formData.append('attachment', attachmentInput.files[0]);
@@ -301,7 +305,7 @@
                         toggleSendButton();
                         loadMessages();
                     } else {
-                        alert('Erreur lors de l\'envoi du message.');
+                        alert(data.error || 'Erreur lors de l\'envoi du message.');
                     }
                 })
                 .catch(error => {
@@ -309,9 +313,8 @@
                 });
             });
 
-           
             function toggleSendButton() {
-                sendMessageBtn.disabled = !messageInput.value.trim() && !attachmentInput.files.length;
+                sendMessageBtn.disabled = !selectedTeacherId || !selectedChildId || (!messageInput.value.trim() && !attachmentInput.files.length);
             }
 
             messageInput.addEventListener('input', toggleSendButton);

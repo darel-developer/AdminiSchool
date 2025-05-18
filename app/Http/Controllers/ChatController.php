@@ -16,6 +16,11 @@ class ChatController extends Controller
     public function sendMessage(Request $request)
     {
         try {
+            Log::info('Tentative d\'envoi de message', [
+                'request_data' => $request->all(),
+                'files' => $request->allFiles(),
+            ]);
+
             $validated = $request->validate([
                 'message' => 'required_without:attachment|string|nullable',
                 'teacher_id' => 'required|exists:teachers,id',
@@ -64,6 +69,12 @@ class ChatController extends Controller
                 ]
             ]);
 
+        } catch (\Illuminate\Validation\ValidationException $ex) {
+            Log::error('Validation error: ' . $ex->getMessage());
+            return response()->json([
+                'error' => 'Données invalides : ' . $ex->getMessage(),
+                'success' => false
+            ], 422);
         } catch (\Exception $e) {
             Log::error('Erreur lors de l\'envoi du message: ' . $e->getMessage());
             return response()->json([
