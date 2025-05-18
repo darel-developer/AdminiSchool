@@ -48,9 +48,9 @@ Route::middleware(['auth:tuteur'])->group(function () {
 // Routes pour les enseignants
 Route::middleware(['auth:teacher'])->prefix('teacher')->group(function () {
     Route::get('/teacher-chat', [ChatController::class, 'teacherChat'])->name('teacher.chat');
-    Route::get('/get-parents', [ChatController::class, 'getParents'])->name('get.parents');
-    Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('send.message');
-    Route::get('/get-messages/{parentId}', [ChatController::class, 'fetchMessages'])->name('get.messages');
+    Route::get('/get-parents', [ChatController::class, 'getParents'])->name('teacher.get-parents');
+    Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('teacher.send-message');
+    Route::get('/get-messages/{parentId}', [ChatController::class, 'fetchMessages'])->name('teacher.messages');
 });
 
 //Routes pour uplaoder les notes des élèves
