@@ -219,11 +219,15 @@
             let selectedParentId = null;
             let isLoadingMessages = false;
 
-            // Charger la liste des parents
+            // Charger la liste des parents dans la colonne de gauche
             function loadParents() {
                 fetch('{{ route("teacher.get-parents") }}', fetchConfig)
                     .then(response => {
                         if (!response.ok) {
+                            // Correction : afficher une erreur claire si 404
+                            if (response.status === 404) {
+                                throw new Error("Aucun parent trouvé pour votre classe.");
+                            }
                             throw new Error(`Erreur HTTP: ${response.status}`);
                         }
                         return response.json();
@@ -254,7 +258,6 @@
                         });
                     })
                     .catch(error => {
-                        console.error('Erreur lors du chargement des parents:', error);
                         loadingParents.style.display = 'none';
                         parentsList.innerHTML = `
                             <div class="alert alert-danger m-3">
@@ -372,7 +375,7 @@
 
                 fetch('{{ route("teacher.send-message") }}', sendConfig)
                     .then(response => response.json())
-                    .then(data => {
+                    .then data => {
                         if (data.error) {
                             console.error('Erreur serveur:', data.error);
                             throw new Error(typeof data.error === 'string' ? data.error : 'Une erreur est survenue');
@@ -401,6 +404,10 @@
                 fetch('{{ route("teacher.get-parents") }}', fetchConfig)
                     .then(response => {
                         if (!response.ok) {
+                            // Correction : afficher une erreur claire si 404
+                            if (response.status === 404) {
+                                throw new Error("Aucun parent trouvé pour votre classe.");
+                            }
                             throw new Error(`Erreur HTTP: ${response.status}`);
                         }
                         return response.json();
