@@ -405,52 +405,62 @@
                 parentsListModal.innerHTML = '';
                 parentsListModal.appendChild(loadingParentsModal);
 
-                fetch('{{ route("teacher.get-parents") }}', fetchConfig)
-                    .then(response => {
-                        console.log('Réponse fetch loadParentsModal:', response);
-                        if (!response.ok) {
-                            if (response.status === 404) {
-                                throw new Error("Aucun parent trouvé pour votre classe.");
-                            }
-                            throw new Error(`Erreur HTTP: ${response.status}`);
+                fetch('{{ route("teacher.get-parents") }}', {
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    console.log('Réponse fetch loadParentsModal:', response);
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            throw new Error("Aucun parent trouvé pour votre classe.");
                         }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Données reçues loadParentsModal:', data);
-                        loadingParentsModal.style.display = 'none';
-                        parentsListModal.innerHTML = '';
+                        throw new Error(`Erreur HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Données reçues loadParentsModal:', data);
+                    loadingParentsModal.style.display = 'none';
+                    parentsListModal.innerHTML = '';
 
-                        if (!data.parents || data.parents.length === 0) {
-                            parentsListModal.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé pour votre classe.</div>';
-                            return;
-                        }
+                    // Correction : data.parents peut être un tableau d'objets ou d'arrays
+                    if (!data.parents || data.parents.length === 0) {
+                        parentsListModal.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé pour votre classe.</div>';
+                        return;
+                    }
 
-                        data.parents.forEach(parent => {
-                            const listItem = document.createElement('button');
-                            listItem.type = 'button';
-                            listItem.className = 'list-group-item list-group-item-action';
-                            listItem.innerHTML = `
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">${parent.nom} ${parent.prenom}</h6>
-                                </div>
-                                <small class="text-muted">
-                                    ${parent.children ? parent.children.map(child => child.name).join(', ') : 'Aucun enfant'}
-                                </small>
-                            `;
-                            listItem.addEventListener('click', function() {
-                                selectParent(parent);
-                                const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
-                                parentModal.hide();
-                            });
-                            parentsListModal.appendChild(listItem);
+                    data.parents.forEach(parent => {
+                        // Si parent est un objet simple (cas fallback)
+                        const nom = parent.nom || parent.first_name || '';
+                        const prenom = parent.prenom || parent.last_name || '';
+                        const children = parent.children || [];
+                        const listItem = document.createElement('button');
+                        listItem.type = 'button';
+                        listItem.className = 'list-group-item list-group-item-action';
+                        listItem.innerHTML = `
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">${nom} ${prenom}</h6>
+                            </div>
+                            <small class="text-muted">
+                                ${children.length ? children.map(child => child.name).join(', ') : 'Aucun enfant'}
+                            </small>
+                        `;
+                        listItem.addEventListener('click', function() {
+                            selectParent(parent);
+                            const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
+                            parentModal.hide();
                         });
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors du chargement des parents (modal):', error);
-                        loadingParentsModal.style.display = 'none';
-                        parentsListModal.innerHTML = `<div class="alert alert-danger m-3">Erreur lors du chargement des parents: ${error.message}</div>`;
+                        parentsListModal.appendChild(listItem);
                     });
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des parents (modal):', error);
+                    loadingParentsModal.style.display = 'none';
+                    parentsListModal.innerHTML = `<div class="alert alert-danger m-3">Erreur lors du chargement des parents: ${error.message}</div>`;
+                });
             }
 
             // Ouvre le modal et charge la liste des parents
