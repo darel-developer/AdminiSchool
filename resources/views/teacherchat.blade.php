@@ -199,9 +199,68 @@
             const loadingParents = document.getElementById('loadingParents');
             const contactParentBtn = document.getElementById('contactParentBtn');
             const parentsListModal = document.getElementById('parentsListModal');
+            // Supprime le spinner du DOM dès le début
+            if (document.getElementById('loadingParentsModal')) {
+                document.getElementById('loadingParentsModal').remove();
+            }
 
-            let selectedParentId = null;
-            let isLoadingMessages = false;
+            // Charger la liste de tous les parents dans le modal (affiche tous les parents de la classe)
+            function loadParentsModal() {
+                parentsListModal.innerHTML = ''; // On vide la liste
+
+                fetch('{{ route("teacher.get-parents") }}', {
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.error || `Erreur HTTP: ${response.status}`);
+                        }).catch(() => {
+                            throw new Error(`Erreur HTTP: ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    parentsListModal.innerHTML = '';
+                    if (!data.parents || data.parents.length === 0) {
+                        parentsListModal.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé pour votre classe.</div>';
+                        return;
+                    }
+                    data.parents.forEach(parent => {
+                        const nom = parent.nom || parent.first_name || '';
+                        const prenom = parent.prenom || parent.last_name || '';
+                        const children = parent.children || [];
+                        const listItem = document.createElement('button');
+                        listItem.type = 'button';
+                        listItem.className = 'list-group-item list-group-item-action';
+                        listItem.innerHTML = `
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">${nom} ${prenom}</h6>
+                            </div>
+                            <small class="text-muted">
+                                ${children.length ? children.map(child => child.name).join(', ') : 'Aucun enfant'}
+                            </small>
+                        `;
+                        listItem.addEventListener('click', function() {
+                            selectParent(parent);
+                            const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
+                            parentModal.hide();
+                        });
+                        parentsListModal.appendChild(listItem);
+                    });
+                })
+                .catch(error => {
+                    parentsListModal.innerHTML = `<div class="alert alert-danger m-3">Erreur lors du chargement des parents: ${error.message}</div>`;
+                });
+            }
+
+            contactParentBtn.addEventListener('click', function() {
+                loadParentsModal();
+            });
 
             // Charger la liste des parents dans la colonne de gauche
             function loadParents() {
