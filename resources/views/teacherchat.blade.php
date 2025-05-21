@@ -221,10 +221,11 @@
 
             // Charger la liste des parents dans la colonne de gauche
             function loadParents() {
+                console.log('Appel à loadParents()');
                 fetch('{{ route("teacher.get-parents") }}', fetchConfig)
                     .then(response => {
+                        console.log('Réponse fetch loadParents:', response);
                         if (!response.ok) {
-                            // Correction : afficher une erreur claire si 404
                             if (response.status === 404) {
                                 throw new Error("Aucun parent trouvé pour votre classe.");
                             }
@@ -233,6 +234,7 @@
                         return response.json();
                     })
                     .then(data => {
+                        console.log('Données reçues loadParents:', data);
                         loadingParents.style.display = 'none';
                         parentsList.innerHTML = '';
 
@@ -258,6 +260,7 @@
                         });
                     })
                     .catch(error => {
+                        console.error('Erreur lors du chargement des parents (colonne):', error);
                         loadingParents.style.display = 'none';
                         parentsList.innerHTML = `
                             <div class="alert alert-danger m-3">
@@ -397,14 +400,15 @@
 
             // Charger la liste des parents dans le modal
             function loadParentsModal() {
+                console.log('Appel à loadParentsModal()');
                 loadingParentsModal.style.display = 'block';
                 parentsListModal.innerHTML = '';
                 parentsListModal.appendChild(loadingParentsModal);
 
                 fetch('{{ route("teacher.get-parents") }}', fetchConfig)
                     .then(response => {
+                        console.log('Réponse fetch loadParentsModal:', response);
                         if (!response.ok) {
-                            // Correction : afficher une erreur claire si 404
                             if (response.status === 404) {
                                 throw new Error("Aucun parent trouvé pour votre classe.");
                             }
@@ -413,6 +417,7 @@
                         return response.json();
                     })
                     .then(data => {
+                        console.log('Données reçues loadParentsModal:', data);
                         loadingParentsModal.style.display = 'none';
                         parentsListModal.innerHTML = '';
 
@@ -442,6 +447,7 @@
                         });
                     })
                     .catch(error => {
+                        console.error('Erreur lors du chargement des parents (modal):', error);
                         loadingParentsModal.style.display = 'none';
                         parentsListModal.innerHTML = `<div class="alert alert-danger m-3">Erreur lors du chargement des parents: ${error.message}</div>`;
                     });
@@ -449,6 +455,7 @@
 
             // Ouvre le modal et charge la liste des parents
             contactParentBtn.addEventListener('click', function() {
+                console.log('Bouton "Contactez un parent" cliqué');
                 loadParentsModal();
             });
 
