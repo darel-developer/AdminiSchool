@@ -138,7 +138,41 @@
         </div>
 
         <!-- Zone de messagerie -->
-       
+        <div class="container mt-4">
+            <div class="row">
+                
+                <div class="col-md-8">
+                    <div class="card chat-container">
+                        <div class="card-header" id="chatHeader">
+                            Sélectionnez un parent pour commencer la conversation
+                        </div>
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="text-center text-muted">
+                                Sélectionnez un parent pour voir les messages
+                            </div>
+                        </div>
+                        <div id="loadingSpinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <form id="messageForm" class="d-flex flex-column gap-2">
+                                @csrf
+                                <div class="input-group">
+                                    <input type="text" id="messageInput" class="form-control" placeholder="Votre message..." disabled>
+                                    <input type="file" id="attachmentInput" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" disabled>
+                                    <button type="submit" id="sendMessageBtn" class="btn btn-primary" disabled>
+                                        Envoyer
+                                    </button>
+                                </div>
+                                <small class="text-muted">Formats acceptés: jpg, jpeg, png, pdf, doc, docx (max 10MB)</small>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -164,7 +198,6 @@
             const loadingSpinner = document.getElementById('loadingSpinner');
             const loadingParents = document.getElementById('loadingParents');
             const contactParentBtn = document.getElementById('contactParentBtn');
-            const loadingParentsModal = document.getElementById('loadingParentsModal');
             const parentsListModal = document.getElementById('parentsListModal');
 
             let selectedParentId = null;
