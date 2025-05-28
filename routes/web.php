@@ -23,6 +23,7 @@ use App\Http\Controllers\ConvocationController;
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\CahierDeTexteController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\TeacherChatController;
 
 //Route pour gérer les cahiers de textes
 Route::get('/cahierexte', [CahierDeTexteController::class, 'index'])->name('cahiertexte');
@@ -47,10 +48,12 @@ Route::middleware(['auth:tuteur'])->group(function () {
 
 // Routes pour les enseignants
 Route::middleware(['auth:teacher'])->prefix('teacher')->group(function () {
-    Route::get('/teacher-chat', [ChatController::class, 'teacherChat'])->name('teacher.chat');
-    Route::get('/get-parents', [ChatController::class, 'getParents'])->name('teacher.get-parents');
-    Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('teacher.send-message');
-    Route::get('/get-messages/{parentId}', [ChatController::class, 'fetchMessages'])->name('teacher.messages');
+    Route::get('/chat', function () {
+        return view('teacherchat');
+    })->name('teacher.chat');
+    Route::get('/all-parents', [TeacherChatController::class, 'getAllParents'])->name('teacher.all-parents');
+    Route::get('/messages/{parentId}', [TeacherChatController::class, 'getMessages'])->name('teacher.all-messages');
+    Route::post('/send-message', [TeacherChatController::class, 'sendMessage'])->name('teacher.send-message');
 });
 
 //Routes pour uplaoder les notes des élèves

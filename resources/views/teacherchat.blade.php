@@ -195,54 +195,37 @@
             const messageInput = document.getElementById('messageInput');
             const attachmentInput = document.getElementById('attachmentInput');
             const sendMessageBtn = document.getElementById('sendMessageBtn');
-            const loadingSpinner = document.getElementById('loadingSpinner');
             const loadingParents = document.getElementById('loadingParents');
             const contactParentBtn = document.getElementById('contactParentBtn');
             const parentsListModal = document.getElementById('parentsListModal');
-            // Supprime le spinner du DOM dès le début
-            if (document.getElementById('loadingParentsModal')) {
-                document.getElementById('loadingParentsModal').remove();
-            }
+            let selectedParentId = null;
 
-            // Charger la liste de tous les parents dans le modal (affiche tous les parents de la classe)
+            // Charger la liste de tous les parents dans le modal
             function loadParentsModal() {
-                parentsListModal.innerHTML = ''; // On vide la liste
-
-                fetch('{{ route("teacher.get-parents") }}', {
+                parentsListModal.innerHTML = '';
+                fetch('{{ url("teacher/all-parents") }}', {
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                         'Accept': 'application/json'
                     }
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(data => {
-                            throw new Error(data.error || `Erreur HTTP: ${response.status}`);
-                        }).catch(() => {
-                            throw new Error(`Erreur HTTP: ${response.status}`);
-                        });
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     parentsListModal.innerHTML = '';
                     if (!data.parents || data.parents.length === 0) {
-                        parentsListModal.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé pour votre classe.</div>';
+                        parentsListModal.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé.</div>';
                         return;
                     }
                     data.parents.forEach(parent => {
-                        const nom = parent.nom || parent.first_name || '';
-                        const prenom = parent.prenom || parent.last_name || '';
-                        const children = parent.children || [];
                         const listItem = document.createElement('button');
                         listItem.type = 'button';
                         listItem.className = 'list-group-item list-group-item-action';
                         listItem.innerHTML = `
                             <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">${nom} ${prenom}</h6>
+                                <h6 class="mb-1">${parent.nom} ${parent.prenom}</h6>
                             </div>
                             <small class="text-muted">
-                                ${children.length ? children.map(child => child.name).join(', ') : 'Aucun enfant'}
+                                ${parent.children.length ? parent.children.map(child => child.name).join(', ') : 'Aucun enfant'}
                             </small>
                         `;
                         listItem.addEventListener('click', function() {
@@ -258,141 +241,61 @@
                 });
             }
 
-            contactParentBtn.addEventListener('click', function() {
-                loadParentsModal();
-            });
-
-            // Charger la liste des parents dans la colonne de gauche
-            function loadParents() {
-                console.log('Appel à loadParents()');
-                fetch('{{ route("teacher.get-parents") }}', fetchConfig)
-                    .then(response => {
-                        console.log('Réponse fetch loadParents:', response);
-                        if (!response.ok) {
-                            if (response.status === 404) {
-                                throw new Error("Aucun parent trouvé pour votre classe.");
-                            }
-                            throw new Error(`Erreur HTTP: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Données reçues loadParents:', data);
-                        loadingParents.style.display = 'none';
-                        parentsList.innerHTML = '';
-
-                        if (!data.parents || data.parents.length === 0) {
-                            parentsList.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé pour votre classe.</div>';
-                            return;
-                        }
-
-                        data.parents.forEach(parent => {
-                            const listItem = document.createElement('button');
-                            listItem.type = 'button';
-                            listItem.className = 'list-group-item list-group-item-action';
-                            listItem.innerHTML = `
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">${parent.nom} ${parent.prenom}</h6>
-                                </div>
-                                <small class="text-muted">
-                                    ${parent.children ? parent.children.map(child => child.name).join(', ') : 'Aucun enfant'}
-                                </small>
-                            `;
-                            listItem.addEventListener('click', () => selectParent(parent));
-                            parentsList.appendChild(listItem);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors du chargement des parents (colonne):', error);
-                        loadingParents.style.display = 'none';
-                        parentsList.innerHTML = `
-                            <div class="alert alert-danger m-3">
-                                Erreur lors du chargement des parents: ${error.message}
-                            </div>
-                        `;
-                    });
-            }
-
-            // Sélectionner un parent
-            function selectParent(parent) {
-                selectedParentId = parent.id;
-                chatHeader.textContent = `Discussion avec ${parent.nom} ${parent.prenom}`;
-                messageInput.disabled = false;
-                attachmentInput.disabled = false;
-                document.querySelectorAll('#parentsList button').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                event.currentTarget.classList.add('active');
-                loadMessages();
-            }
-
-            // Charger les messages
+            // Charger les messages pour un parent
             function loadMessages() {
-                if (!selectedParentId || isLoadingMessages) return;
+                if (!selectedParentId) return;
+                fetch(`{{ url('teacher/messages') }}/${selectedParentId}`, {
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    chatMessages.innerHTML = '';
 
-                isLoadingMessages = true;
-                loadingSpinner.style.display = 'block';
-                chatMessages.style.opacity = '0.5';
+                    if (!data.messages || data.messages.length === 0) {
+                        chatMessages.innerHTML = '<div class="text-center text-muted">Aucun message dans cette conversation.</div>';
+                        return;
+                    }
 
-                fetch(`{{ route('teacher.messages', '') }}/${selectedParentId}`, fetchConfig)
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.json().then(data => {
-                                throw new Error(data.error || `Erreur HTTP: ${response.status}`);
-                            });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        chatMessages.innerHTML = '';
+                    data.messages.forEach(message => {
+                        const messageElement = document.createElement('div');
+                        messageElement.className = `message ${message.sender.type === 'teacher' ? 'sent' : 'received'}`;
 
-                        if (!data.messages || data.messages.length === 0) {
-                            chatMessages.innerHTML = '<div class="text-center text-muted">Aucun message dans cette conversation.</div>';
-                            return;
-                        }
-
-                        data.messages.forEach(message => {
-                            const messageElement = document.createElement('div');
-                            messageElement.className = `message ${message.sender.type === 'teacher' ? 'sent' : 'received'}`;
-
-                            let content = `
-                                <div class="sender">${message.sender.name}</div>
-                                <div class="content">${message.message || ''}</div>
-                            `;
-
-                            if (message.attachment) {
-                                const extension = message.attachment.split('.').pop().toLowerCase();
-                                const isImage = ['jpg', 'jpeg', 'png', 'gif'].includes(extension);
-
-                                content += `
-                                    <div class="attachment">
-                                        ${isImage
-                                            ? `<img src="${message.attachment}" class="img-fluid" style="max-height: 200px;" alt="Pièce jointe">`
-                                            : `<a href="${message.attachment}" target="_blank">Voir la pièce jointe</a>`
-                                        }
-                                    </div>
-                                `;
-                            }
-
-                            content += `<div class="time">${new Date(message.created_at).toLocaleString()}</div>`;
-                            messageElement.innerHTML = content;
-                            chatMessages.appendChild(messageElement);
-                        });
-
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    })
-                    .catch(error => {
-                        chatMessages.innerHTML = `
-                            <div class="alert alert-danger">
-                                Erreur lors du chargement des messages: ${error.message}
-                            </div>
+                        let content = `
+                            <div class="sender">${message.sender.name}</div>
+                            <div class="content">${message.message || ''}</div>
                         `;
-                    })
-                    .finally(() => {
-                        isLoadingMessages = false;
-                        loadingSpinner.style.display = 'none';
-                        chatMessages.style.opacity = '1';
+
+                        if (message.attachment) {
+                            const extension = message.attachment.split('.').pop().toLowerCase();
+                            const isImage = ['jpg', 'jpeg', 'png', 'gif'].includes(extension);
+
+                            content += `
+                                <div class="attachment">
+                                    ${isImage
+                                        ? `<img src="${message.attachment}" class="img-fluid" style="max-height: 200px;" alt="Pièce jointe">`
+                                        : `<a href="${message.attachment}" target="_blank">Voir la pièce jointe</a>`
+                                    }
+                                </div>
+                            `;
+                        }
+
+                        content += `<div class="time">${new Date(message.created_at).toLocaleString()}</div>`;
+                        messageElement.innerHTML = content;
+                        chatMessages.appendChild(messageElement);
                     });
+
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                })
+                .catch(error => {
+                    chatMessages.innerHTML = `
+                        <div class="alert alert-danger">
+                            Erreur lors du chargement des messages: ${error.message}
+                        </div>
+                    `;
+                });
             }
 
             // Envoyer un message
@@ -413,100 +316,37 @@
                 messageInput.disabled = true;
                 attachmentInput.disabled = true;
 
-                const sendConfig = {
-                    ...fetchConfig,
+                fetch('{{ url("teacher/send-message") }}', {
                     method: 'POST',
-                    body: formData
-                };
-
-                fetch('{{ route("teacher.send-message") }}', sendConfig)
-                    .then(response => response.json())
-                    .then data => {
-                        if (data.error) {
-                            console.error('Erreur serveur:', data.error);
-                            throw new Error(typeof data.error === 'string' ? data.error : 'Une erreur est survenue');
-                        }
-                        messageInput.value = '';
-                        attachmentInput.value = '';
-                        loadMessages();
-                    })
-                    .catch(error => {
-                        console.error('Erreur:', error);
-                        alert(`Erreur lors de l'envoi du message: ${error.message}`);
-                    })
-                    .finally(() => {
-                        sendMessageBtn.disabled = false;
-                        messageInput.disabled = false;
-                        attachmentInput.disabled = false;
-                    });
-            });
-
-            // Charger la liste des parents dans le modal (sans spinner)
-            function loadParentsModal() {
-                console.log('Appel à loadParentsModal()');
-                parentsListModal.innerHTML = ''; // On vide la liste
-
-                fetch('{{ route("teacher.get-parents") }}', {
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    }
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: formData
                 })
-                .then(response => {
-                    console.log('Réponse fetch loadParentsModal:', response);
-                    if (!response.ok) {
-                        return response.json().then(data => {
-                            throw new Error(data.error || `Erreur HTTP: ${response.status}`);
-                        }).catch(() => {
-                            throw new Error(`Erreur HTTP: ${response.status}`);
-                        });
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    console.log('Données reçues loadParentsModal:', data);
-                    parentsListModal.innerHTML = '';
-
-                    if (!data.parents || data.parents.length === 0) {
-                        parentsListModal.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé pour votre classe.</div>';
-                        return;
+                    if (data.error) {
+                        console.error('Erreur serveur:', data.error);
+                        throw new Error(typeof data.error === 'string' ? data.error : 'Une erreur est survenue');
                     }
-
-                    data.parents.forEach(parent => {
-                        const nom = parent.nom || parent.first_name || '';
-                        const prenom = parent.prenom || parent.last_name || '';
-                        const children = parent.children || [];
-                        const listItem = document.createElement('button');
-                        listItem.type = 'button';
-                        listItem.className = 'list-group-item list-group-item-action';
-                        listItem.innerHTML = `
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">${nom} ${prenom}</h6>
-                            </div>
-                            <small class="text-muted">
-                                ${children.length ? children.map(child => child.name).join(', ') : 'Aucun enfant'}
-                            </small>
-                        `;
-                        listItem.addEventListener('click', function() {
-                            selectParent(parent);
-                            const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
-                            parentModal.hide();
-                        });
-                        parentsListModal.appendChild(listItem);
-                    });
+                    messageInput.value = '';
+                    attachmentInput.value = '';
+                    loadMessages();
                 })
                 .catch(error => {
-                    console.error('Erreur lors du chargement des parents (modal):', error);
-                    parentsListModal.innerHTML = `<div class="alert alert-danger m-3">Erreur lors du chargement des parents: ${error.message}</div>`;
+                    console.error('Erreur:', error);
+                    alert(`Erreur lors de l'envoi du message: ${error.message}`);
+                })
+                .finally(() => {
+                    sendMessageBtn.disabled = false;
+                    messageInput.disabled = false;
+                    attachmentInput.disabled = false;
                 });
-            }
-
-            // Ouvre le modal et charge la liste des parents
-            contactParentBtn.addEventListener('click', function() {
-                console.log('Bouton "Contactez un parent" cliqué');
-                loadParentsModal();
             });
 
+            contactParentBtn.addEventListener('click', function() {
+                loadParentsModal();
+            });
 
             // Activer/désactiver le bouton d'envoi
             function toggleSendButton() {
