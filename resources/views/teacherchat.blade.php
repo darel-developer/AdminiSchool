@@ -189,16 +189,22 @@
             };
 
             const parentsList = document.getElementById('parentsList');
-            const chatMessages = document.getElementById('chatMessages');
             const chatHeader = document.getElementById('chatHeader');
-            const messageForm = document.getElementById('messageForm');
+            const chatMessages = document.getElementById('chatMessages');
             const messageInput = document.getElementById('messageInput');
             const attachmentInput = document.getElementById('attachmentInput');
             const sendMessageBtn = document.getElementById('sendMessageBtn');
-            const loadingParents = document.getElementById('loadingParents');
-            const contactParentBtn = document.getElementById('contactParentBtn');
-            const parentsListModal = document.getElementById('parentsListModal');
             let selectedParentId = null;
+
+            // Sélectionner un parent et démarrer la discussion
+            function selectParent(parent) {
+                selectedParentId = parent.id;
+                chatHeader.textContent = `Discussion avec ${parent.nom} ${parent.prenom}`;
+                messageInput.disabled = false;
+                attachmentInput.disabled = false;
+                sendMessageBtn.disabled = false;
+                loadMessages();
+            }
 
             // Charger la liste de tous les parents dans le modal
             function loadParentsModal() {
@@ -324,7 +330,7 @@
                     body: formData
                 })
                 .then(response => response.json())
-                .then(data => {
+                .then data => {
                     if (data.error) {
                         console.error('Erreur serveur:', data.error);
                         throw new Error(typeof data.error === 'string' ? data.error : 'Une erreur est survenue');
