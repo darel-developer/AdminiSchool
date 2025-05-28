@@ -9,6 +9,7 @@ use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Routing\Controller; // Ajout pour accès à middleware
+use Illuminate\Support\Facades\Log;
 
 class TeacherChatController extends Controller
 {
@@ -21,7 +22,16 @@ class TeacherChatController extends Controller
     // Récupérer tous les parents avec leurs enfants
     public function getAllParents()
     {
+        // Correction : assure-toi que la relation 'students' existe bien pour chaque tuteur
         $parents = Tuteur::with('students')->get();
+
+        // Si tu as des tuteurs mais pas d'enfants liés, la liste children sera vide
+        // Pour le debug, log le résultat
+        if ($parents->isEmpty()) {
+            Log::info('Aucun tuteur trouvé en base.');
+        } else {
+            Log::info('Tuteurs trouvés:', $parents->toArray());
+        }
 
         $result = $parents->map(function ($parent) {
             return [
@@ -29,14 +39,21 @@ class TeacherChatController extends Controller
                 'nom' => $parent->nom,
                 'prenom' => $parent->prenom,
                 'email' => $parent->email,
-                'children' => $parent->students->map(function ($student) {
+                'children' => $parent->students ? $parent->students->map(function ($student) {
                     return [
                         'id' => $student->id,
                         'name' => $student->name
                     ];
-                })->values()->toArray()
+                })->values()->toArray() : []
             ];
         });
+
+        // Correction : si tu veux voir tous les parents même sans enfants, ne filtre pas sur children
+        if ($result->isEmpty()) {
+            Log::info('Aucun parent structuré trouvé.');
+        } else {
+            Log::info('Parents structurés:', $result->toArray());
+        }
 
         return response()->json(['parents' => $result]);
     }
