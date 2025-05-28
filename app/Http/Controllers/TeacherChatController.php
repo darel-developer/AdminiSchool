@@ -8,14 +8,14 @@ use App\Models\Tuteur;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Routing\Controller; // Ajout pour accès à middleware
 use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controller;
 
 class TeacherChatController extends Controller
 {
+    // Supprime l'appel à parent::__construct() qui n'existe pas dans Controller
     public function __construct()
     {
-        parent::__construct(); // Optionnel, selon Laravel, mais safe
         $this->middleware('auth:teacher');
     }
 
