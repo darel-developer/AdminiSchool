@@ -19,19 +19,28 @@ class TeacherChatController extends Controller
         $this->middleware('auth:teacher');
     }
 
-    // Récupérer tous les parents avec leurs enfants
+    // Récupérer uniquement les parents ayant des enfants dans la classe de l'enseignant connecté
     public function getAllParents()
     {
-        // Correction : assure-toi que la relation 'students' existe bien pour chaque tuteur
-        $parents = Tuteur::with('students')->get();
-
-        // Si tu as des tuteurs mais pas d'enfants liés, la liste children sera vide
-        // Pour le debug, log le résultat
-        if ($parents->isEmpty()) {
-            Log::info('Aucun tuteur trouvé en base.');
-        } else {
-            Log::info('Tuteurs trouvés:', $parents->toArray());
+        $teacher = Auth::guard('teacher')->user();
+        if (!$teacher) {
+            return response()->json(['parents' => []]);
         }
+
+        // Récupérer la classe de l'enseignant
+        $classe = $teacher->classe;
+        if (!$classe) {
+            return response()->json(['parents' => []]);
+        }
+
+        // Récupérer les étudiants de cette classe
+        $students = \App\Models\Student::where('class', $classe->name)->get();
+
+        // Récupérer les tuteurs de ces étudiants
+        $tuteurIds = $students->pluck('tuteur_id')->unique()->filter();
+        $parents = Tuteur::with(['students' => function($query) use ($classe) {
+            $query->where('class', $classe->name);
+        }])->whereIn('id', $tuteurIds)->get();
 
         $result = $parents->map(function ($parent) {
             return [
@@ -47,13 +56,6 @@ class TeacherChatController extends Controller
                 })->values()->toArray() : []
             ];
         });
-
-        // Correction : si tu veux voir tous les parents même sans enfants, ne filtre pas sur children
-        if ($result->isEmpty()) {
-            Log::info('Aucun parent structuré trouvé.');
-        } else {
-            Log::info('Parents structurés:', $result->toArray());
-        }
 
         return response()->json(['parents' => $result]);
     }
