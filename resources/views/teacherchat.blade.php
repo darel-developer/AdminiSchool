@@ -126,11 +126,7 @@
                     </div>
                     <div class="modal-body">
                         <div id="parentsListModal" class="list-group">
-                            <div id="loadingParentsModal" class="text-center">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Chargement...</span>
-                                </div>
-                            </div>
+                            <!-- SUPPRIME le spinner ici -->
                         </div>
                     </div>
                 </div>
@@ -210,7 +206,7 @@
                 loadMessages();
             }
 
-            // Charger la liste de tous les parents dans le modal
+            // Charger la liste de tous les parents dans le modal (sans spinner)
             function loadParentsModal() {
                 parentsListModal.innerHTML = '';
                 fetch('{{ url("teacher/all-parents") }}', {
@@ -223,7 +219,7 @@
                 .then(data => {
                     parentsListModal.innerHTML = '';
                     if (!data.parents || data.parents.length === 0) {
-                        parentsListModal.innerHTML = '<div class="text-center text-muted p-3">Aucun parent trouvé.</div>';
+                        parentsListModal.innerHTML = '<div class="text-center text-muted p-3">Aucun tuteur.</div>';
                         return;
                     }
                     data.parents.forEach(parent => {
@@ -247,7 +243,7 @@
                     });
                 })
                 .catch(error => {
-                    parentsListModal.innerHTML = `<div class="alert alert-danger m-3">Erreur lors du chargement des parents: ${error.message}</div>`;
+                    parentsListModal.innerHTML = `<div class="alert alert-danger m-3">Erreur lors du chargement des tuteurs: ${error.message}</div>`;
                 });
             }
 
@@ -322,4 +318,40 @@
 
                 const formData = new FormData();
                 formData.append('parent_id', selectedParentId);
-                if
+                if (message) formData.append('message', message);
+                if (attachment) formData.append('attachment', attachment);
+
+                sendMessageBtn.disabled = true;
+                sendMessageBtn.textContent = 'Envoi...';
+
+                fetch('{{ url("teacher/send-message") }}', {
+                    method: 'POST',
+                    body: formData,
+                    ...fetchConfig
+                })
+                .then(response => response.json())
+                .then(data => {
+                    sendMessageBtn.disabled = false;
+                    sendMessageBtn.textContent = 'Envoyer';
+
+                    if (data.success) {
+                        messageInput.value = '';
+                        attachmentInput.value = '';
+                        loadMessages();
+                    } else {
+                        alert(`Erreur: ${data.message}`);
+                    }
+                })
+                .catch(error => {
+                    sendMessageBtn.disabled = false;
+                    sendMessageBtn.textContent = 'Envoyer';
+                    alert(`Erreur lors de l'envoi du message: ${error.message}`);
+                });
+            });
+
+            // Charger la liste des parents au démarrage
+            loadParentsModal();
+        });
+    </script>
+</body>
+</html>
