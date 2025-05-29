@@ -189,16 +189,26 @@
             };
 
             const parentsList = document.getElementById('parentsList');
-            const chatMessages = document.getElementById('chatMessages');
             const chatHeader = document.getElementById('chatHeader');
-            const messageForm = document.getElementById('messageForm');
+            const chatMessages = document.getElementById('chatMessages');
             const messageInput = document.getElementById('messageInput');
             const attachmentInput = document.getElementById('attachmentInput');
             const sendMessageBtn = document.getElementById('sendMessageBtn');
-            const loadingParents = document.getElementById('loadingParents');
-            const contactParentBtn = document.getElementById('contactParentBtn');
             const parentsListModal = document.getElementById('parentsListModal');
             let selectedParentId = null;
+            let selectedParentName = '';
+
+            // Sélectionner un parent et démarrer la discussion
+            function selectParent(parent) {
+                selectedParentId = parent.id;
+                selectedParentName = `${parent.nom} ${parent.prenom}`;
+                chatHeader.textContent = `Discussion avec ${selectedParentName}`;
+                messageInput.disabled = false;
+                attachmentInput.disabled = false;
+                sendMessageBtn.disabled = false;
+                chatMessages.innerHTML = '<div class="text-center text-muted">Chargement des messages...</div>';
+                loadMessages();
+            }
 
             // Charger la liste de tous les parents dans le modal
             function loadParentsModal() {
@@ -298,68 +308,18 @@
                 });
             }
 
-            // Envoyer un message
+            // Envoyer un message au tuteur sélectionné
             messageForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
                 const message = messageInput.value.trim();
                 const attachment = attachmentInput.files[0];
 
-                if ((!message && !attachment) || !selectedParentId) return;
+                if ((!message && !attachment) || !selectedParentId) {
+                    alert("Veuillez sélectionner un parent et saisir un message ou une pièce jointe.");
+                    return;
+                }
 
                 const formData = new FormData();
                 formData.append('parent_id', selectedParentId);
-                if (message) formData.append('message', message);
-                if (attachment) formData.append('attachment', attachment);
-
-                sendMessageBtn.disabled = true;
-                messageInput.disabled = true;
-                attachmentInput.disabled = true;
-
-                fetch('{{ url("teacher/send-message") }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error('Erreur serveur:', data.error);
-                        throw new Error(typeof data.error === 'string' ? data.error : 'Une erreur est survenue');
-                    }
-                    messageInput.value = '';
-                    attachmentInput.value = '';
-                    loadMessages();
-                })
-                .catch(error => {
-                    console.error('Erreur:', error);
-                    alert(`Erreur lors de l'envoi du message: ${error.message}`);
-                })
-                .finally(() => {
-                    sendMessageBtn.disabled = false;
-                    messageInput.disabled = false;
-                    attachmentInput.disabled = false;
-                });
-            });
-
-            contactParentBtn.addEventListener('click', function() {
-                loadParentsModal();
-            });
-
-            // Activer/désactiver le bouton d'envoi
-            function toggleSendButton() {
-                sendMessageBtn.disabled = !selectedParentId ||
-                    (!messageInput.value.trim() && !attachmentInput.files.length);
-            }
-
-            messageInput.addEventListener('input', toggleSendButton);
-            attachmentInput.addEventListener('change', toggleSendButton);
-
-            // Charger les parents au démarrage
-            loadParents();
-        });
-    </script>
-</body>
-</html>
+                if
