@@ -85,6 +85,42 @@
             padding: 10px;
             overflow-y: auto;
             background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-message-bubble {
+            max-width: 70%;
+            padding: 10px 16px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            word-break: break-word;
+            font-size: 1rem;
+            display: inline-block;
+            position: relative;
+        }
+        .chat-message-sent {
+            align-self: flex-end;
+            background-color: #007bff;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+            border-bottom-left-radius: 18px;
+        }
+        .chat-message-received {
+            align-self: flex-start;
+            background-color: #e9ecef;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 18px;
+        }
+        .chat-message-meta {
+            font-size: 0.7em;
+            opacity: 0.65;
+            margin-top: 2px;
+            text-align: right;
+        }
+        .chat-message-attachment {
+            margin-top: 5px;
+            display: block;
         }
         .chat-input {
             display: flex;
@@ -208,7 +244,9 @@
             let selectedTeacherId = null;
             let messagePollingInterval = null; // Ajout pour le polling
 
-           
+            // Récupérer l'id du parent connecté depuis lebackend (Blade)
+            const parentId = {{ Auth::guard('tuteur')->user()->id ?? 'null' }};
+
             childSelector.addEventListener('change', function () {
                 selectedChildId = this.value;
                 chatHeader.textContent = 'Sélectionnez un enseignant pour commencer';
@@ -267,17 +305,21 @@
                     .then(data => {
                         chatMessages.innerHTML = '';
                         data.messages.forEach(message => {
-                            const messageElement = document.createElement('div');
-                            // Affichage du message et pièce jointe si présente
-                            messageElement.className = 'mb-2 p-2 rounded ' + (message.sender && message.sender.type === 'parent' ? 'bg-primary text-white' : 'bg-light');
-                            if (message.attachment) {
-                                messageElement.innerHTML = `
-                                    ${message.message ? `<div>${message.message}</div>` : ''}
-                                    <a href="${message.attachment}" target="_blank">📎 Pièce jointe</a>
-                                `;
-                            } else {
-                                messageElement.textContent = message.message;
+                            // Determine qui est l'expéditeur
+                            // 'parent' == tuteur connecté, sinon 'teacher'
+                            const isSent = message.sender && message.sender.type === 'parent';
+                            const bubbleClass = isSent ? "chat-message-bubble chat-message-sent" : "chat-message-bubble chat-message-received";
+                            let html = '';
+                            if (message.message) {
+                                html += `<div>${message.message}</div>`;
                             }
+                            if (message.attachment) {
+                                html += `<a class="chat-message-attachment" href="${message.attachment}" target="_blank">📎 Pièce jointe</a>`;
+                            }
+                            html += `<div class="chat-message-meta">${message.sender ? message.sender.name : ""} &middot; ${message.created_at ?? ""}</div>`;
+                            const messageElement = document.createElement('div');
+                            messageElement.className = bubbleClass;
+                            messageElement.innerHTML = html;
                             chatMessages.appendChild(messageElement);
                         });
                         chatMessages.scrollTop = chatMessages.scrollHeight;

@@ -57,26 +57,65 @@
         }
         .message {
             margin-bottom: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 1rem;
-            max-width: 75%;
+            padding: 0.7rem 1.2rem;
+            border-radius: 1.2rem;
+            max-width: 70%;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            word-break: break-word;
+            display: flex;
+            flex-direction: column;
         }
         .message.sent {
             background-color: #007bff;
-            color: white;
+            color: #fff;
             margin-left: auto;
+            margin-right: 0;
+            border-bottom-right-radius: 0.4rem;
+            border-bottom-left-radius: 1.2rem;
+            align-items: flex-end;
+        }
+        .message.sent::after {
+            content: "";
+            position: absolute;
+            right: -10px;
+            top: 18px;
+            border-width: 10px 0 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent transparent #007bff;
         }
         .message.received {
             background-color: #e9ecef;
+            color: #222;
             margin-right: auto;
+            margin-left: 0;
+            border-bottom-left-radius: 0.4rem;
+            border-bottom-right-radius: 1.2rem;
+            align-items: flex-start;
+        }
+        .message.received::after {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 18px;
+            border-width: 10px 10px 10px 0;
+            border-style: solid;
+            border-color: transparent #e9ecef transparent transparent;
         }
         .message .sender {
             font-size: 0.8rem;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
+            font-weight: bold;
+            opacity: 0.7;
+        }
+        .message .content {
+            font-size: 1rem;
         }
         .message .time {
             font-size: 0.7rem;
-            opacity: 0.8;
+            opacity: 0.7;
+            margin-top: 0.3rem;
+            text-align: right;
         }
         .message .attachment {
             margin-top: 0.5rem;
@@ -89,6 +128,14 @@
             display: none;
             text-align: center;
             padding: 1rem;
+        }
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 60vh;
+            }
+            .message {
+                max-width: 90%;
+            }
         }
     </style>
 </head>
