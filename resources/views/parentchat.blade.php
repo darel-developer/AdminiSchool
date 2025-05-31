@@ -95,7 +95,6 @@
             margin-bottom: 12px;
             word-break: break-word;
             font-size: 1rem;
-            display: inline-block;
             position: relative;
         }
         .chat-message-sent {
@@ -104,6 +103,16 @@
             color: #fff;
             border-bottom-right-radius: 4px;
             border-bottom-left-radius: 18px;
+            position: relative;
+        }
+        .chat-message-sent::after {
+            content: "";
+            position: absolute;
+            right: -10px;
+            top: 18px;
+            border-width: 10px 0 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent transparent #007bff;
         }
         .chat-message-received {
             align-self: flex-start;
@@ -111,6 +120,16 @@
             color: #333;
             border-bottom-left-radius: 4px;
             border-bottom-right-radius: 18px;
+            position: relative;
+        }
+        .chat-message-received::after {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 18px;
+            border-width: 10px 10px 10px 0;
+            border-style: solid;
+            border-color: transparent #e9ecef transparent transparent;
         }
         .chat-message-meta {
             font-size: 0.7em;

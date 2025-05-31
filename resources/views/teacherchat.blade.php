@@ -54,6 +54,8 @@
             padding: 1rem;
             background: #f8f9fa;
             border-radius: 0.5rem;
+                display: flex;
+            flex-direction: column;
         }
         .message {
             margin-bottom: 1rem;
@@ -69,11 +71,10 @@
         .message.sent {
             background-color: #007bff;
             color: #fff;
-            margin-left: auto;
-            margin-right: 0;
             border-bottom-right-radius: 0.4rem;
             border-bottom-left-radius: 1.2rem;
             align-items: flex-end;
+            align-self: flex-end;
         }
         .message.sent::after {
             content: "";
@@ -87,11 +88,10 @@
         .message.received {
             background-color: #e9ecef;
             color: #222;
-            margin-right: auto;
-            margin-left: 0;
             border-bottom-left-radius: 0.4rem;
             border-bottom-right-radius: 1.2rem;
             align-items: flex-start;
+            align-self: flex-start;
         }
         .message.received::after {
             content: "";
