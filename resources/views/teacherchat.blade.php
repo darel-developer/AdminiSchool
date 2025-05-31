@@ -193,6 +193,7 @@
             const parentsListModal = document.getElementById('parentsListModal');
             let selectedParentId = null;
             let selectedParentName = '';
+            let messagePollingInterval = null; // Ajout du polling
 
             // Sélectionner un parent et démarrer la discussion
             function selectParent(parent) {
@@ -204,6 +205,7 @@
                 sendMessageBtn.disabled = false;
                 chatMessages.innerHTML = '<div class="text-center text-muted">Chargement des messages...</div>';
                 loadMessages();
+                startMessagePolling(); // Démarrer le polling
             }
 
             // Charger la liste de tous les parents dans le modal (sans spinner)
@@ -304,6 +306,20 @@
                 });
             }
 
+            // Polling automatique des messages
+            function startMessagePolling() {
+                stopMessagePolling();
+                if (selectedParentId) {
+                    messagePollingInterval = setInterval(loadMessages, 3000);
+                }
+            }
+            function stopMessagePolling() {
+                if (messagePollingInterval) {
+                    clearInterval(messagePollingInterval);
+                    messagePollingInterval = null;
+                }
+            }
+
             // Envoyer un message au tuteur sélectionné
             messageForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -338,6 +354,7 @@
                         messageInput.value = '';
                         attachmentInput.value = '';
                         loadMessages();
+                        // Le polling continue, pas besoin de recharger la page
                     } else {
                         alert(`Erreur: ${data.message}`);
                     }

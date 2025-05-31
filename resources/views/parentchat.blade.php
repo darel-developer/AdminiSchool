@@ -206,6 +206,7 @@
             const sendMessageBtn = document.getElementById('sendMessageBtn');
             const teacherList = document.getElementById('teacherList');
             let selectedTeacherId = null;
+            let messagePollingInterval = null; // Ajout pour le polling
 
            
             childSelector.addEventListener('change', function () {
@@ -213,6 +214,7 @@
                 chatHeader.textContent = 'Sélectionnez un enseignant pour commencer';
                 chatMessages.innerHTML = '';
                 sendMessageBtn.disabled = true;
+                stopMessagePolling(); // Arrêter le polling lors du changement d'enfant
             });
 
             
@@ -241,6 +243,7 @@
                                 chatHeader.textContent = `Discussion avec ${teacher.first_name} ${teacher.last_name}`;
                                 sendMessageBtn.disabled = false;
                                 loadMessages();
+                                startMessagePolling(); // Démarrer le polling
                                 const teacherModal = bootstrap.Modal.getInstance(document.getElementById('teacherModal'));
                                 teacherModal.hide();
                             });
@@ -265,8 +268,16 @@
                         chatMessages.innerHTML = '';
                         data.messages.forEach(message => {
                             const messageElement = document.createElement('div');
-                            messageElement.textContent = message.message;
-                            messageElement.className = 'mb-2 p-2 rounded ' + (message.tuteur_id ? 'bg-primary text-white' : 'bg-light');
+                            // Affichage du message et pièce jointe si présente
+                            messageElement.className = 'mb-2 p-2 rounded ' + (message.sender && message.sender.type === 'parent' ? 'bg-primary text-white' : 'bg-light');
+                            if (message.attachment) {
+                                messageElement.innerHTML = `
+                                    ${message.message ? `<div>${message.message}</div>` : ''}
+                                    <a href="${message.attachment}" target="_blank">📎 Pièce jointe</a>
+                                `;
+                            } else {
+                                messageElement.textContent = message.message;
+                            }
                             chatMessages.appendChild(messageElement);
                         });
                         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -275,6 +286,68 @@
                         alert('Erreur lors de la récupération des messages.');
                     });
             }
+
+            // Polling automatique des messages
+            function startMessagePolling() {
+                stopMessagePolling();
+                if (selectedTeacherId) {
+                    messagePollingInterval = setInterval(loadMessages, 3000);
+                }
+            }
+            function stopMessagePolling() {
+                if (messagePollingInterval) {
+                    clearInterval(messagePollingInterval);
+                    messagePollingInterval = null;
+                }
+            }
+
+            // Arrêter le polling lors du changement d'enfant ou d'enseignant
+            childSelector.addEventListener('change', function () {
+                chatHeader.textContent = 'Sélectionnez un enseignant pour commencer';
+                chatMessages.innerHTML = '';
+                sendMessageBtn.disabled = true;
+                stopMessagePolling();
+            });
+
+            contactTeacherBtn.addEventListener('click', function () {
+                if (!selectedChildId) {
+                    alert('Veuillez sélectionner un enfant.');
+                    return;
+                }
+
+                fetch(`/get-teachers?child_id=${selectedChildId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+
+                        teacherList.innerHTML = '';
+                        data.teachers.forEach(teacher => {
+                            const listItem = document.createElement('li');
+                            listItem.className = 'list-group-item list-group-item-action';
+                            listItem.textContent = `${teacher.first_name} ${teacher.last_name}`;
+                            listItem.dataset.id = teacher.id;
+                            listItem.addEventListener('click', function () {
+                                selectedTeacherId = teacher.id;
+                                chatHeader.textContent = `Discussion avec ${teacher.first_name} ${teacher.last_name}`;
+                                sendMessageBtn.disabled = false;
+                                loadMessages();
+                                startMessagePolling(); // Démarrer le polling
+                                const teacherModal = bootstrap.Modal.getInstance(document.getElementById('teacherModal'));
+                                teacherModal.hide();
+                            });
+                            teacherList.appendChild(listItem);
+                        });
+
+                        const teacherModal = new bootstrap.Modal(document.getElementById('teacherModal'));
+                        teacherModal.show();
+                    })
+                    .catch(error => {
+                        alert('Erreur lors du chargement des enseignants.');
+                    });
+            });
 
             
             sendMessageBtn.addEventListener('click', function () {
@@ -306,6 +379,7 @@
                         attachmentInput.value = '';
                         toggleSendButton();
                         loadMessages();
+                        // Le polling continue, pas besoin de recharger la page
                     } else {
                         alert(data.error || 'Erreur lors de l\'envoi du message.');
                     }
