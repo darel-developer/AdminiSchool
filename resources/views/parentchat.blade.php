@@ -428,45 +428,10 @@
                 stopMessagePolling();
             });
 
-            contactTeacherBtn.addEventListener('click', function () {
-                if (!selectedChildId) {
-                    alert('Veuillez sélectionner un enfant.');
-                    return;
-                }
-
-                fetch(`/get-teachers?child_id=${selectedChildId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                            return;
-                        }
-
-                        teacherList.innerHTML = '';
-                        data.teachers.forEach(teacher => {
-                            const listItem = document.createElement('li');
-                            listItem.className = 'list-group-item list-group-item-action';
-                            listItem.textContent = `${teacher.first_name} ${teacher.last_name}`;
-                            listItem.dataset.id = teacher.id;
-                            listItem.addEventListener('click', function () {
-                                selectedTeacherId = teacher.id;
-                                chatHeader.textContent = `Discussion avec ${teacher.first_name} ${teacher.last_name}`;
-                                sendMessageBtn.disabled = false;
-                                loadMessages();
-                                startMessagePolling(); // Démarrer le polling
-                                const teacherModal = bootstrap.Modal.getInstance(document.getElementById('teacherModal'));
-                                teacherModal.hide();
-                            });
-                            teacherList.appendChild(listItem);
-                        });
-
-                        const teacherModal = new bootstrap.Modal(document.getElementById('teacherModal'));
-                        teacherModal.show();
-                    })
-                    .catch(error => {
-                        alert('Erreur lors du chargement des enseignants.');
-                    });
-            });
+            // SUPPRIMEZ CE BLOC EN DOUBLE (gardez un seul addEventListener pour contactTeacherBtn)
+            // contactTeacherBtn.addEventListener('click', function () {
+            //     ...existing code...
+            // });
 
             
             sendMessageBtn.addEventListener('click', function () {
