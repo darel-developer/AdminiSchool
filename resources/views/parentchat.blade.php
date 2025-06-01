@@ -82,80 +82,117 @@
         }
         .chat-messages {
             flex-grow: 1;
-            padding: 10px;
+            padding: 18px 10px 10px 10px;
             overflow-y: auto;
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa 80%, #e3e6ed 100%);
             display: flex;
             flex-direction: column;
         }
         .chat-message-bubble {
-            max-width: 70%;
-            padding: 10px 16px;
-            border-radius: 18px;
-            margin-bottom: 12px;
+            max-width: 75%;
+            padding: 14px 20px;
+            border-radius: 22px;
+            margin-bottom: 18px;
             word-break: break-word;
             font-size: 1rem;
+            display: inline-block;
             position: relative;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            transition: box-shadow 0.2s, background 0.2s;
+        }
+        .chat-message-bubble:hover {
+            box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+            background-color: #f1f3f7;
         }
         .chat-message-sent {
             align-self: flex-end;
-            background-color: #007bff;
+            background: linear-gradient(135deg, #007bff 80%, #0056b3 100%);
             color: #fff;
             border-bottom-right-radius: 4px;
             border-bottom-left-radius: 18px;
-            position: relative;
-        }
-        .chat-message-sent::after {
-            content: "";
-            position: absolute;
-            right: -10px;
-            top: 18px;
-            border-width: 10px 0 10px 10px;
-            border-style: solid;
-            border-color: transparent transparent transparent #007bff;
         }
         .chat-message-received {
             align-self: flex-start;
-            background-color: #e9ecef;
+            background: linear-gradient(135deg, #e9ecef 80%, #dbe4ee 100%);
             color: #333;
             border-bottom-left-radius: 4px;
             border-bottom-right-radius: 18px;
-            position: relative;
-        }
-        .chat-message-received::after {
-            content: "";
-            position: absolute;
-            left: -10px;
-            top: 18px;
-            border-width: 10px 10px 10px 0;
-            border-style: solid;
-            border-color: transparent #e9ecef transparent transparent;
         }
         .chat-message-meta {
-            font-size: 0.7em;
-            opacity: 0.65;
-            margin-top: 2px;
+            font-size: 0.78em;
+            opacity: 0.7;
+            margin-top: 7px;
             text-align: right;
+            font-style: italic;
         }
         .chat-message-attachment {
-            margin-top: 5px;
+            margin-top: 7px;
             display: block;
+            font-size: 0.97em;
+        }
+        .chat-message-bubble .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            position: absolute;
+            top: -10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+        }
+        .chat-message-sent .avatar {
+            right: -42px;
+            background: #007bff;
+        }
+        .chat-message-received .avatar {
+            left: -42px;
+            background: #e9ecef;
         }
         .chat-input {
             display: flex;
-            padding: 10px;
-            border-top: 1px solid #ddd;
-            background-color: #fff;
+            padding: 14px 10px;
+            border-top: 1px solid #e0e0e0;
+            background: #f8f9fa;
         }
         .chat-input textarea {
             flex-grow: 1;
             resize: none;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
             padding: 10px;
+            font-size: 1rem;
+            background: #fff;
+            transition: border 0.2s;
+        }
+        .chat-input textarea:focus {
+            border: 1.5px solid #007bff;
+            outline: none;
         }
         .chat-input button {
+            margin-left: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .chat-input input[type="file"] {
+            max-width: 180px;
             margin-left: 10px;
+            border-radius: 8px;
+            background: #f1f3f7;
+        }
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 60vh;
+            }
+            .chat-message-bubble {
+                max-width: 95%;
+            }
+            .content {
+                margin-left: 0;
+                padding: 8px;
+            }
+            .sidebar {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -370,45 +407,10 @@
                 stopMessagePolling();
             });
 
-            contactTeacherBtn.addEventListener('click', function () {
-                if (!selectedChildId) {
-                    alert('Veuillez sélectionner un enfant.');
-                    return;
-                }
-
-                fetch(`/get-teachers?child_id=${selectedChildId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                            return;
-                        }
-
-                        teacherList.innerHTML = '';
-                        data.teachers.forEach(teacher => {
-                            const listItem = document.createElement('li');
-                            listItem.className = 'list-group-item list-group-item-action';
-                            listItem.textContent = `${teacher.first_name} ${teacher.last_name}`;
-                            listItem.dataset.id = teacher.id;
-                            listItem.addEventListener('click', function () {
-                                selectedTeacherId = teacher.id;
-                                chatHeader.textContent = `Discussion avec ${teacher.first_name} ${teacher.last_name}`;
-                                sendMessageBtn.disabled = false;
-                                loadMessages();
-                                startMessagePolling(); // Démarrer le polling
-                                const teacherModal = bootstrap.Modal.getInstance(document.getElementById('teacherModal'));
-                                teacherModal.hide();
-                            });
-                            teacherList.appendChild(listItem);
-                        });
-
-                        const teacherModal = new bootstrap.Modal(document.getElementById('teacherModal'));
-                        teacherModal.show();
-                    })
-                    .catch(error => {
-                        alert('Erreur lors du chargement des enseignants.');
-                    });
-            });
+            // SUPPRIMEZ CE BLOC EN DOUBLE (gardez un seul addEventListener pour contactTeacherBtn)
+            // contactTeacherBtn.addEventListener('click', function () {
+            //     ...existing code...
+            // });
 
             
             sendMessageBtn.addEventListener('click', function () {
