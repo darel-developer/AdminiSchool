@@ -8,16 +8,29 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa 70%, #e3e6ed 100%);
+        }
         .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-    color: #fff;
-}
-
-.btn-success:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-}
+            background-color: #28a745;
+            border-color: #28a745;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .paiement-card {
+            background: #f6f8fc;
+            border: 1.5px solid #e3e6ed;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+            transition: box-shadow 0.2s, border 0.2s;
+        }
+        .paiement-card:hover {
+            box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+            border-color: #b3c0d1;
+        }
     </style>
 </head>
 <body>
@@ -26,7 +39,7 @@
         <div class="row g-4">
             @foreach($paiements as $paiement)
                 <div class="col-md-6 col-lg-4">
-                    <div class="card shadow-sm border-0 h-100" style="border-radius: 18px; position: relative;">
+                    <div class="card paiement-card shadow-sm border-0 h-100" style="position: relative;">
                         <div class="card-body pb-2 pt-3" style="position: relative;">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
