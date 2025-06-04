@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
         body {
-            background: linear-gradient(135deg, #f8f9fa 70%, #e3e6ed 100%);
+            background: #f3f4f7;
         }
         .btn-success {
             background-color: #28a745;
