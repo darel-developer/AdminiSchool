@@ -75,7 +75,7 @@
                 </div>
             @endforeach
         </div>
-        <a href="{{ route('parentpaiement') }}" class="btn btn-primary mt-4">Retour</a>
+        <a href="javascript:history.back()" class="btn btn-primary mt-4">Retour</a>
     </div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 </body>
