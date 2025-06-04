@@ -22,43 +22,48 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Liste des Paiements</h1>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Type de Paiement</th>
-                    <th>Montant</th>
-                    <th>Numéro de Facture</th>
-                    <th>État</th>
-                    <th>Facture</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($paiements as $paiement)
-                    <tr>
-                        <td>{{ $paiement->nom }}</td>
-                        <td>{{ $paiement->prenom }}</td>
-                        <td>{{ $paiement->typepaiement }}</td>
-                        <td>{{ $paiement->montant }}</td>
-                        <td>{{ $paiement->num_facture }}</td>
-                        <td>{{ $paiement->etat }}</td>
-                        <td>
-                            <div class="mt-3">
-                                <a href="{{ route('paiement.facture', $paiement->id) }}" class="btn btn-secondary" target="_blank">Voir la Facture</a>
+        <h1 class="mb-4">Liste des Paiements</h1>
+        <div class="row g-4">
+            @foreach($paiements as $paiement)
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm border-0 h-100" style="border-radius: 18px; position: relative;">
+                        <div class="card-body pb-2 pt-3" style="position: relative;">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <div class="fw-bold text-primary" style="font-size: 1.1rem;">
+                                        {{ $paiement->typepaiement }}
+                                    </div>
+                                    <div class="text-success" style="font-size: 1.3rem; font-weight: bold;">
+                                        {{ number_format($paiement->montant, 0, ',', ' ') }} FCFA
+                                    </div>
+                                </div>
+                                <a href="{{ route('paiement.download', $paiement->id) }}" class="btn btn-success btn-sm" style="border-radius: 8px;">
+                                    <i class="fas fa-download"></i> Télécharger
+                                </a>
                             </div>
-                        </td>
-                        <td>
-                            <a href="{{ route('paiement.download', $paiement->id) }}" class="btn btn-success">
-                                <i class="fas fa-download"></i> Télécharger la Facture
-                            </a> 
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <a href="{{ route('parentpaiement') }}" class="btn btn-primary">Retour</a>
+                            <div class="mb-2">
+                                <span class="badge bg-secondary">Facture N° {{ $paiement->num_facture }}</span>
+                            </div>
+                            <a href="{{ route('paiement.facture', $paiement->id) }}" class="btn btn-outline-primary btn-sm mb-2" target="_blank">
+                                Voir la Facture
+                            </a>
+                        </div>
+                        <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-end" style="border-radius: 0 0 18px 18px;">
+                            <div>
+                                <span class="fw-bold">{{ $paiement->nom }} {{ $paiement->prenom }}</span>
+                            </div>
+                            <div>
+                                <span class="badge {{ $paiement->etat == 'Payé' ? 'bg-success' : 'bg-warning text-dark' }}">
+                                    {{ $paiement->etat }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <a href="{{ route('parentpaiement') }}" class="btn btn-primary mt-4">Retour</a>
     </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 </body>
 </html>
