@@ -242,8 +242,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+    // --- Gestion de la cloche de notification avec animation et couleur rouge ---
     document.addEventListener('DOMContentLoaded', function () {
         let lastUnreadCount = 0;
+        let notificationIsActive = false; // Pour savoir si la cloche est en état "nouvelle notification"
+
+        // Fonction pour mettre à jour le badge et l'icône de la cloche
         function updateNotificationBadge() {
             fetch('{{ route("notifications.unread-count") }}') 
                 .then(response => response.json())
@@ -253,15 +257,23 @@
                     if (data.unreadNotificationsCount > 0) {
                         badge.textContent = data.unreadNotificationsCount; 
                         badge.style.display = 'inline-block'; 
-                        // Animation GIF si nouvelle notification
+
+                        // Si nouvelle notification, active l'animation et la couleur rouge
                         if (data.unreadNotificationsCount > lastUnreadCount) {
-                            const originalSrc = "https://img.icons8.com/ios-filled/50/000000/bell.png";
-                            const gifSrc = "https://img.icons8.com/fluency/48/000000/bell.gif";
-                            bell.src = gifSrc;
-                            setTimeout(() => { bell.src = originalSrc; }, 1200);
+                            bell.classList.add('bell-animate');
+                            bell.style.filter = 'invert(16%) sepia(94%) saturate(7482%) hue-rotate(357deg) brightness(93%) contrast(119%)'; // Rouge
+                            notificationIsActive = true;
+                        } else if (!notificationIsActive) {
+                            // Si badge > 0 mais pas de nouvelle, garde la couleur rouge sans animation
+                            bell.classList.remove('bell-animate');
+                            bell.style.filter = 'invert(16%) sepia(94%) saturate(7482%) hue-rotate(357deg) brightness(93%) contrast(119%)'; // Rouge
                         }
                     } else {
+                        // Pas de notifications non lues : cloche noire, pas d'animation
                         badge.style.display = 'none'; 
+                        bell.classList.remove('bell-animate');
+                        bell.style.filter = 'invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)'; // Noir
+                        notificationIsActive = false;
                     }
                     lastUnreadCount = data.unreadNotificationsCount;
                 })
@@ -270,13 +282,17 @@
                 });
         }
 
-        // mise à jour du badge toutes les 10 secondes
+        // Mise à jour du badge toutes les 10 secondes
         setInterval(updateNotificationBadge, 10000);
 
-        // badge initial
+        // Badge initial
         updateNotificationBadge();
+
+        // Rends la fonction accessible globalement pour la réutiliser après lecture
+        window.updateNotificationBadge = updateNotificationBadge;
     });
 
+    // Fonction appelée quand on ouvre la modal de notifications
     function openNotificationModal() {
         fetch('{{ route("notifications.page") }}')
             .then(response => response.json())
@@ -301,17 +317,13 @@
                             </div>
                         `;
                         notificationList.appendChild(listItem);
-                        // Optionally, add a separator except for the last item
-                        // if (i < data.notifications.length - 1) {
-                        //     notificationList.appendChild(document.createElement('hr'));
-                        // }
                     });
                 }
 
                 const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
                 modal.show();
 
-                // Marquer les notifications lues
+                // Marquer les notifications comme lues et remettre la cloche à l'état normal
                 markNotificationsAsRead();
             })
             .catch(error => {
@@ -323,6 +335,7 @@
             });
     }
 
+    // Quand on marque les notifications comme lues, la cloche redevient noire et l'animation s'arrête
     function markNotificationsAsRead() {
         fetch('{{ route("notifications.mark-as-read") }}', {
             method: 'POST',
@@ -334,7 +347,11 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                updateNotificationBadge();
+                // Remet la cloche à l'état normal (noir, pas d'animation)
+                const bell = document.getElementById('notificationBell');
+                bell.classList.remove('bell-animate');
+                bell.style.filter = 'invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)'; // Noir
+                window.updateNotificationBadge();
             }
         })
         .catch(error => {
@@ -342,6 +359,23 @@
         });
     }
     </script>
+    <style>
+        /* Animation de secousse pour la cloche */
+        @keyframes bell-shake {
+            0% { transform: rotate(0); }
+            10% { transform: rotate(-15deg); }
+            20% { transform: rotate(10deg); }
+            30% { transform: rotate(-10deg); }
+            40% { transform: rotate(6deg); }
+            50% { transform: rotate(-4deg); }
+            60% { transform: rotate(2deg); }
+            70% { transform: rotate(-1deg); }
+            80%, 100% { transform: rotate(0); }
+        }
+        .bell-animate {
+            animation: bell-shake 1s cubic-bezier(.36,.07,.19,.97) both;
+        }
+    </style>
     <script>
         let selectedChildId = {{ $students->first()->id ?? 'null' }}; 
 
@@ -530,51 +564,6 @@
             .catch(error => {
                 console.error('Erreur lors de la mise à jour des données :', error);
             });
-        }
-
-        function openNotificationModal() {
-            fetch('{{ route("notifications.page") }}')
-                .then(response => response.json())
-                .then(data => {
-                    const notificationList = document.getElementById('notificationList');
-                    notificationList.innerHTML = '';
-
-                    if (data.notifications.length === 0) {
-                        notificationList.innerHTML = '<li class="list-group-item text-center text-muted py-4"><img src="https://img.icons8.com/ios-filled/50/cccccc/bell.png" style="width:32px;height:32px;"><br>Aucune notification disponible.</li>';
-                    } else {
-                        data.notifications.forEach(notification => {
-                            const listItem = document.createElement('li');
-                            listItem.className = 'list-group-item d-flex align-items-start py-3';
-                            listItem.innerHTML = `
-                                <div class="me-3">
-                                    <img src="https://img.icons8.com/color/36/000000/appointment-reminders--v2.png" alt="Notif" style="width:32px;height:32px;">
-                                </div>
-                                <div style="flex:1;">
-                                    <div class="fw-bold mb-1" style="color:#0d6efd;">${notification.title || 'Notification'}</div>
-                                    <div class="mb-1">${notification.message}</div>
-                                    <div class="text-muted small">${new Date(notification.created_at).toLocaleString()}</div>
-                                </div>
-                            `;
-                            notificationList.appendChild(listItem);
-                            // Optionally, add a separator except for the last item
-                            // if (i < data.notifications.length - 1) {
-                            //     notificationList.appendChild(document.createElement('hr'));
-                            // }
-                        });
-                    }
-
-                    const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
-                    modal.show();
-
-                    markNotificationsAsRead();
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des notifications :', error);
-                    const notificationList = document.getElementById('notificationList');
-                    notificationList.innerHTML = '<li class="list-group-item text-danger text-center">Erreur lors de la récupération des notifications.</li>';
-                    const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
-                    modal.show();
-                });
         }
     </script>
 </body>
