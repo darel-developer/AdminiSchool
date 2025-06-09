@@ -245,18 +245,19 @@
     // --- Gestion de la cloche de notification avec animation et couleur rouge ---
     document.addEventListener('DOMContentLoaded', function () {
         let lastUnreadCount = 0;
-        let notificationIsActive = false; // Pour savoir si la cloche est en état "nouvelle notification"
+        let notificationIsActive = false;
+        let pollingInterval = null;
 
         // Fonction pour mettre à jour le badge et l'icône de la cloche
         function updateNotificationBadge() {
-            fetch('{{ route("notifications.unread-count") }}') 
+            fetch('{{ route("notifications.unread-count") }}')
                 .then(response => response.json())
                 .then(data => {
                     const badge = document.getElementById('notificationBadge');
                     const bell = document.getElementById('notificationBell');
                     if (data.unreadNotificationsCount > 0) {
-                        badge.textContent = data.unreadNotificationsCount; 
-                        badge.style.display = 'inline-block'; 
+                        badge.textContent = data.unreadNotificationsCount;
+                        badge.style.display = 'inline-block';
 
                         // Si nouvelle notification, active l'animation et la couleur rouge
                         if (data.unreadNotificationsCount > lastUnreadCount) {
@@ -270,7 +271,7 @@
                         }
                     } else {
                         // Pas de notifications non lues : cloche noire, pas d'animation
-                        badge.style.display = 'none'; 
+                        badge.style.display = 'none';
                         bell.classList.remove('bell-animate');
                         bell.style.filter = 'invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)'; // Noir
                         notificationIsActive = false;
@@ -282,8 +283,8 @@
                 });
         }
 
-        // Mise à jour du badge toutes les 10 secondes
-        setInterval(updateNotificationBadge, 10000);
+        // --- Pooling instantané (toutes les 2 secondes) ---
+        pollingInterval = setInterval(updateNotificationBadge, 2000);
 
         // Badge initial
         updateNotificationBadge();
