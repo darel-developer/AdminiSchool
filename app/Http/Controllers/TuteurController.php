@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\Classe;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf; 
 
 class TuteurController extends Controller
 {
@@ -129,5 +130,28 @@ class TuteurController extends Controller
         ]);
 
         return redirect()->route('parent')->with('success', 'Données de l\'enfant mises à jour avec succès.');
+    }
+
+    // Affiche la liste complète des tuteurs pour impression (HTML ou PDF)
+    public function printTuteurs()
+    {
+        $tuteurs = \App\Models\Tuteur::all();
+        // Pour une page HTML d'impression :
+        return view('print.tuteurs', compact('tuteurs'));
+
+        // Pour générer un PDF directement (décommente si tu veux du PDF) :
+        // $pdf = Pdf::loadView('print.tuteurs', compact('tuteurs'));
+        // return $pdf->download('liste_tuteurs.pdf');
+    }
+
+    // Affiche la liste complète des enseignants pour impression (HTML ou PDF)
+    public function printEnseignants()
+    {
+        $teachers = \App\Models\Teacher::with('classe')->get();
+        return view('print.enseignants', compact('teachers'));
+
+        // Pour générer un PDF directement :
+        // $pdf = Pdf::loadView('print.enseignants', compact('teachers'));
+        // return $pdf->download('liste_enseignants.pdf');
     }
 }

@@ -102,6 +102,8 @@ Route::delete('/tuteurschool/delete/{id}', [TuteurController::class, 'destroy'])
 
 // Add this route to resolve the error
 Route::get('/users', [TuteurController::class, 'index'])->name('users');
+Route::get('/userschool/tuteurs', [TuteurController::class, 'printTuteurs'])->name('tuteurs.print');
+Route::get('/userschool/enseignants', [TuteurController::class, 'printEnseignants'])->name('enseignants.print');
 
 //Route pour gérer les élèves
 Route::post('student/upload', [StudentController::class, 'upload'])->name('student.upload');

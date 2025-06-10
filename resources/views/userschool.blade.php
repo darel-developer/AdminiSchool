@@ -115,8 +115,13 @@
             @endif
 
             <!-- Table des tuteurs -->
-            <h2>Tuteurs</h2>
-            <table class="table table-bordered">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Tuteurs</h2>
+                <button class="btn btn-outline-secondary" onclick="printTable('tuteursTable')" title="Imprimer la liste des tuteurs">
+                    <img src="https://img.icons8.com/ios-filled/24/000000/print.png" alt="Imprimer" style="width:20px;height:20px;">
+                </button>
+            </div>
+            <table class="table table-bordered" id="tuteursTable">
                 <thead>
                     <tr>
                         <th>Nom</th>
@@ -127,7 +132,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($tuteurs as $tuteur)
+                    @foreach($tuteurs->take(5) as $tuteur)
                         <tr>
                             <td>{{ $tuteur->nom }}</td>
                             <td>{{ $tuteur->prenom }}</td>
@@ -145,10 +150,18 @@
                     @endforeach
                 </tbody>
             </table>
+            @if($tuteurs->count() > 5)
+                <a href="{{ url('/userschool/tuteurs') }}" target="_blank" class="btn btn-primary mb-3">Voir plus</a>
+            @endif
 
             <!-- Table des enseignants -->
-            <h2>Enseignants</h2>
-            <table class="table table-bordered">
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <h2>Enseignants</h2>
+                <button class="btn btn-outline-secondary" onclick="printTable('enseignantsTable')" title="Imprimer la liste des enseignants">
+                    <img src="https://img.icons8.com/ios-filled/24/000000/print.png" alt="Imprimer" style="width:20px;height:20px;">
+                </button>
+            </div>
+            <table class="table table-bordered" id="enseignantsTable">
                 <thead>
                     <tr>
                         <th>Nom</th>
@@ -161,7 +174,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($teachers as $teacher)
+                    @foreach($teachers->take(5) as $teacher)
                         <tr>
                             <td>{{ $teacher->first_name }}</td>
                             <td>{{ $teacher->last_name }}</td>
@@ -181,6 +194,9 @@
                     @endforeach
                 </tbody>
             </table>
+            @if($teachers->count() > 5)
+                <a href="{{ url('/userschool/enseignants') }}" target="_blank" class="btn btn-primary mb-3">Voir plus</a>
+            @endif
         </div>
     </div>
 
@@ -190,11 +206,20 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Ouvrir automatiquement la fenêtre modale au chargement de la page
-        document.addEventListener('DOMContentLoaded', function () {
-            var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
-            myModal.show();
-        });
+        // Fonction pour imprimer un tableau spécifique
+        function printTable(tableId) {
+            var printContents = document.getElementById(tableId).outerHTML;
+            var originalContents = document.body.innerHTML;
+            var win = window.open('', '', 'height=700,width=900');
+            win.document.write('<html><head><title>Impression</title>');
+            win.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">');
+            win.document.write('</head><body>');
+            win.document.write(printContents);
+            win.document.write('</body></html>');
+            win.document.close();
+            win.focus();
+            setTimeout(function(){ win.print(); win.close(); }, 500);
+        }
     </script>
 </body>
 </html>
