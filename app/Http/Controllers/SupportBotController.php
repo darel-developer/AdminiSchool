@@ -17,6 +17,8 @@ class SupportBotController extends Controller
             $reply = "Pour ajouter un enfant, allez dans le menu 'Ajouter Enfant', remplissez le formulaire et validez.";
         } elseif (str_contains($question, 'paiement')) {
             $reply = "Pour effectuer un paiement, rendez-vous dans la section 'Paiement' et suivez les instructions affichées.";
+        } elseif (str_contains($question, 'bonjour')) {
+            $reply = "Bonjour ! Comment puis-je vous aider aujourd'hui ?";
         } elseif (str_contains($question, 'document')) {
             $reply = "Pour déposer ou consulter un document, utilisez la section 'Documents' dans le menu principal.";
         } elseif (str_contains($question, 'notification')) {
@@ -30,7 +32,7 @@ class SupportBotController extends Controller
         } elseif (str_contains($question, 'dashboard') || str_contains($question, 'accueil')) {
             $reply = "Le dashboard affiche un résumé de vos informations principales dès la connexion.";
         } elseif (str_contains($question, 'enseignant')) {
-            $reply = "Pour voir la liste des enseignants, allez dans la section 'Enseignants' du menu.";
+            $reply = "Pour voir la liste des enseignants, allez dans la section 'Enseignants' du menu.si vous êtes un administrateur";
         } else {
             $reply = "Je n'ai pas compris votre question. Veuillez préciser ou reformuler. Vous pouvez demander par exemple : 'Comment ajouter un enfant ?'";
         }
