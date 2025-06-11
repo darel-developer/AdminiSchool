@@ -24,6 +24,7 @@ use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\CahierDeTexteController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\TeacherChatController;
+use App\Http\Controllers\SupportBotController;
 
 //Route pour gérer les cahiers de textes
 Route::get('/cahierexte', [CahierDeTexteController::class, 'index'])->name('cahiertexte');
@@ -165,6 +166,7 @@ Route::post('/plannings/upload', [PlanningController::class, 'upload'])->name('p
 //Route pour gérer l'aide technique
 Route::get('/help-support', [SupportController::class, 'index'])->name('help.support');
 Route::post('/help-support/send', [SupportController::class, 'send'])->name('help.support.send');
+Route::post('/help-support/bot', [SupportBotController::class, 'respond'])->name('help.support.bot');
 
 //Route pour gérer le mot de passe oublié
 Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');

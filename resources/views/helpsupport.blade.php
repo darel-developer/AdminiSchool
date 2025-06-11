@@ -49,8 +49,8 @@
             <form id="chatForm" method="POST" action="{{ route('help.support.send') }}">
                 @csrf
                 <div class="input-group mt-3">
-                    <input type="text" name="message" id="messageInput" class="form-control" placeholder="Type your message..." required>
-                    <button type="submit" class="btn btn-primary">Send</button>
+                    <input type="text" name="message" id="messageInput" class="form-control" placeholder="Posez votre question sur l'utilisation de l'application..." required>
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
                 </div>
             </form>
         </div>
@@ -60,25 +60,42 @@
             event.preventDefault();
             const messageInput = document.getElementById('messageInput');
             const chatBox = document.getElementById('chatBox');
+            const userMessage = messageInput.value.trim();
+            if (!userMessage) return;
 
-            // Append user message to chat box
-            const userMessage = document.createElement('div');
-            userMessage.classList.add('chat-message', 'user');
-            userMessage.textContent = messageInput.value;
-            chatBox.appendChild(userMessage);
-
-            // Simulate bot response
-            setTimeout(() => {
-                const botMessage = document.createElement('div');
-                botMessage.classList.add('chat-message', 'bot');
-                botMessage.textContent = 'Thank you for your message. Our team will get back to you shortly.';
-                chatBox.appendChild(botMessage);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 1000);
-
-            // Clear input
-            messageInput.value = '';
+            // Affiche le message utilisateur
+            const userDiv = document.createElement('div');
+            userDiv.classList.add('chat-message', 'user');
+            userDiv.textContent = userMessage;
+            chatBox.appendChild(userDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Envoie la question au contrôleur Laravel pour obtenir la réponse du bot
+            fetch("{{ route('help.support.bot') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ message: userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const botDiv = document.createElement('div');
+                botDiv.classList.add('chat-message', 'bot');
+                botDiv.textContent = data.reply;
+                chatBox.appendChild(botDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(() => {
+                const botDiv = document.createElement('div');
+                botDiv.classList.add('chat-message', 'bot');
+                botDiv.textContent = "Désolé, une erreur est survenue. Veuillez réessayer.";
+                chatBox.appendChild(botDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+
+            messageInput.value = '';
         });
     </script>
 </body>
