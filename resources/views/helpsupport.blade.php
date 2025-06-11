@@ -46,7 +46,7 @@
             <div class="chat-box" id="chatBox">
                 <!-- Messages will be appended here -->
             </div>
-            <form id="chatForm" method="POST" action="{{ route('help.support.send') }}">
+            <form id="chatForm" method="POST">
                 @csrf
                 <div class="input-group mt-3">
                     <input type="text" name="message" id="messageInput" class="form-control" placeholder="Posez votre question sur l'utilisation de l'application..." required>
