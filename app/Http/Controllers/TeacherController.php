@@ -53,19 +53,20 @@ class TeacherController extends Controller
 
             Log::info('Enseignant enregistré en base', ['teacher_id' => $teacher->id]);
 
-            // Prépare les données pour la vue du mail (attention aux clés utilisées dans la vue !)
+            // Prépare les données pour la vue du mail
             $mailData = [
                 'name' => $teacher->first_name . ' ' . $teacher->last_name,
                 'email' => $teacher->email,
-                'password' => $request->password, // mot de passe en clair pour le mail
+                'password' => $request->password,
                 'platformLink' => 'https://adminischool-virtual-academy-master-vtuvm7.laravel.cloud/',
             ];
 
-            // Envoi du mail
+            // Envoi du mail avec configuration explicite de l'expéditeur
             try {
                 Log::info('Tentative d\'envoi de mail à l\'enseignant', ['email' => $teacher->email]);
                 Mail::send('emails.teacher-login', $mailData, function($message) use ($teacher) {
                     $message->to($teacher->email)
+                        ->from('sanangdarel17@gmail.com', 'Equipe AdminiSchool') // <-- expéditeur explicite
                         ->subject('Vos accès à la plateforme AdminiSchool');
                 });
                 Log::info('Mail envoyé avec succès à l\'enseignant', ['email' => $teacher->email]);
