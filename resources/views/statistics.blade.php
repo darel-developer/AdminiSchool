@@ -195,6 +195,16 @@
     <div class="content">
         <div class="container mt-5">
             <h1 class="text-center mb-4">Statistiques des Performances des Élèves</h1>
+
+            <!-- Boutons d'action -->
+            <div class="mb-4 d-flex justify-content-center gap-3">
+                <a href="{{ route('teacher.statistics.pdf') }}" class="btn btn-success" target="_blank">
+                    <i class="bi bi-file-earmark-pdf"></i> Télécharger PDF
+                </a>
+                <a href="{{ route('teacher.schedule') }}" class="btn btn-primary" target="_blank">
+                    <i class="bi bi-calendar-week"></i> Historique des cours & Emploi du temps
+                </a>
+            </div>
     
             <!-- Tableau des statistiques -->
             <div class="table-responsive">
@@ -238,9 +248,25 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Préparation des données pour les graphiques
-        const studentNames = @json($statistics->pluck('student_name'));
-        const averageGrades = @json($statistics->pluck('average_grade'));
-        const subjects = @json($statistics->pluck('matiere'));
+        const statistics = @json($statistics);
+
+        // Pour le graphique barres : chaque élève avec sa moyenne
+        const studentNames = statistics.map(stat => stat.student_name);
+        const averageGrades = statistics.map(stat => stat.average_grade);
+
+        // Pour le graphique circulaire : matières uniques et moyenne par matière
+        const subjectMap = {};
+        statistics.forEach(stat => {
+            if (!subjectMap[stat.matiere]) {
+                subjectMap[stat.matiere] = { total: 0, count: 0 };
+            }
+            subjectMap[stat.matiere].total += parseFloat(stat.average_grade);
+            subjectMap[stat.matiere].count += 1;
+        });
+        const uniqueSubjects = Object.keys(subjectMap);
+        const subjectAverages = uniqueSubjects.map(subject => 
+            (subjectMap[subject].total / subjectMap[subject].count).toFixed(2)
+        );
 
         // Graphique des moyennes par élève
         const ctx1 = document.getElementById('averageGradeChart').getContext('2d');
@@ -268,15 +294,15 @@
             }
         });
 
-        // Graphique des performances par matière
+        // Graphique des performances par matière (matières uniques)
         const ctx2 = document.getElementById('subjectPerformanceChart').getContext('2d');
         new Chart(ctx2, {
             type: 'pie',
             data: {
-                labels: subjects,
+                labels: uniqueSubjects,
                 datasets: [{
                     label: 'Performances par Matière',
-                    data: averageGrades,
+                    data: subjectAverages,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.6)',
                         'rgba(75, 192, 192, 0.6)',

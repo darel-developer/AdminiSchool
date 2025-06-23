@@ -207,6 +207,8 @@ Route::post('/send-announcement', [AnnouncementController::class, 'store'])->nam
 
 //Route pour les statistiques des enseignants
 Route::get('/statistics', [TeacherController::class, 'showStatistics'])->name('teacher.statistics');
+Route::get('/statistics/pdf', [TeacherController::class, 'downloadStatisticsPdf'])->name('teacher.statistics.pdf');
+Route::get('/teacher/schedule', [TeacherController::class, 'showSchedule'])->name('teacher.schedule');
 
 // Routes pour générer les rapports mensuels
 Route::get('/reports/absences', [DashboardController::class, 'generateAbsenceReport'])->name('reports.absences');
