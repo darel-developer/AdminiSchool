@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TeacherController extends Controller
 {
@@ -199,5 +200,27 @@ class TeacherController extends Controller
         $teacher->update($request->only('first_name', 'last_name', 'email', 'phone', 'subject', 'class_id'));
 
         return redirect()->route('users')->with('success', 'Enseignant mis à jour avec succès.');
+    }
+
+    // Téléchargement PDF des statistiques (à compléter selon besoin)
+    public function downloadStatisticsPdf()
+    {
+        // Récupère les statistiques comme pour l'affichage
+        $statistics = Grades::select('student_name', 'matiere', DB::raw('AVG(grade) as average_grade'))
+            ->groupBy('student_name', 'matiere')
+            ->get();
+
+        // Génère le PDF à partir de la vue existante (ou crée une vue dédiée si besoin)
+        $pdf = Pdf::loadView('statistics', compact('statistics'));
+
+        // Télécharge le PDF
+        return $pdf->download('statistiques_eleves.pdf');
+    }
+
+    // Affichage de l'emploi du temps de l'enseignant (à compléter selon besoin)
+    public function showSchedule()
+    {
+        // Affiche juste un message simple pour le moment
+        return response('<h2 style="text-align:center;margin-top:40px;">Emploi du temps enseignant à venir...</h2>');
     }
 }
