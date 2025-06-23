@@ -205,16 +205,15 @@ class TeacherController extends Controller
     // Téléchargement PDF des statistiques (à compléter selon besoin)
     public function downloadStatisticsPdf()
     {
-        // Récupère les statistiques comme pour l'affichage
-        $statistics = Grades::select('student_name', 'matiere', DB::raw('AVG(grade) as average_grade'))
+        // Récupère les statistiques (nom élève + matière)
+        $statistics = Grades::select('student_name', 'matiere')
             ->groupBy('student_name', 'matiere')
             ->get();
 
-        // Génère le PDF à partir de la vue existante (ou crée une vue dédiée si besoin)
-        $pdf = Pdf::loadView('statistics', compact('statistics'));
+        // Génère le PDF à partir d'une vue dédiée minimaliste
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.statistics-simple', compact('statistics'));
 
-        // Télécharge le PDF
-        return $pdf->download('statistiques_eleves.pdf');
+        return $pdf->download('liste_eleves_matieres.pdf');
     }
 
     // Affichage de l'emploi du temps de l'enseignant (à compléter selon besoin)
@@ -224,3 +223,4 @@ class TeacherController extends Controller
         return response('<h2 style="text-align:center;margin-top:40px;">Emploi du temps enseignant à venir...</h2>');
     }
 }
+
