@@ -70,7 +70,17 @@ class TeacherController extends Controller
             // Utilisation de Symfony Mailer
             try {
                 Log::info('Tentative d\'envoi de mail via Symfony Mailer', ['email' => $teacher->email]);
-                $transport = Transport::fromDsn('smtp://'.env('MAIL_USERNAME').':'.env('MAIL_PASSWORD').'@'.env('MAIL_HOST').':'.env('MAIL_PORT'));
+                // Construction correcte du DSN avec tous les paramètres requis
+                $dsn = sprintf(
+                    'smtp://%s:%s@%s:%s?encryption=%s',
+                    urlencode(env('MAIL_USERNAME')),
+                    urlencode(env('MAIL_PASSWORD')),
+                    env('MAIL_HOST'),
+                    env('MAIL_PORT'),
+                    env('MAIL_ENCRYPTION', 'tls')
+                );
+                Log::info('DSN utilisé pour Symfony Mailer', ['dsn' => $dsn]);
+                $transport = Transport::fromDsn($dsn);
                 $mailer = new Mailer($transport);
 
                 $email = (new Email())
