@@ -43,7 +43,7 @@
 <body>
     <div class="container">
         <h1>Bienvenue sur AdminiSchool</h1>
-        <p>Bonjour {{ $name }},</p>
+        <p>Bonjour {{ isset($name) ? $name : ($first_name ?? '') . ' ' . ($last_name ?? '') }},</p>
         <p>Votre compte a été créé avec succès sur la plateforme AdminiSchool.</p>
         <p>Voici vos informations de connexion :</p>
         <ul>
@@ -51,7 +51,7 @@
             <li><strong>Mot de passe :</strong> {{ $password }}</li>
         </ul>
         <p>Vous pouvez vous connecter en cliquant sur le lien suivant :</p>
-        <p><a href="{{ $platformLink }}">{{ $platformLink }}</a></p>
+        <p><a href="{{ $platformLink ?? $platform_link }}">{{ $platformLink ?? $platform_link }}</a></p>
         <p>Cordialement,</p>
         <p>L'équipe AdminiSchool</p>
         <div class="footer">
