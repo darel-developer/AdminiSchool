@@ -28,6 +28,8 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('Début de la création d\'un enseignant', ['data' => $request->all()]);
+
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
@@ -38,31 +40,45 @@ class TeacherController extends Controller
             'password'   => 'required|string|min:6',
         ]);
 
-        $teacher = new \App\Models\Teacher();
-        $teacher->first_name = $validated['first_name'];
-        $teacher->last_name = $validated['last_name'];
-        $teacher->phone = $validated['phone'];
-        $teacher->email = $validated['email'];
-        $teacher->subject = $validated['subject'];
-        $teacher->class_id = $validated['class_id'];
-        $teacher->password = bcrypt($validated['password']);
-        $teacher->save();
+        try {
+            $teacher = new \App\Models\Teacher();
+            $teacher->first_name = $validated['first_name'];
+            $teacher->last_name = $validated['last_name'];
+            $teacher->phone = $validated['phone'];
+            $teacher->email = $validated['email'];
+            $teacher->subject = $validated['subject'];
+            $teacher->class_id = $validated['class_id'];
+            $teacher->password = bcrypt($validated['password']);
+            $teacher->save();
 
-        // Envoi du mail avec les infos de connexion
-        $mailData = [
-            'first_name' => $teacher->first_name,
-            'last_name' => $teacher->last_name,
-            'email' => $teacher->email,
-            'password' => $request->password, // mot de passe en clair pour le mail
-            'platform_link' => 'https://adminischool-virtual-academy-master-vtuvm7.laravel.cloud/',
-        ];
+            Log::info('Enseignant enregistré en base', ['teacher_id' => $teacher->id]);
 
-        Mail::send('emails.teacher-login', $mailData, function($message) use ($teacher) {
-            $message->to($teacher->email)
-                ->subject('Vos accès à la plateforme AdminiSchool');
-        });
+            // Prépare les données pour la vue du mail (attention aux clés utilisées dans la vue !)
+            $mailData = [
+                'name' => $teacher->first_name . ' ' . $teacher->last_name,
+                'email' => $teacher->email,
+                'password' => $request->password, // mot de passe en clair pour le mail
+                'platformLink' => 'https://adminischool-virtual-academy-master-vtuvm7.laravel.cloud/',
+            ];
 
-        return redirect()->route('userschool')->with('success', 'Enseignant créé et email envoyé avec succès.');
+            // Envoi du mail
+            try {
+                Log::info('Tentative d\'envoi de mail à l\'enseignant', ['email' => $teacher->email]);
+                Mail::send('emails.teacher-login', $mailData, function($message) use ($teacher) {
+                    $message->to($teacher->email)
+                        ->subject('Vos accès à la plateforme AdminiSchool');
+                });
+                Log::info('Mail envoyé avec succès à l\'enseignant', ['email' => $teacher->email]);
+            } catch (\Exception $e) {
+                Log::error('Erreur lors de l\'envoi du mail à l\'enseignant', ['error' => $e->getMessage()]);
+                return redirect()->route('userschool')->with('error', 'Enseignant créé mais erreur lors de l\'envoi du mail : ' . $e->getMessage());
+            }
+
+            return redirect()->route('userschool')->with('success', 'Enseignant créé et email envoyé avec succès.');
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la création de l\'enseignant', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Erreur lors de la création de l\'enseignant : ' . $e->getMessage());
+        }
     }
 
     private function sendSmsWithInfobip($teacher, $password)
