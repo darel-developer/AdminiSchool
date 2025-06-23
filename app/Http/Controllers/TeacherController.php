@@ -28,73 +28,41 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
-            'email' => 'required|string|email|max:255|unique:teachers,email',
-            'subject' => 'required|string|max:255',
-            'password' => 'required|string|min:8',
-            'class_id' => 'nullable|exists:classes,id',
+            'last_name'  => 'required|string|max:255',
+            'phone'      => 'required|string|max:255',
+            'email'      => 'required|email|max:255|unique:teachers,email',
+            'subject'    => 'required|string|max:255',
+            'class_id'   => 'required|exists:classes,id',
+            'password'   => 'required|string|min:6',
         ]);
 
-        $teacher = Teacher::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'subject' => $request->subject,
-            'type' => 'teacher',
-            'password' => Hash::make($request->password),
-            'class_id' => $request->class_id,
-        ]);
+        $teacher = new \App\Models\Teacher();
+        $teacher->first_name = $validated['first_name'];
+        $teacher->last_name = $validated['last_name'];
+        $teacher->phone = $validated['phone'];
+        $teacher->email = $validated['email'];
+        $teacher->subject = $validated['subject'];
+        $teacher->class_id = $validated['class_id'];
+        $teacher->password = bcrypt($validated['password']);
+        $teacher->save();
 
-        // Send email with login details
-        $platformLink = url('/login');
-        $emailData = [
-            'name' => $teacher->first_name . ' ' . $teacher->last_name,
+        // Envoi du mail avec les infos de connexion
+        $mailData = [
+            'first_name' => $teacher->first_name,
+            'last_name' => $teacher->last_name,
             'email' => $teacher->email,
-            'password' => $request->password,
-            'platformLink' => $platformLink,
+            'password' => $request->password, // mot de passe en clair pour le mail
+            'platform_link' => 'https://adminischool-virtual-academy-master-vtuvm7.laravel.cloud/',
         ];
 
-        // Préparer les informations de l'email pour le log
-        $fromAddress = config('mail.from.address');
-        $fromName = config('mail.from.name');
-        $toAddress = $teacher->email;
-        $subject = 'Vos informations de connexion - AdminiSchool';
+        Mail::send('emails.teacher-login', $mailData, function($message) use ($teacher) {
+            $message->to($teacher->email)
+                ->subject('Vos accès à la plateforme AdminiSchool');
+        });
 
-        // Générer le contenu de l'email (en utilisant la vue Blade)
-        $emailContent = view('emails.teacher-login', $emailData)->render();
-
-        // Log des informations d'envoi d'email
-        Log::info('Tentative d\'envoi d\'email au professeur', [
-            'from' => $fromAddress . ' (' . $fromName . ')',
-            'to' => $toAddress,
-            'subject' => $subject,
-            'content' => $emailContent
-        ]);
-
-        try {
-            Mail::send('emails.teacher-login', $emailData, function ($message) use ($teacher, $fromAddress, $fromName, $subject) {
-                $message->from($fromAddress, $fromName)
-                        ->to($teacher->email)
-                        ->subject($subject);
-            });
-            Log::info('Email envoyé avec succès au professeur', [
-                'to' => $toAddress
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Echec de l\'envoi de l\'email au professeur', [
-                'to' => $toAddress,
-                'error' => $e->getMessage()
-            ]);
-        }
-
-        // Send SMS with Infobip
-        $this->sendSmsWithInfobip($teacher, $request->password);
-
-        return redirect()->route('login')->with('status', 'Teacher created successfully and email sent!');
+        return redirect()->route('userschool')->with('success', 'Enseignant créé et email envoyé avec succès.');
     }
 
     private function sendSmsWithInfobip($teacher, $password)
