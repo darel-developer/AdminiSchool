@@ -17,6 +17,9 @@ use App\Models\Grades;
 use Illuminate\Support\Facades\DB;
 use App\Models\Classe;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
 
 class TeacherController extends Controller
 {
@@ -61,17 +64,25 @@ class TeacherController extends Controller
                 'platformLink' => 'https://adminischool-virtual-academy-master-vtuvm7.laravel.cloud/',
             ];
 
-            // Envoi du mail avec configuration explicite de l'expéditeur
+            // Génère le contenu HTML du mail à partir de la vue Blade
+            $html = view('emails.teacher-login', $mailData)->render();
+
+            // Utilisation de Symfony Mailer
             try {
-                Log::info('Tentative d\'envoi de mail à l\'enseignant', ['email' => $teacher->email]);
-                Mail::send('emails.teacher-login', $mailData, function($message) use ($teacher) {
-                    $message->to($teacher->email)
-                        ->from('sanangdarel17@gmail.com', 'Equipe AdminiSchool') // <-- expéditeur explicite
-                        ->subject('Vos accès à la plateforme AdminiSchool');
-                });
-                Log::info('Mail envoyé avec succès à l\'enseignant', ['email' => $teacher->email]);
+                Log::info('Tentative d\'envoi de mail via Symfony Mailer', ['email' => $teacher->email]);
+                $transport = Transport::fromDsn('smtp://'.env('MAIL_USERNAME').':'.env('MAIL_PASSWORD').'@'.env('MAIL_HOST').':'.env('MAIL_PORT'));
+                $mailer = new Mailer($transport);
+
+                $email = (new Email())
+                    ->from(new \Symfony\Component\Mime\Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME', 'Equipe AdminiSchool')))
+                    ->to($teacher->email)
+                    ->subject('Vos accès à la plateforme AdminiSchool')
+                    ->html($html);
+
+                $mailer->send($email);
+                Log::info('Mail envoyé avec succès via Symfony Mailer', ['email' => $teacher->email]);
             } catch (\Exception $e) {
-                Log::error('Erreur lors de l\'envoi du mail à l\'enseignant', ['error' => $e->getMessage()]);
+                Log::error('Erreur lors de l\'envoi du mail via Symfony Mailer', ['error' => $e->getMessage()]);
                 return redirect()->route('userschool')->with('error', 'Enseignant créé mais erreur lors de l\'envoi du mail : ' . $e->getMessage());
             }
 
