@@ -330,7 +330,8 @@
                         data.teachers.forEach(teacher => {
                             const listItem = document.createElement('li');
                             listItem.className = 'list-group-item list-group-item-action';
-                            listItem.textContent = `${teacher.first_name} ${teacher.last_name}`;
+                            // Ajoute la matière à côté du nom de l'enseignant
+                            listItem.innerHTML = `<span>${teacher.first_name} ${teacher.last_name}</span> <span class="badge bg-info ms-2">${teacher.subject}</span>`;
                             listItem.dataset.id = teacher.id;
                             listItem.addEventListener('click', function () {
                                 selectedTeacherId = teacher.id;
