@@ -301,10 +301,19 @@
                 const notificationList = document.getElementById('notificationList');
                 notificationList.innerHTML = '';
 
-                if (data.notifications.length === 0) {
+                // Filtrer les notifications de moins de 3 jours
+                const now = new Date();
+                const filteredNotifications = data.notifications.filter(notification => {
+                    const notifDate = new Date(notification.created_at);
+                    const diffTime = Math.abs(now - notifDate);
+                    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+                    return diffDays <= 3;
+                });
+
+                if (filteredNotifications.length === 0) {
                     notificationList.innerHTML = '<li class="list-group-item text-center text-muted py-4"><img src="https://img.icons8.com/ios-filled/50/cccccc/bell.png" style="width:32px;height:32px;"><br>Aucune notification disponible.</li>';
                 } else {
-                    data.notifications.forEach(notification => {
+                    filteredNotifications.forEach(notification => {
                         const listItem = document.createElement('li');
                         listItem.className = 'list-group-item d-flex align-items-start py-3';
                         listItem.innerHTML = `
