@@ -26,6 +26,9 @@ class BulletinController extends Controller
         $classNames = \App\Models\Classe::whereIn('id', $classIds)->pluck('name')->toArray();
         $students = \App\Models\Student::whereIn('class', $classNames)->get();
 
+        // Liste des parents à notifier (évite les doublons)
+        $parentsNotified = [];
+
         // Associer chaque PDF à l'élève par nom de fichier (nom + classe)
         $uploadedFiles = $request->file('bulletins');
         $found = 0;
@@ -34,22 +37,33 @@ class BulletinController extends Controller
             // On suppose que le nom du fichier est "nom" ou "nom_classe" (ex: Jean_Dupont_6A.pdf)
             $student = $students->first(function($stu) use ($filename) {
                 $expected1 = str_replace(' ', '_', strtolower($stu->name));
-                $expected2 = $expected1 . '_' . (isset($stu->class->name) ? str_replace(' ', '_', strtolower($stu->class->name)) : '');
+                $expected2 = $expected1 . '_' . (str_replace(' ', '_', strtolower($stu->class)));
                 $filenameLower = strtolower($filename);
                 return $filenameLower === $expected1 || $filenameLower === $expected2;
             });
             if ($student) {
                 // Stocke le PDF dans storage/app/public/bulletins/{student_id}.pdf
                 $path = $file->storeAs('public/bulletins', $student->id . '.pdf');
-                // Notifie le parent
-                $parent = Tuteur::find($student->parent_id);
-                if ($parent) {
-                    Notification::create([
-                        'tuteur_id' => $parent->id,
+                // Notifie le parent (tuteur)
+                if ($student->tuteur_id && !in_array($student->tuteur_id, $parentsNotified)) {
+                    \App\Models\Notification::create([
+                        'tuteur_id' => $student->tuteur_id,
                         'message' => 'Le bulletin de notes de votre enfant ' . $student->name . ' est disponible.',
                     ]);
+                    $parentsNotified[] = $student->tuteur_id;
                 }
                 $found++;
+            }
+        }
+
+        // Notifier tous les parents de la classe même si le PDF n'a pas été trouvé pour leur enfant
+        foreach ($students as $student) {
+            if ($student->tuteur_id && !in_array($student->tuteur_id, $parentsNotified)) {
+                \App\Models\Notification::create([
+                    'tuteur_id' => $student->tuteur_id,
+                    'message' => 'Le bulletin de notes de votre enfant ' . $student->name . ' est disponible.',
+                ]);
+                $parentsNotified[] = $student->tuteur_id;
             }
         }
 
