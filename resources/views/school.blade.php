@@ -238,7 +238,7 @@
                     </form>
                 </div>
                 <button id="backBtn3" class="btn btn-secondary mt-3">Retour</button>
-                <a href="{{ route('parent.bulletins') }}" class="btn btn-info mt-3">Voir l'interface parent pour consulter les bulletins</a>
+                
             </div>
         </div>
     </div>
