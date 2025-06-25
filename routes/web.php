@@ -251,9 +251,7 @@ Route::get('SchoolRegister', function(){
     return view ('SchoolRegister');
 })->name('SchoolRegister');
 
-Route::get('/school', function(){
-    return view ('school');
-})->name('school');
+Route::get('/school', [App\Http\Controllers\SchoolController::class, 'index'])->name('school');
 
 Route::get('event', function(){
     return view ('event');
