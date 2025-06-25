@@ -24,4 +24,10 @@ class SchoolController extends Controller
 
         return redirect('login')->with('success', 'School ajouté avec succès');
     }
+
+    public function index()
+    {
+        $classes = \App\Models\Classe::all();
+        return view('school', compact('classes'));
+    }
 }
