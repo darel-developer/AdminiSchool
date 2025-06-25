@@ -212,28 +212,11 @@
                 <button type="button" class="btn btn-primary" onclick="loadSection('planning')">Planning</button>
                 <button type="button" class="btn btn-primary" onclick="loadSection('notes')">Notes</button>
                 <button type="button" class="btn btn-primary" onclick="loadSection('edit')">Modifier les données</button>
-                <button type="button" class="btn btn-success" onclick="loadSection('bulletin')">Bulletin de notes</button>
+                <button type="button" class="btn btn-primary" onclick="loadSection('bulletins')">Bulletins</button>
             </div>
+
             <div id="content" class="section-content">
                 <p>Sélectionnez une section pour afficher les données.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bulletin Modal -->
-    <div class="modal fade" id="bulletinModal" tabindex="-1" aria-labelledby="bulletinModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="bulletinModalLabel">
-                        <img src="https://img.icons8.com/ios-filled/24/ffffff/pdf.png" alt="Bulletin" style="margin-right:8px;">
-                        Bulletin de notes
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="bulletinModalBody" style="min-height:70vh;display:flex;align-items:center;justify-content:center;">
-                    <!-- PDF ou message d'erreur ici -->
-                </div>
             </div>
         </div>
     </div>
@@ -386,232 +369,203 @@
             console.error('Erreur lors de la mise à jour des notifications :', error);
         });
     }
-
-    // Fonction pour afficher le bulletin
-    function showBulletin() {
-        if (!selectedChildId) {
-            alert('Veuillez sélectionner un enfant.');
-            return;
+    </script>
+    <style>
+        /* Animation de secousse pour la cloche */
+        @keyframes bell-shake {
+            0% { transform: rotate(0); }
+            10% { transform: rotate(-15deg); }
+            20% { transform: rotate(10deg); }
+            30% { transform: rotate(-10deg); }
+            40% { transform: rotate(6deg); }
+            50% { transform: rotate(-4deg); }
+            60% { transform: rotate(2deg); }
+            70% { transform: rotate(-1deg); }
+            80%, 100% { transform: rotate(0); }
         }
-        const modalBody = document.getElementById('bulletinModalBody');
-        modalBody.innerHTML = '<div class="text-center w-100"><div class="spinner-border text-success" role="status"></div><br>Chargement du bulletin...</div>';
-        fetch(`/child/bulletin/${selectedChildId}`)
-            .then(response => {
-                if (response.status === 404) {
-                    throw new Error('Bulletin non disponible.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success && data.url) {
-                    modalBody.innerHTML = `
-                        <div class="w-100" style="height:70vh;">
-                            <iframe src="${data.url}" style="width:100%;height:100%;" frameborder="0"></iframe>
-                            <a href="${data.url}" class="btn btn-success mt-3" download target="_blank">
-                                <img src="https://img.icons8.com/ios-filled/24/ffffff/download.png" style="width:20px;height:20px;margin-right:5px;"> Télécharger le bulletin
-                            </a>
-                        </div>
-                    `;
-                } else {
-                    modalBody.innerHTML = '<div class="alert alert-danger text-center">Bulletin non disponible.</div>';
-                }
-            })
-            .catch(() => {
-                modalBody.innerHTML = '<div class="alert alert-danger text-center">Bulletin non disponible.</div>';
+        .bell-animate {
+            animation: bell-shake 1s cubic-bezier(.36,.07,.19,.97) both;
+        }
+    </style>
+    <script>
+        let selectedChildId = {{ $students->first()->id ?? 'null' }}; 
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const childSelector = document.getElementById('childSelector');
+            const content = document.getElementById('content');
+
+            
+            if (childSelector && selectedChildId) {
+                childSelector.value = selectedChildId;
+                content.innerHTML = '<p>Sélectionnez une section pour afficher les données.</p>';
+            }
+
+            
+            childSelector.addEventListener('change', function () {
+                selectedChildId = this.value;
+                content.innerHTML = '<p>Sélectionnez une section pour afficher les données.</p>';
             });
-        const modal = new bootstrap.Modal(document.getElementById('bulletinModal'));
-        modal.show();
-    }
 
-    let selectedChildId = {{ $students->first()->id ?? 'null' }}; 
+            
+            window.loadSection = function (section) {
+                if (!selectedChildId) {
+                    alert('Veuillez sélectionner un enfant.');
+                    return;
+                }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const childSelector = document.getElementById('childSelector');
-        const content = document.getElementById('content');
-
-        if (childSelector && selectedChildId) {
-            childSelector.value = selectedChildId;
-            content.innerHTML = '<p>Sélectionnez une section pour afficher les données.</p>';
-        }
-
-        childSelector.addEventListener('change', function () {
-            selectedChildId = this.value;
-            content.innerHTML = '<p>Sélectionnez une section pour afficher les données.</p>';
-        });
-
-        window.loadSection = function (section) {
-            if (!selectedChildId) {
-                alert('Veuillez sélectionner un enfant.');
-                return;
-            }
-
-            // Cas spécial pour le bulletin
-            if (section === 'bulletin') {
-                content.innerHTML = '<div class="text-center w-100"><div class="spinner-border text-success" role="status"></div><br>Chargement du bulletin...</div>';
-                fetch(`/child/bulletin/${selectedChildId}`)
-                    .then(response => {
-                        if (response.status === 404) {
-                            throw new Error('Bulletin non disponible.');
-                        }
-                        return response.json();
-                    })
+                fetch(`/child/${section}/${selectedChildId}`)
+                    .then(response => response.json())
                     .then(data => {
-                        if (data.success && data.url) {
-                            content.innerHTML = `
-                                <h2>Bulletin de notes</h2>
-                                <div class="w-100" style="height:70vh;">
-                                    <iframe src="${data.url}" style="width:100%;height:100%;" frameborder="0"></iframe>
-                                    <a href="${data.url}" class="btn btn-success mt-3" download target="_blank">
-                                        <img src="https://img.icons8.com/ios-filled/24/ffffff/download.png" style="width:20px;height:20px;margin-right:5px;"> Télécharger le bulletin
-                                    </a>
-                                </div>
-                            `;
+                        if (data.success) {
+                            let htmlContent = '';
+                            switch (section) {
+                                case 'general':
+                                    htmlContent = `
+                                        <h2>Informations Générales</h2>
+                                        <p><strong>Nom :</strong> ${data.data.name}</p>
+                                        <p><strong>Classe :</strong> ${data.data.class}</p>
+                                        <p><strong>Date d'inscription :</strong> ${data.data.enrollment_date || 'Non disponible'}</p>
+                                        <p><strong>Absences :</strong> ${data.data.absences}</p>
+                                        <p><strong>Convocations :</strong> ${data.data.convocations}</p>
+                                        <p><strong>Avertissements :</strong> ${data.data.warnings}</p>
+                                    `;
+                                    break;
+
+                                case 'planning':
+                                    if (data.data.planning.length > 0) {
+                                        htmlContent = `
+                                            <h2>Planning</h2>
+                                            <a href="/child/planning/download/${selectedChildId}" class="btn btn-success mb-3 float-end" target="_blank">
+                                                <img src="https://img.icons8.com/ios-filled/50/ffffff/download.png" alt="Download" style="width: 20px; height: 20px; margin-right: 5px;">
+                                                Télécharger le PDF
+                                            </a>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Heure Début</th>
+                                                        <th>Heure Fin</th>
+                                                        <th>Code</th>
+                                                        <th>Enseignant</th>
+                                                        <th>Salle</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${data.data.planning.map(planning => `
+                                                        <tr>
+                                                            <td>${planning.date}</td>
+                                                            <td>${planning.start_time}</td>
+                                                            <td>${planning.end_time}</td>
+                                                            <td>${planning.code}</td>
+                                                            <td>${planning.teacher}</td>
+                                                            <td>${planning.room}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        `;
+                                    } else {
+                                        htmlContent = '<p>Aucun planning disponible.</p>';
+                                    }
+                                    break;
+
+                                case 'absence':
+                                    htmlContent = `
+                                        <h2>Absences</h2>
+                                        <p><strong>Nombre d'absences :</strong> ${data.data.absences}</p>
+                                    `;
+                                    break;
+
+                                case 'convocation':
+                                    htmlContent = `
+                                        <h2>Convocations</h2>
+                                        <p><strong>Nombre de convocations :</strong> ${data.data.convocations}</p>
+                                    `;
+                                    break;
+
+                                case 'warnings':
+                                    htmlContent = `
+                                        <h2>Avertissements</h2>
+                                        <p><strong>Nombre d'avertissements :</strong> ${data.data.warnings}</p>
+                                    `;
+                                    break;
+
+                                case 'notes':
+                                    if (data.data.notes && data.data.notes.length > 0) {
+                                        htmlContent = `
+                                            <h2>Notes</h2>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Matière</th>
+                                                        <th>Note</th>
+                                                        <th>Commentaire</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${data.data.notes.map(note => `
+                                                        <tr>
+                                                            <td>${note.matiere}</td>
+                                                            <td>${note.grade}</td>
+                                                            <td>${note.comment || 'Aucun commentaire'}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        `;
+                                    } else {
+                                        htmlContent = '<p>Aucune note disponible.</p>';
+                                    }
+                                    break;
+
+                                case 'bulletins':
+                                    if (data.data.url) {
+                                        htmlContent = `
+                                            <h2>Bulletin de notes</h2>
+                                            <div class="w-100" style="height:70vh;">
+                                                <iframe src="${data.data.url}" style="width:100%;height:100%;" frameborder="0"></iframe>
+                                                <a href="${data.data.url}" class="btn btn-success mt-3" download target="_blank">
+                                                    <img src="https://img.icons8.com/ios-filled/24/ffffff/download.png" style="width:20px;height:20px;margin-right:5px;"> Télécharger le bulletin
+                                                </a>
+                                            </div>
+                                        `;
+                                    } else {
+                                        htmlContent = '<div class="alert alert-danger text-center">Bulletin non disponible.</div>';
+                                    }
+                                    break;
+
+                                case 'edit':
+                                    htmlContent = `
+                                        <h2>Modifier les données de l'enfant</h2>
+                                        <form id="editChildForm">
+                                            <div class="mb-3">
+                                                <label for="name" class="form-label">Nom</label>
+                                                <input type="text" class="form-control" id="name" name="name" value="${data.data.name}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="class" class="form-label">Classe</label>
+                                                <input type="text" class="form-control" id="class" name="class" value="${data.data.class}" required>
+                                            </div>
+                                            <button type="button" class="btn btn-primary" onclick="updateChild(${data.data.id})">Mettre à jour</button>
+                                        </form>
+                                    `;
+                                    break;
+
+                                default:
+                                    htmlContent = `<p>Section ${section} chargée avec succès.</p>`;
+                                    break;
+                            }
+
+                            document.getElementById('content').innerHTML = htmlContent;
                         } else {
-                            content.innerHTML = '<div class="alert alert-danger text-center">Bulletin non disponible.</div>';
+                            document.getElementById('content').innerHTML = `<p>${data.error}</p>`;
                         }
                     })
-                    .catch(() => {
-                        content.innerHTML = '<div class="alert alert-danger text-center">Bulletin non disponible.</div>';
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des données :', error);
+                        document.getElementById('content').innerHTML = '<p>Erreur lors de la récupération des données.</p>';
                     });
-                return;
-            }
-
-            fetch(`/child/${section}/${selectedChildId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        let htmlContent = '';
-                        switch (section) {
-                            case 'general':
-                                htmlContent = `
-                                    <h2>Informations Générales</h2>
-                                    <p><strong>Nom :</strong> ${data.data.name}</p>
-                                    <p><strong>Classe :</strong> ${data.data.class}</p>
-                                    <p><strong>Date d'inscription :</strong> ${data.data.enrollment_date || 'Non disponible'}</p>
-                                    <p><strong>Absences :</strong> ${data.data.absences}</p>
-                                    <p><strong>Convocations :</strong> ${data.data.convocations}</p>
-                                    <p><strong>Avertissements :</strong> ${data.data.warnings}</p>
-                                `;
-                                break;
-
-                            case 'planning':
-                                if (data.data.planning.length > 0) {
-                                    htmlContent = `
-                                        <h2>Planning</h2>
-                                        <a href="/child/planning/download/${selectedChildId}" class="btn btn-success mb-3 float-end" target="_blank">
-                                            <img src="https://img.icons8.com/ios-filled/50/ffffff/download.png" alt="Download" style="width: 20px; height: 20px; margin-right: 5px;">
-                                            Télécharger le PDF
-                                        </a>
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Heure Début</th>
-                                                    <th>Heure Fin</th>
-                                                    <th>Code</th>
-                                                    <th>Enseignant</th>
-                                                    <th>Salle</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                ${data.data.planning.map(planning => `
-                                                    <tr>
-                                                        <td>${planning.date}</td>
-                                                        <td>${planning.start_time}</td>
-                                                        <td>${planning.end_time}</td>
-                                                        <td>${planning.code}</td>
-                                                        <td>${planning.teacher}</td>
-                                                        <td>${planning.room}</td>
-                                                    </tr>
-                                                `).join('')}
-                                            </tbody>
-                                        </table>
-                                    `;
-                                } else {
-                                    htmlContent = '<p>Aucun planning disponible.</p>';
-                                }
-                                break;
-
-                            case 'absence':
-                                htmlContent = `
-                                    <h2>Absences</h2>
-                                    <p><strong>Nombre d'absences :</strong> ${data.data.absences}</p>
-                                `;
-                                break;
-
-                            case 'convocation':
-                                htmlContent = `
-                                    <h2>Convocations</h2>
-                                    <p><strong>Nombre de convocations :</strong> ${data.data.convocations}</p>
-                                `;
-                                break;
-
-                            case 'warnings':
-                                htmlContent = `
-                                    <h2>Avertissements</h2>
-                                    <p><strong>Nombre d'avertissements :</strong> ${data.data.warnings}</p>
-                                `;
-                                break;
-
-                            case 'notes':
-                                if (data.data.notes && data.data.notes.length > 0) {
-                                    htmlContent = `
-                                        <h2>Notes</h2>
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Matière</th>
-                                                    <th>Note</th>
-                                                    <th>Commentaire</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                ${data.data.notes.map(note => `
-                                                    <tr>
-                                                        <td>${note.matiere}</td>
-                                                        <td>${note.grade}</td>
-                                                        <td>${note.comment || 'Aucun commentaire'}</td>
-                                                    </tr>
-                                                `).join('')}
-                                            </tbody>
-                                        </table>
-                                    `;
-                                } else {
-                                    htmlContent = '<p>Aucune note disponible.</p>';
-                                }
-                                break;
-
-                            case 'edit':
-                                htmlContent = `
-                                    <h2>Modifier les données de l'enfant</h2>
-                                    <form id="editChildForm">
-                                        <div class="mb-3">
-                                            <label for="name" class="form-label">Nom</label>
-                                            <input type="text" class="form-control" id="name" name="name" value="${data.data.name}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="class" class="form-label">Classe</label>
-                                            <input type="text" class="form-control" id="class" name="class" value="${data.data.class}" required>
-                                        </div>
-                                        <button type="button" class="btn btn-primary" onclick="updateChild(${data.data.id})">Mettre à jour</button>
-                                    </form>
-                                `;
-                                break;
-
-                            default:
-                                htmlContent = `<p>Section ${section} chargée avec succès.</p>`;
-                                break;
-                        }
-
-                        document.getElementById('content').innerHTML = htmlContent;
-                    } else {
-                        document.getElementById('content').innerHTML = `<p>${data.error}</p>`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des données :', error);
-                    document.getElementById('content').innerHTML = '<p>Erreur lors de la récupération des données.</p>';
-                });
+            };
         });
 
         function updateChild(childId) {

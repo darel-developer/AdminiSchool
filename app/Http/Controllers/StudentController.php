@@ -104,6 +104,16 @@ class StudentController extends Controller
                         ];
                         break;
 
+                    case 'bulletins':
+                        $path = storage_path('app/public/bulletins/' . $student->id . '.pdf');
+                        if (file_exists($path)) {
+                            $url = asset('storage/bulletins/' . $student->id . '.pdf');
+                            $data = ['url' => $url];
+                        } else {
+                            return response()->json(['success' => false, 'error' => 'Bulletin non disponible.']);
+                        }
+                        break;
+
                     default:
                         return response()->json(['success' => false, 'error' => 'La section demandée est inconnue ou invalide.']);
                 }

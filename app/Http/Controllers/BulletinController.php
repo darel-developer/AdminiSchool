@@ -21,8 +21,10 @@ class BulletinController extends Controller
             'classes' => 'required|array|min:1',
         ]);
 
+        // Récupère les noms des classes à partir des IDs
         $classIds = $request->input('classes');
-        $students = Student::whereIn('class_id', $classIds)->get();
+        $classNames = \App\Models\Classe::whereIn('id', $classIds)->pluck('name')->toArray();
+        $students = \App\Models\Student::whereIn('class', $classNames)->get();
 
         // Associer chaque PDF à l'élève par nom de fichier (nom + classe)
         $uploadedFiles = $request->file('bulletins');
