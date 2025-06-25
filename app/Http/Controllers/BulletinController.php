@@ -24,7 +24,9 @@ class BulletinController extends Controller
         // Récupère les noms des classes à partir des IDs
         $classIds = $request->input('classes');
         $classNames = \App\Models\Classe::whereIn('id', $classIds)->pluck('name')->toArray();
+        Log::info('Classes sélectionnées pour upload bulletin', ['classIds' => $classIds, 'classNames' => $classNames]);
         $students = \App\Models\Student::whereIn('class', $classNames)->get();
+        Log::info('Étudiants trouvés pour ces classes', ['students' => $students->pluck('id', 'name')->toArray()]);
 
         // Liste des parents à notifier (évite les doublons)
         $parentsNotified = [];
@@ -34,7 +36,7 @@ class BulletinController extends Controller
         $found = 0;
         foreach ($uploadedFiles as $file) {
             $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            // On suppose que le nom du fichier est "nom" ou "nom_classe" (ex: Jean_Dupont_6A.pdf)
+            Log::info('Traitement du fichier bulletin', ['filename' => $filename]);
             $student = $students->first(function($stu) use ($filename) {
                 $expected1 = str_replace(' ', '_', strtolower($stu->name));
                 $expected2 = $expected1 . '_' . (str_replace(' ', '_', strtolower($stu->class)));
@@ -42,17 +44,22 @@ class BulletinController extends Controller
                 return $filenameLower === $expected1 || $filenameLower === $expected2;
             });
             if ($student) {
+                Log::info('Match trouvé pour le fichier bulletin', ['student_id' => $student->id, 'student_name' => $student->name]);
                 // Stocke le PDF dans storage/app/public/bulletins/{student_id}.pdf
                 $path = $file->storeAs('public/bulletins', $student->id . '.pdf');
+                Log::info('Bulletin stocké', ['path' => $path]);
                 // Notifie le parent (tuteur)
                 if ($student->tuteur_id && !in_array($student->tuteur_id, $parentsNotified)) {
                     \App\Models\Notification::create([
                         'tuteur_id' => $student->tuteur_id,
                         'message' => 'Le bulletin de notes de votre enfant ' . $student->name . ' est disponible.',
                     ]);
+                    Log::info('Notification envoyée au tuteur', ['tuteur_id' => $student->tuteur_id]);
                     $parentsNotified[] = $student->tuteur_id;
                 }
                 $found++;
+            } else {
+                Log::warning('Aucun étudiant trouvé pour le fichier bulletin', ['filename' => $filename]);
             }
         }
 
@@ -63,10 +70,12 @@ class BulletinController extends Controller
                     'tuteur_id' => $student->tuteur_id,
                     'message' => 'Le bulletin de notes de votre enfant ' . $student->name . ' est disponible.',
                 ]);
+                Log::info('Notification envoyée au tuteur (sans PDF)', ['tuteur_id' => $student->tuteur_id]);
                 $parentsNotified[] = $student->tuteur_id;
             }
         }
 
+        Log::info('Upload bulletins terminé', ['found' => $found, 'total_students' => count($students)]);
         return back()->with('success', "$found bulletins associés et notifications envoyées.");
     }
 

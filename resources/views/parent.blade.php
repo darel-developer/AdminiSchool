@@ -519,7 +519,7 @@
                                     break;
 
                                 case 'bulletins':
-                                    if (data.data.url) {
+                                    if (data.data && data.data.url) {
                                         htmlContent = `
                                             <h2>Bulletin de notes</h2>
                                             <div class="w-100" style="height:70vh;">
@@ -530,7 +530,7 @@
                                             </div>
                                         `;
                                     } else {
-                                        htmlContent = '<div class="alert alert-danger text-center">Bulletin non disponible.</div>';
+                                        htmlContent = `<div class="alert alert-danger text-center">${data.error || 'Bulletin non disponible.'}</div>`;
                                     }
                                     break;
 
@@ -563,7 +563,7 @@
                     })
                     .catch(error => {
                         console.error('Erreur lors de la récupération des données :', error);
-                        document.getElementById('content').innerHTML = '<p>Erreur lors de la récupération des données.</p>';
+                        document.getElementById('content').innerHTML = `<p>Erreur lors de la récupération des données : ${error.message}</p>`;
                     });
             };
         });
