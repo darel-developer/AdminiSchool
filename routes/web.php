@@ -311,3 +311,6 @@ Route::get('teacher', function(){
 Route::get('teacherchat', function(){
     return view ('teacherchat');
 })->name('teacherchat');
+
+// Route pour l'upload des bulletins PDF (bulletins de notes)
+Route::post('/bulletins/upload', [App\Http\Controllers\BulletinController::class, 'upload'])->name('bulletins.upload');
