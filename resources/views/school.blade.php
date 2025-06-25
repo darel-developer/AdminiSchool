@@ -207,8 +207,38 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Téléverser</button>
                     </form>
+                    <button id="nextBtn3" class="btn btn-secondary mt-3">Suivant</button>
                     <button id="backBtn2" class="btn btn-secondary mt-3">Retour</button>
                 </div>
+
+                <!-- Formulaire pour téléverser les bulletins de notes PDF -->
+                <div id="form4" class="form-section">
+                    <div class="form-header">Téléverser les bulletins de notes (PDF)</div>
+                    <p class="form-description">
+                        Sélectionnez le dossier contenant tous les bulletins de notes PDF des élèves.<br>
+                        Chaque fichier PDF doit être nommé avec le matricule ou l'identifiant unique de l'élève (ex: <b>12345.pdf</b>).
+                    </p>
+                    <form id="uploadBulletinsForm" method="POST" action="{{ route('bulletins.upload') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="bulletinsFolder" class="form-label">Dossier des bulletins (PDF)</label>
+                            <input type="file" name="bulletins[]" id="bulletinsFolder" class="form-control" accept="application/pdf" multiple webkitdirectory directory required>
+                            <!-- webkitdirectory permet la sélection de dossier dans Chrome/Edge -->
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sélectionnez les classes concernées :</label><br>
+                            @foreach($classes as $class)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="classes[]" id="class_{{ $class->id }}" value="{{ $class->id }}">
+                                    <label class="form-check-label" for="class_{{ $class->id }}">{{ $class->name }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                        <button type="submit" class="btn btn-primary">Téléverser les bulletins</button>
+                    </form>
+                </div>
+                <button id="backBtn3" class="btn btn-secondary mt-3">Retour</button>
+                <a href="{{ route('parent.bulletins') }}" class="btn btn-info mt-3">Voir l'interface parent pour consulter les bulletins</a>
             </div>
         </div>
     </div>
@@ -224,6 +254,11 @@
             document.getElementById('form3').classList.add('active');
         });
 
+        document.getElementById('nextBtn3').addEventListener('click', function() {
+            document.getElementById('form3').classList.remove('active');
+            document.getElementById('form4').classList.add('active');
+        });
+
         document.getElementById('backBtn').addEventListener('click', function() {
             document.getElementById('form2').classList.remove('active');
             document.getElementById('form1').classList.add('active');
@@ -232,6 +267,11 @@
         document.getElementById('backBtn2').addEventListener('click', function() {
             document.getElementById('form3').classList.remove('active');
             document.getElementById('form2').classList.add('active');
+        });
+
+        document.getElementById('backBtn3').addEventListener('click', function() {
+            document.getElementById('form4').classList.remove('active');
+            document.getElementById('form3').classList.add('active');
         });
     </script>
 </body>

@@ -82,75 +82,100 @@ class StudentController extends Controller
         return back()->with('success', 'Les données des convocations ont été importées avec succès.');
     }
 
-    public function getChildData($section)
+    public function getChildData($section, $childId = null)
     {
         // Récupérer le tuteur connecté
         $tuteur = auth()->guard('tuteur')->user();
-        
-        // Vérifier si le tuteur a un enfant associé
-        if ($tuteur && $tuteur->childName) {
-            // Chercher l'enfant dans la table 'students' avec le nom de l'enfant
+
+        // Si $childId est fourni, on récupère l'enfant par ID, sinon par nom (pour compatibilité)
+        if ($childId) {
+            $student = Student::where('id', $childId)->where('parent_id', $tuteur->id)->first();
+        } elseif ($tuteur && $tuteur->childName) {
             $student = Student::where('name', $tuteur->childName)->first();
-    
-            // Si l'enfant existe, retourner les données de l'enfant pour la section demandée
-            if ($student) {
-                $data = [];
-                switch ($section) {
-                    case 'information':
-                        $data = [
-                            'name' => $student->name,
-                            'class' => $student->class,
-                            'enrollment_date' => $student->enrollment_date,
-                            'absences' => $student->absences,
-                            'convocations' => $student->convocations,
-                            'warnings' => $student->warnings,
-                        ];
-                        break;
-                    case 'absence':
-                        $data = [
-                            'absences' => $student->absences,
-                        ];
-                        break;
-                    case 'notes':
-                        $data = [
-                            'notes' => $student->notes, 
-                        ];
-                        break;
-                    case 'convocation':
-                        $data = [
-                            'convocations' => $student->convocations,
-                        ];
-                        break;
-                    case 'planning':
-                        $planning = Planning::where('class', $student->class)->get();
-                        $data = [
-                            'planning' => $planning,
-                        ];
-                        break;
-                    case 'barbillard':
-                        $data = [
-                            'warnings' => $student->warnings,
-                        ];
-                        break;
-                    default:
-                        return response()->json(['success' => false, 'error' => 'Section inconnue.']);
-                }
-    
-                return response()->json([
-                    'success' => true,
-                    'data' => $data,
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'Aucun étudiant trouvé avec ce nom.',
-                ]);
-            }
+        } else {
+            $student = null;
         }
-    
-        return response()->json([
-            'success' => false,
-            'error' => 'Tuteur non trouvé ou enfant non associé.',
-        ]);
+
+        if ($student) {
+            $data = [];
+            switch ($section) {
+                case 'information':
+                case 'general':
+                    $data = [
+                        'name' => $student->name,
+                        'class' => $student->class,
+                        'enrollment_date' => $student->enrollment_date,
+                        'absences' => $student->absences,
+                        'convocations' => $student->convocations,
+                        'warnings' => $student->warnings,
+                    ];
+                    break;
+                case 'absence':
+                    $data = [
+                        'absences' => $student->absences,
+                    ];
+                    break;
+                case 'notes':
+                    $data = [
+                        'notes' => $student->notes,
+                    ];
+                    break;
+                case 'convocation':
+                    $data = [
+                        'convocations' => $student->convocations,
+                    ];
+                    break;
+                case 'planning':
+                    $planning = Planning::where('class', $student->class)->get();
+                    $data = [
+                        'planning' => $planning,
+                    ];
+                    break;
+                case 'barbillard':
+                    $data = [
+                        'warnings' => $student->warnings,
+                    ];
+                    break;
+                case 'bulletin':
+                    $path = storage_path('app/public/bulletins/' . $student->id . '.pdf');
+                    if (file_exists($path)) {
+                        $url = asset('storage/bulletins/' . $student->id . '.pdf');
+                        $data = ['url' => $url];
+                        return response()->json(['success' => true, 'data' => $data]);
+                    } else {
+                        return response()->json(['success' => false, 'error' => 'Bulletin non disponible.'], 404);
+                    }
+                default:
+                    return response()->json(['success' => false, 'error' => 'Section inconnue.']);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'error' => 'Aucun étudiant trouvé avec ce nom ou cet ID.',
+            ]);
+        }
+    }
+
+    // Ajout pour servir le bulletin PDF d'un enfant
+    public function getBulletin($childId)
+    {
+        // Vérifier que le tuteur connecté est bien le parent de l'enfant
+        $tuteur = auth()->guard('tuteur')->user();
+        $student = \App\Models\Student::where('id', $childId)->where('parent_id', $tuteur->id)->first();
+        if (!$student) {
+            return response()->json(['success' => false, 'error' => 'Enfant non trouvé.'], 404);
+        }
+        $path = storage_path('app/public/bulletins/' . $student->id . '.pdf');
+        if (!file_exists($path)) {
+            return response()->json(['success' => false, 'error' => 'Bulletin non disponible.'], 404);
+        }
+        // Générer une URL temporaire pour visualiser/télécharger le PDF
+        $url = asset('storage/bulletins/' . $student->id . '.pdf');
+        return response()->json(['success' => true, 'url' => $url]);
     }
 }

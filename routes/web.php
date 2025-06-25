@@ -25,6 +25,7 @@ use App\Http\Controllers\CahierDeTexteController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\TeacherChatController;
 use App\Http\Controllers\SupportBotController;
+use App\Http\Controllers\BulletinController;
 
 //Route pour gérer les cahiers de textes
 Route::get('/cahierexte', [CahierDeTexteController::class, 'index'])->name('cahiertexte');
