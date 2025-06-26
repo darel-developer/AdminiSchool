@@ -175,7 +175,6 @@
                         <ul>
                             <li>Paiement de 5 étudiants</li>
                             <li>3 absences reported today</li>
-                            <li>Convocation scheduled for tomorrow</li>
                         </ul>
                     </div>
                 </div>
