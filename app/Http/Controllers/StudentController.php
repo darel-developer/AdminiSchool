@@ -105,21 +105,34 @@ class StudentController extends Controller
                         break;
 
                     case 'bulletins':
-                        $path = storage_path('app/public/bulletins/' . $student->id . '.pdf');
-                        Log::info('[BULLETIN] Recherche du bulletin pour élève', [
+                        // Recherche du bulletin par nom de l'élève (avec et sans espaces)
+                        $filenameWithSpaces = $student->name . '.pdf';
+                        $filenameWithUnderscores = str_replace(' ', '_', strtolower($student->name)) . '.pdf';
+                        $storagePath = storage_path('app/public/bulletins/');
+                        $pathWithSpaces = $storagePath . $filenameWithSpaces;
+                        $pathWithUnderscores = $storagePath . $filenameWithUnderscores;
+
+                        // Log les chemins testés
+                        \Log::info('[BULLETIN] Recherche du bulletin pour élève', [
                             'student_id' => $student->id,
                             'student_name' => $student->name,
-                            'expected_path' => $path,
-                            'file_exists' => file_exists($path)
+                            'test_path_with_spaces' => $pathWithSpaces,
+                            'file_exists_with_spaces' => file_exists($pathWithSpaces),
+                            'test_path_with_underscores' => $pathWithUnderscores,
+                            'file_exists_with_underscores' => file_exists($pathWithUnderscores),
                         ]);
-                        if (file_exists($path)) {
-                            $url = asset('storage/bulletins/' . $student->id . '.pdf');
+
+                        if (file_exists($pathWithSpaces)) {
+                            $url = asset('storage/bulletins/' . $filenameWithSpaces);
+                            $data = ['url' => $url];
+                        } elseif (file_exists($pathWithUnderscores)) {
+                            $url = asset('storage/bulletins/' . $filenameWithUnderscores);
                             $data = ['url' => $url];
                         } else {
-                            Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
+                            \Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
                                 'student_id' => $student->id,
                                 'student_name' => $student->name,
-                                'expected_path' => $path
+                                'tested_paths' => [$pathWithSpaces, $pathWithUnderscores]
                             ]);
                             return response()->json(['success' => false, 'error' => 'Bulletin non disponible.']);
                         }
