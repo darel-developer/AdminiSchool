@@ -106,10 +106,21 @@ class StudentController extends Controller
 
                     case 'bulletins':
                         $path = storage_path('app/public/bulletins/' . $student->id . '.pdf');
+                        Log::info('[BULLETIN] Recherche du bulletin pour élève', [
+                            'student_id' => $student->id,
+                            'student_name' => $student->name,
+                            'expected_path' => $path,
+                            'file_exists' => file_exists($path)
+                        ]);
                         if (file_exists($path)) {
                             $url = asset('storage/bulletins/' . $student->id . '.pdf');
                             $data = ['url' => $url];
                         } else {
+                            Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
+                                'student_id' => $student->id,
+                                'student_name' => $student->name,
+                                'expected_path' => $path
+                            ]);
                             return response()->json(['success' => false, 'error' => 'Bulletin non disponible.']);
                         }
                         break;
