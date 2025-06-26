@@ -105,14 +105,20 @@ class StudentController extends Controller
                         break;
 
                     case 'bulletins':
-                        // Recherche du bulletin par nom de l'élève (avec et sans espaces)
+                        // S'assure que le dossier existe avant de scanner
+                        $storagePath = storage_path('app/public/bulletins/');
+                        if (!is_dir($storagePath)) {
+                            Log::error('[BULLETIN] Le dossier bulletins/ est introuvable', [
+                                'expected_path' => $storagePath
+                            ]);
+                            return response()->json(['success' => false, 'error' => 'Le dossier des bulletins est introuvable.'], 500);
+                        }
+
                         $filenameWithSpaces = $student->name . '.pdf';
                         $filenameWithUnderscores = str_replace(' ', '_', strtolower($student->name)) . '.pdf';
-                        $storagePath = storage_path('app/public/bulletins/');
                         $pathWithSpaces = $storagePath . $filenameWithSpaces;
                         $pathWithUnderscores = $storagePath . $filenameWithUnderscores;
 
-                        // Correction : vérifier la casse du nom du fichier (insensible à la casse)
                         $foundFile = null;
                         foreach (scandir($storagePath) as $file) {
                             if (strtolower($file) === strtolower($filenameWithSpaces)) {
