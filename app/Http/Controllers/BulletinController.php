@@ -40,13 +40,15 @@ class BulletinController extends Controller
             $student = $students->first(function($stu) use ($filename) {
                 $expected1 = str_replace(' ', '_', strtolower($stu->name));
                 $expected2 = $expected1 . '_' . (str_replace(' ', '_', strtolower($stu->class)));
+                $expected3 = strtolower($stu->name); // nom avec espaces
                 $filenameLower = strtolower($filename);
-                return $filenameLower === $expected1 || $filenameLower === $expected2;
+                return $filenameLower === $expected1 || $filenameLower === $expected2 || $filenameLower === $expected3;
             });
             if ($student) {
                 Log::info('Match trouvé pour le fichier bulletin', ['student_id' => $student->id, 'student_name' => $student->name]);
-                // Stocke le PDF dans storage/app/public/bulletins/{student_id}.pdf
-                $path = $file->storeAs('public/bulletins', $student->id . '.pdf');
+                // Stocke le PDF dans storage/app/public/bulletins/{nom_élève}.pdf (avec espaces)
+                $pdfName = $student->name . '.pdf';
+                $path = $file->storeAs('public/bulletins', $pdfName);
                 Log::info('Bulletin stocké', ['path' => $path]);
                 // Notifie le parent (tuteur)
                 if ($student->tuteur_id && !in_array($student->tuteur_id, $parentsNotified)) {
