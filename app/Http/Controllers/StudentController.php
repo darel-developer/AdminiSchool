@@ -112,7 +112,15 @@ class StudentController extends Controller
                         $pathWithSpaces = $storagePath . $filenameWithSpaces;
                         $pathWithUnderscores = $storagePath . $filenameWithUnderscores;
 
-                        // Log les chemins testés
+                        // Correction : vérifier la casse du nom du fichier (insensible à la casse)
+                        $foundFile = null;
+                        foreach (scandir($storagePath) as $file) {
+                            if (strtolower($file) === strtolower($filenameWithSpaces)) {
+                                $foundFile = $file;
+                                break;
+                            }
+                        }
+
                         Log::info('[BULLETIN] Recherche du bulletin pour élève', [
                             'student_id' => $student->id,
                             'student_name' => $student->name,
@@ -120,10 +128,11 @@ class StudentController extends Controller
                             'file_exists_with_spaces' => file_exists($pathWithSpaces),
                             'test_path_with_underscores' => $pathWithUnderscores,
                             'file_exists_with_underscores' => file_exists($pathWithUnderscores),
+                            'found_file' => $foundFile,
                         ]);
 
-                        if (file_exists($pathWithSpaces)) {
-                            $url = asset('storage/bulletins/' . $filenameWithSpaces);
+                        if ($foundFile) {
+                            $url = asset('storage/bulletins/' . $foundFile);
                             $data = ['url' => $url];
                         } elseif (file_exists($pathWithUnderscores)) {
                             $url = asset('storage/bulletins/' . $filenameWithUnderscores);
