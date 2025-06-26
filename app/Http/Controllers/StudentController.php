@@ -113,7 +113,7 @@ class StudentController extends Controller
                         $pathWithUnderscores = $storagePath . $filenameWithUnderscores;
 
                         // Log les chemins testés
-                        \Log::info('[BULLETIN] Recherche du bulletin pour élève', [
+                        Log::info('[BULLETIN] Recherche du bulletin pour élève', [
                             'student_id' => $student->id,
                             'student_name' => $student->name,
                             'test_path_with_spaces' => $pathWithSpaces,
@@ -129,7 +129,7 @@ class StudentController extends Controller
                             $url = asset('storage/bulletins/' . $filenameWithUnderscores);
                             $data = ['url' => $url];
                         } else {
-                            \Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
+                            Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
                                 'student_id' => $student->id,
                                 'student_name' => $student->name,
                                 'tested_paths' => [$pathWithSpaces, $pathWithUnderscores]
