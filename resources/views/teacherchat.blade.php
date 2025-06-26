@@ -17,7 +17,7 @@
         }
         .sidebar {
             width: 250px;
-            background: linear-gradient(135deg, #ee7724, #d8363a, #dd3675, #b44593);
+            background: #2c3e50;
             color: #fff;
             padding: 20px 0;
             position: fixed;
@@ -141,18 +141,25 @@
 </head>
 <body>
     <!-- Barre de navigation -->
-    <div class="sidebar">
+     <div class="sidebar">
+        <div class="sidebar-title">ADMINISCHOOL</div>
+        <div class="sidebar-separator"></div>
         <a href="#" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
-        <a href="#" class="sidebar-item">
+        
+        <a href="{{route('teacherchat')}}" class="sidebar-item">
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Chat
         </a>
+        <a href="{{ route('teacher.statistics') }}" class="sidebar-item">
+            <img src="{{ asset('images/statistics.png') }}" alt="statistics">
+            Statistiques
+        </a>
         <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/chat.png') }}" alt="chat">
-            Chat
+            <img src="{{ asset('images/setting.png') }}" alt="settings">
+            Settings
         </a>
     </div>
 
