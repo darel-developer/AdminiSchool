@@ -48,8 +48,9 @@ class BulletinController extends Controller
                 Log::info('Match trouvé pour le fichier bulletin', ['student_id' => $student->id, 'student_name' => $student->name]);
                 // Stocke le PDF dans storage/app/public/bulletins/{nom_élève}.pdf (avec espaces)
                 $pdfName = $student->name . '.pdf';
-                $path = $file->storeAs('public/bulletins', $pdfName);
-                Log::info('Bulletin stocké', ['path' => $path]);
+                // Utilise la méthode putFileAs pour garantir le bon dossier
+                $file->storeAs('public/bulletins', $pdfName);
+                Log::info('Bulletin stocké', ['path' => storage_path('app/public/bulletins/' . $pdfName)]);
                 // Notifie le parent (tuteur)
                 if ($student->tuteur_id && !in_array($student->tuteur_id, $parentsNotified)) {
                     \App\Models\Notification::create([
