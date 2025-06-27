@@ -71,4 +71,90 @@ class DashboardController extends Controller
         $pdf = Pdf::loadView('reports.paiements', compact('paiements'));
         return $pdf->download('rapport_paiements.pdf');
     }
+
+    public function customChartData(Request $request)
+    {
+        $types = $request->input('types', []);
+        $criteria = $request->input('criteria', 'count');
+        $result = [];
+
+        foreach ($types as $type) {
+            switch ($type) {
+                case 'students':
+                    $query = \App\Models\Student::query();
+                    $label = 'Elèves';
+                    $data = [];
+                    if ($criteria === 'sum') {
+                        $data[] = $query->count();
+                    } elseif ($criteria === 'count') {
+                        $data[] = $query->count();
+                    } elseif ($criteria === 'top5') {
+                        $data = $query->orderByDesc('created_at')->limit(5)->pluck('id')->toArray();
+                    } else {
+                        $data = $query->count();
+                    }
+                    $result[] = [
+                        'label' => $label,
+                        'data' => $data,
+                    ];
+                    break;
+                case 'paiements':
+                    $query = \App\Models\Paiement::query();
+                    $label = 'Paiements';
+                    $data = [];
+                    if ($criteria === 'sum') {
+                        $data[] = $query->sum('montant');
+                    } elseif ($criteria === 'count') {
+                        $data[] = $query->count();
+                    } elseif ($criteria === 'top5') {
+                        $data = $query->orderByDesc('montant')->limit(5)->pluck('montant')->toArray();
+                    } else {
+                        $data = $query->count();
+                    }
+                    $result[] = [
+                        'label' => $label,
+                        'data' => $data,
+                    ];
+                    break;
+                case 'absences':
+                    $query = \App\Models\Student::query();
+                    $label = 'Absences';
+                    $data = [];
+                    if ($criteria === 'sum') {
+                        $data[] = $query->sum('absences');
+                    } elseif ($criteria === 'count') {
+                        $data[] = $query->where('absences', '>', 0)->count();
+                    } elseif ($criteria === 'top5') {
+                        $data = $query->orderByDesc('absences')->limit(5)->pluck('absences')->toArray();
+                    } else {
+                        $data = $query->sum('absences');
+                    }
+                    $result[] = [
+                        'label' => $label,
+                        'data' => $data,
+                    ];
+                    break;
+                // Ajouter d'autres types si besoin
+            }
+        }
+
+        // Générer les labels selon le critère
+        if ($criteria === 'top5') {
+            $labels = ['1', '2', '3', '4', '5'];
+        } else {
+            $labels = array_map(function($item) {
+                return $item['label'];
+            }, $result);
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'datasets' => array_map(function($item) {
+                return [
+                    'label' => $item['label'],
+                    'data' => $item['data'],
+                ];
+            }, $result),
+        ]);
+    }
 }

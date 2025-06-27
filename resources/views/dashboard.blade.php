@@ -10,75 +10,197 @@
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
         }
         .sidebar {
             width: 250px;
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #22304f 0%, #34495e 100%);
             color: #ecf0f1;
             height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
             padding: 20px 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.08);
+            z-index: 1050;
+            transition: transform 0.3s ease;
         }
         .sidebar-title {
-            font-family: 'Lemonada', sans-serif;
-            font-weight: 600;
-            font-size: 1.5rem;
+            font-family: 'Lemonada', cursive;
+            font-weight: 700;
+            font-size: 1.7rem;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 10px 20px;
+            padding: 12px 28px;
             text-decoration: none;
             color: #bdc3c7;
             font-weight: 500;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            border-radius: 8px;
+            margin: 4px 12px;
+            transition: background 0.2s, color 0.2s;
+            font-size: 1.07rem;
         }
-        .sidebar-item:hover {
-            background-color: #34495e;
-            color: #ecf0f1;
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
         }
         .sidebar-item img {
-            width: 25px;
-            height: 25px;
-            margin-right: 10px;
+            width: 26px;
+            height: 26px;
+            margin-right: 14px;
         }
         .content {
             margin-left: 250px;
-            padding: 20px;
+            padding: 32px 24px 24px 24px;
             flex-grow: 1;
+            min-height: 100vh;
+            background: #f4f7fb;
+            transition: margin-left 0.3s;
         }
         .dashboard-card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
+            border: none;
+            background: #fff;
+            transition: transform 0.18s, box-shadow 0.18s;
         }
         .dashboard-card:hover {
-            transform: scale(1.05);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 8px 24px rgba(44, 62, 80, 0.13);
         }
         .dashboard-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
+            font-size: 1.18rem;
+            font-weight: 600;
+            color: #22304f;
+            margin-bottom: 6px;
         }
         .dashboard-value {
-            font-size: 2.5rem;
-            font-weight: bold;
+            font-size: 2.2rem;
+            font-weight: 700;
             color: #007bff;
+        }
+        .card h5 {
+            font-weight: 600;
+            color: #22304f;
+        }
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .modal-content {
+            border-radius: 14px;
+        }
+        /* Hamburger menu */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 1100;
+            background: #22304f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+        }
+        /* Responsive styles */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                width: 220px;
+                z-index: 1050;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+                padding: 24px 6px 24px 6px;
+            }
+            .sidebar-toggle {
+                display: flex;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .dashboard-card {
+                margin-bottom: 18px;
+            }
+            .content {
+                padding: 16px 2vw 16px 2vw;
+            }
+            .row {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            .col-md-3, .col-md-6, .col-md-12 {
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+            .dashboard-title {
+                font-size: 1rem;
+            }
+            .dashboard-value {
+                font-size: 1.5rem;
+            }
+            .sidebar {
+                width: 180px;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .sidebar {
+                width: 100vw;
+                padding: 14px 0;
+            }
+            .sidebar-title {
+                font-size: 1.2rem;
+            }
+            .sidebar-item {
+                font-size: 0.98rem;
+                padding: 10px 18px;
+            }
+            .dashboard-card {
+                padding: 10px 4px !important;
+            }
+            .modal-content {
+                padding: 0 2vw;
+            }
+        }
+        /* Overlay for sidebar on mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44,62,80,0.25);
+            z-index: 1049;
+        }
+        .sidebar.open ~ .sidebar-overlay {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
+    <!-- Hamburger menu button -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
-        <a href="#" class="sidebar-item">
+        <a href="#" class="sidebar-item active">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
             Dashboard
         </a>
@@ -98,7 +220,6 @@
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
             Paiements
         </a>
-        
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
             Utilisateur
@@ -120,12 +241,12 @@
             Help Support
         </a>
     </div>
-
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="content">
-        <div class="container mt-5">
-            <h1 class="text-center mb-4">Dashboard</h1>
-            <div class="row">
-                <div class="col-md-3">
+        <div class="container-fluid mt-3 mt-md-5">
+            <h1 class="text-center mb-4" style="font-weight:700;letter-spacing:1px;">Dashboard</h1>
+            <div class="row g-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <a href="{{ route('students.details') }}" class="text-decoration-none">
                         <div class="card dashboard-card p-3 text-center">
                             <div class="dashboard-title">Etudiants <i class="fas fa-user-graduate"></i></div>
@@ -133,7 +254,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <a href="{{ route('convocations.details') }}" class="text-decoration-none">
                         <div class="card dashboard-card p-3 text-center">
                             <div class="dashboard-title">Convocations <i class="fas fa-bullhorn"></i></div>
@@ -141,7 +262,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <a href="{{ route('absences.details') }}" class="text-decoration-none">
                         <div class="card dashboard-card p-3 text-center">
                             <div class="dashboard-title">Absences <i class="fas fa-calendar-times"></i></div>
@@ -149,7 +270,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-md-3">
                      <a href="{{ route('paiements.details') }}" class="text-decoration-none">
                         <div class="card dashboard-card p-3 text-center">
                             <div class="dashboard-title">Paiements <i class="fas fa-money-bill-wave"></i></div>
@@ -158,57 +279,124 @@
                     </a>
                 </div>
             </div>
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <div class="card p-3">
+            <div class="row mt-4 g-3">
+                <div class="col-12 col-md-6">
+                    <div class="card p-3 h-100">
                         <h5>Activités récentes</h5>
-                        <ul>
+                        <ul class="mb-0 ps-3">
                             <li>Nouveau étudaint inscrit</li>
                             <li>Etudiant Devas nya ajouté au système</li>
                             <li>Evenement Créer</li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card p-3">
+                <div class="col-12 col-md-6">
+                    <div class="card p-3 h-100">
                         <h5>Notifications</h5>
-                        <ul>
+                        <ul class="mb-0 ps-3">
                             <li>Paiement de 5 étudiants</li>
                             <li>3 absences reported today</li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="row mt-4">
-                <div class="col-md-12">
+            <div class="row mt-4 g-3">
+                <div class="col-12">
                     <div class="card p-3">
                         <h5>Actions Rapides</h5>
-                        <div class="d-flex justify-content-around">
-                            <a href="{{ route('reports.absences') }}" class="btn btn-primary">Rapport des Absences</a>
-                            <a href="{{ route('reports.convocations') }}" class="btn btn-warning">Rapport des Convocations</a>
-                            <a href="{{ route('reports.paiements') }}" class="btn btn-success">Rapport des Paiements</a>
+                        <div class="d-flex flex-wrap gap-2 justify-content-around">
+                            <a href="{{ route('reports.absences') }}" class="btn btn-primary flex-grow-1 flex-md-grow-0">Rapport des Absences</a>
+                            <a href="{{ route('reports.convocations') }}" class="btn btn-warning flex-grow-1 flex-md-grow-0">Rapport des Convocations</a>
+                            <a href="{{ route('reports.paiements') }}" class="btn btn-success flex-grow-1 flex-md-grow-0">Rapport des Paiements</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row mt-5">
-                <div class="col-md-6">
-                    <div class="card p-4">
+            <div class="row mt-5 g-3">
+                <div class="col-12 col-md-6">
+                    <div class="card p-4 h-100">
                         <h5 class="text-center">Comparaison type de paiement</h5>
                         <canvas id="paymentChart" width="200" height="200"></canvas>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card p-4">
+                <div class="col-12 col-md-6">
+                    <div class="card p-4 h-100">
                         <h5 class="text-center">Convocations par mois</h5>
                         <canvas id="registrationChart" width="200" height="200"></canvas>
                     </div>
                 </div>
             </div>
+            <!-- Section pour afficher le graphe personnalisé -->
+            <div class="row mt-4" id="customChartSection" style="display:none;">
+                <div class="col-12">
+                    <div class="card p-4">
+                        <h5 class="text-center">Graphe personnalisé</h5>
+                        <canvas id="customChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- Bouton pour ouvrir la modale -->
+            <div class="d-flex justify-content-end mt-4">
+                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#customChartModal">
+                    <i class="fas fa-chart-bar"></i> Créer un graphe personnalisé
+                </button>
+            </div>
         </div>
     </div>
 
+    <!-- Modale pour la création du graphe personnalisé -->
+    <div class="modal fade" id="customChartModal" tabindex="-1" aria-labelledby="customChartModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="customChartModalLabel">Créer un graphe personnalisé</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          </div>
+          <div class="modal-body">
+            <form id="customChartForm">
+                <div class="mb-3">
+                    <label for="chartType" class="form-label">Type de graphe</label>
+                    <select class="form-select" id="chartType" required>
+                        <option value="bar">Histogramme</option>
+                        <option value="pie">Camembert</option>
+                        <option value="line">Courbe</option>
+                        <option value="doughnut">Doughnut</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Données à utiliser</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="dataStudents" value="students">
+                        <label class="form-check-label" for="dataStudents">Elèves</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="dataPaiements" value="paiements">
+                        <label class="form-check-label" for="dataPaiements">Paiements</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="dataAbsences" value="absences">
+                        <label class="form-check-label" for="dataAbsences">Absences</label>
+                    </div>
+                    <!-- Ajouter d'autres données si besoin -->
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Critères d'affichage</label>
+                    <select class="form-select" id="displayCriteria">
+                        <option value="sum">Somme</option>
+                        <option value="count">Nombre</option>
+                        <option value="top5">Top 5</option>
+                        <!-- Ajouter d'autres critères si besoin -->
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Générer le graphe</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const ctx = document.getElementById('paymentChart').getContext('2d');
         const paymentChart = new Chart(ctx, {
@@ -264,6 +452,111 @@
                         position: 'top',
                     }
                 }
+            }
+        });
+
+        // --- Graphe personnalisé via AJAX ---
+        let customChartInstance = null;
+
+        document.getElementById('customChartForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const chartType = document.getElementById('chartType').value;
+            const criteria = document.getElementById('displayCriteria').value;
+            const selectedData = [];
+            if (document.getElementById('dataStudents').checked) selectedData.push('students');
+            if (document.getElementById('dataPaiements').checked) selectedData.push('paiements');
+            if (document.getElementById('dataAbsences').checked) selectedData.push('absences');
+
+            // Appel AJAX pour récupérer les données personnalisées
+            fetch("{{ route('dashboard.customChartData') }}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    chartType: chartType,
+                    criteria: criteria,
+                    selectedData: selectedData
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Afficher la section du graphe personnalisé
+                document.getElementById('customChartSection').style.display = 'block';
+
+                // Détruire l'ancien graphe si existant
+                if (customChartInstance) {
+                    customChartInstance.destroy();
+                }
+
+                // Créer le nouveau graphe avec les données reçues
+                const ctx = document.getElementById('customChart').getContext('2d');
+                customChartInstance = new Chart(ctx, {
+                    type: chartType,
+                    data: {
+                        labels: result.labels,
+                        datasets: result.datasets
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            }
+                        }
+                    }
+                });
+
+                // Fermer la modale
+                var modal = bootstrap.Modal.getInstance(document.getElementById('customChartModal'));
+                modal.hide();
+            });
+        });
+
+        // Sidebar toggle for mobile/tablet
+        const sidebar = document.getElementById('sidebarMenu');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.style.display = 'none';
+        }
+        function openSidebar() {
+            sidebar.classList.add('open');
+            sidebarOverlay.style.display = 'block';
+        }
+        sidebarToggle.addEventListener('click', function() {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+        sidebarOverlay.addEventListener('click', closeSidebar);
+        // Close sidebar on navigation (mobile)
+        document.querySelectorAll('.sidebar-item').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) closeSidebar();
+            });
+        });
+
+        // Bouton pour supprimer le graphe personnalisé
+        document.addEventListener('DOMContentLoaded', function() {
+            const section = document.getElementById('customChartSection');
+            if (section) {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-danger mt-2';
+                btn.innerHTML = '<i class="fas fa-trash"></i> Supprimer le graphe';
+                btn.onclick = function() {
+                    if (customChartInstance) {
+                        customChartInstance.destroy();
+                        customChartInstance = null;
+                    }
+                    section.style.display = 'none';
+                };
+                section.querySelector('.card').appendChild(btn);
             }
         });
     </script>

@@ -192,6 +192,7 @@ Route::put('/teachers/update/{id}', [TeacherController::class, 'update'])->name(
 
 //Route du dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::post('/dashboard/custom-chart-data', [DashboardController::class, 'customChartData'])->name('dashboard.customChartData');
 Route::get('/students/details', [StudentController::class, 'details'])->name('students.details');
 Route::get('/teachers/details', [TeacherController::class, 'details'])->name('teachers.details');
 Route::get('/convocations/details', [ConvocationController::class, 'details'])->name('convocations.details');
