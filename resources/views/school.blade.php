@@ -9,58 +9,72 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #f8f9fa;
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         .sidebar {
             width: 250px;
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #22304f 0%, #34495e 100%);
             color: #ecf0f1;
             padding: 20px 0;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.08);
+            z-index: 1050;
+            transition: transform 0.3s ease;
         }
         .sidebar-title {
-            font-family: 'Lemonada', sans-serif;
-            font-weight: 600;
-            font-size: 1.8rem;
+            font-family: 'Lemonada', cursive;
+            font-weight: 700;
+            font-size: 1.6rem;
             text-align: center;
             color: #ecf0f1;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 12px 28px;
             text-decoration: none;
             color: #bdc3c7;
             font-weight: 500;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            border-radius: 8px;
+            margin: 4px 12px;
+            transition: background 0.2s, color 0.2s;
+            font-size: 1.07rem;
         }
-        .sidebar-item:hover {
-            background-color: #34495e;
-            color: #ecf0f1;
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
         }
         .sidebar-item img {
-            width: 25px;
-            height: 25px;
-            margin-right: 15px;
+            width: 26px;
+            height: 26px;
+            margin-right: 14px;
         }
         .content {
             margin-left: 250px;
-            padding: 20px;
+            padding: 32px 24px 24px 24px;
             flex-grow: 1;
-            background: #fff;
+            min-height: 100vh;
+            background: #f4f7fb;
+            transition: margin-left 0.3s;
         }
         .form-section {
             display: none;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
+            padding: 24px 18px;
+            margin-bottom: 18px;
         }
         .form-section.active {
             display: block;
@@ -70,12 +84,14 @@
             background-color: #007bff;
             color: #fff;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
+            font-weight: 600;
+            font-size: 1.15rem;
         }
         .form-description {
-            font-size: 0.9rem;
+            font-size: 0.97rem;
             color: #6c757d;
             margin-bottom: 15px;
         }
@@ -83,11 +99,13 @@
             font-weight: bold;
         }
         .form-control {
-            border-radius: 5px;
+            border-radius: 7px;
         }
         .btn-primary {
             background-color: #007bff;
             border: none;
+            border-radius: 8px;
+            font-weight: 500;
         }
         .btn-primary:hover {
             background-color: #0056b3;
@@ -95,14 +113,102 @@
         .btn-secondary {
             background-color: #6c757d;
             border: none;
+            border-radius: 8px;
+            font-weight: 500;
         }
         .btn-secondary:hover {
             background-color: #5a6268;
         }
+        /* Hamburger menu */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 1100;
+            background: #22304f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+        }
+        /* Overlay for sidebar on mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44,62,80,0.25);
+            z-index: 1049;
+        }
+        .sidebar.open ~ .sidebar-overlay {
+            display: block;
+        }
+        /* Responsive styles */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                width: 220px;
+                z-index: 1050;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+                padding: 18px 2vw 18px 2vw;
+            }
+            .sidebar-toggle {
+                display: flex;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .content {
+                padding: 10px 1vw 10px 1vw;
+            }
+            .form-section {
+                padding: 14px 4px;
+            }
+            .sidebar {
+                width: 180px;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .sidebar {
+                width: 100vw;
+                padding: 14px 0;
+            }
+            .sidebar-title {
+                font-size: 1.1rem;
+            }
+            .sidebar-item {
+                font-size: 0.98rem;
+                padding: 10px 18px;
+            }
+            .form-section {
+                padding: 10px 2px;
+            }
+        }
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>
-    <div class="sidebar">
+    <!-- Hamburger menu button -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
@@ -124,7 +230,6 @@
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
             Payments
         </a>
-        
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
             Utilisateur
@@ -150,13 +255,14 @@
             Help Support
         </a>
     </div>
-
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="content">
-        <div class="container mt-5">
-            <h1 id="main-title" class="text-center">Téléversement des données</h1>
-            <div class="mt-4">
-                <!-- Formulaire pour les élèves -->
-                <div id="form1" class="form-section active">
+        <div class="container-fluid mt-4">
+            <h1 id="main-title" class="text-center mb-4" style="font-weight:700;letter-spacing:1px;">Téléversement des données</h1>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <!-- Formulaire pour les élèves -->
+                    <div id="form1" class="form-section active">
                     
                     <p class="form-description">
                         Veuillez téléverser un fichier Excel contenant les informations des élèves. Le fichier doit inclure les colonnes suivantes :
@@ -243,7 +349,35 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script>
+        // Sidebar toggle for mobile/tablet
+        const sidebar = document.getElementById('sidebarMenu');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.style.display = 'none';
+        }
+        function openSidebar() {
+            sidebar.classList.add('open');
+            sidebarOverlay.style.display = 'block';
+        }
+        sidebarToggle.addEventListener('click', function() {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+        sidebarOverlay.addEventListener('click', closeSidebar);
+        // Close sidebar on navigation (mobile)
+        document.querySelectorAll('.sidebar-item').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) closeSidebar();
+            });
+        });
+
         document.getElementById('nextBtn').addEventListener('click', function() {
             document.getElementById('form1').classList.remove('active');
             document.getElementById('form2').classList.add('active');

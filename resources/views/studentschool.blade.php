@@ -7,46 +7,132 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
+            padding: 32px 24px;
+            margin-top: 40px;
+        }
+        h1 {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .form-check {
+            background: #f4f7fb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+        }
+        .form-check label {
+            font-weight: 500;
+        }
+        .btn-primary {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .alert {
+            border-radius: 8px;
+        }
+        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 1055;
             left: 0;
             top: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0,0,0,0.35);
             padding-top: 60px;
         }
         .modal-content {
-            background-color: #fefefe;
+            background-color: #fff;
             margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
+            padding: 32px 24px;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.13);
+            width: 90%;
+            max-width: 400px;
+            position: relative;
         }
         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
+            position: absolute;
+            right: 18px;
+            top: 12px;
         }
         .close:hover,
         .close:focus {
-            color: black;
+            color: #22304f;
             text-decoration: none;
             cursor: pointer;
         }
+        .modal h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #007bff;
+        }
+        .form-label {
+            font-weight: 600;
+        }
+        #openModalBtn {
+            width: 100%;
+            margin-top: 18px;
+        }
+        /* Responsive styles */
+        @media (max-width: 991.98px) {
+            .container {
+                padding: 18px 2vw;
+                margin-top: 24px;
+            }
+            .modal-content {
+                padding: 18px 2vw;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .container {
+                padding: 10px 1vw;
+            }
+            .modal-content {
+                padding: 10px 1vw;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .container {
+                padding: 8px 2px;
+            }
+            .modal-content {
+                padding: 8px 2px;
+            }
+            .form-check label {
+                font-size: 0.97rem;
+            }
+        }
         select.form-control {
-            color: #000; /* Couleur du texte */
-            background-color: #fff; /* Couleur de fond */
+            color: #000;
+            background-color: #fff;
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container">
         <h1>Actions</h1>
         @if(session('success'))
             <div class="alert alert-success" role="alert">
@@ -94,7 +180,7 @@
                         <option value="convocation">Convocation</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Suivant</button>
+                <button type="submit" class="btn btn-primary w-100">Suivant</button>
             </form>
         </div>
     </div>
@@ -123,11 +209,10 @@
                     <label for="customType" class="form-label">Type personnalisé</label>
                     <input type="text" class="form-control" id="customType" name="customType">
                 </div>
-                <button type="submit" class="btn btn-primary">Envoyer</button>
+                <button type="submit" class="btn btn-primary w-100">Envoyer</button>
             </form>
         </div>
     </div>
-
     <script>
         const absenceTypes = [
             { value: 'retard', text: 'Retard' },

@@ -9,73 +9,187 @@
     <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
         .class-container {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background-color: #f8f9fa;
+            border: 1px solid #e0e6ed;
+            border-radius: 14px;
+            padding: 24px 18px;
+            margin-bottom: 24px;
+            background: #fff;
+            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
+            transition: box-shadow 0.2s;
+        }
+        .class-container:hover {
+            box-shadow: 0 8px 28px rgba(44, 62, 80, 0.13);
         }
         .class-header {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #007bff;
-            margin-bottom: 10px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #22304f;
+            margin-bottom: 16px;
         }
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
         .modal-header {
             background-color: #007bff;
             color: #fff;
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
         }
-
         .sidebar {
             width: 250px;
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #22304f 0%, #34495e 100%);
             color: #ecf0f1;
             height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
             padding: 20px 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.08);
+            z-index: 1050;
+            transition: transform 0.3s ease;
         }
         .sidebar-title {
-            font-family: 'Lemonada', sans-serif;
-            font-weight: 600;
+            font-family: 'Lemonada', cursive;
+            font-weight: 700;
             font-size: 1.5rem;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 10px 20px;
+            padding: 12px 28px;
             text-decoration: none;
             color: #bdc3c7;
             font-weight: 500;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            border-radius: 8px;
+            margin: 4px 12px;
+            transition: background 0.2s, color 0.2s;
+            font-size: 1.07rem;
         }
-        .sidebar-item:hover {
-            background-color: #34495e;
-            color: #ecf0f1;
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
         }
         .sidebar-item img {
-            width: 25px;
-            height: 25px;
-            margin-right: 10px;
+            width: 26px;
+            height: 26px;
+            margin-right: 14px;
         }
         .content {
             margin-left: 250px;
-            padding: 20px;
+            padding: 32px 24px 24px 24px;
             flex-grow: 1;
+            min-height: 100vh;
+            background: #f4f7fb;
+            transition: margin-left 0.3s;
+        }
+        .btn-primary, .btn-danger, .btn-success {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .modal-content {
+            border-radius: 14px;
+        }
+        /* Hamburger menu */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 1100;
+            background: #22304f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+        }
+        /* Overlay for sidebar on mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44,62,80,0.25);
+            z-index: 1049;
+        }
+        .sidebar.open ~ .sidebar-overlay {
+            display: block;
+        }
+        /* Responsive styles */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                width: 180px;
+                z-index: 1050;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+                padding: 18px 2vw 18px 2vw;
+            }
+            .sidebar-toggle {
+                display: flex;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .content {
+                padding: 10px 1vw 10px 1vw;
+            }
+            .sidebar {
+                width: 140px;
+            }
+            .class-container {
+                padding: 14px 6px;
+            }
+            .class-header {
+                font-size: 1.05rem;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .sidebar {
+                width: 100vw;
+                padding: 14px 0;
+            }
+            .sidebar-title {
+                font-size: 1.1rem;
+            }
+            .sidebar-item {
+                font-size: 0.98rem;
+                padding: 10px 18px;
+            }
+            .content {
+                padding: 8px 2px 8px 2px;
+            }
+            .class-container {
+                padding: 8px 2px;
+            }
+        }
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
+    <!-- Hamburger menu button -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
@@ -119,19 +233,16 @@
             Help Support
         </a>
     </div>
-
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="content">
         <div class="container mt-5">
-            <h1 class="text-center mb-4">Gestion du Cahier de Texte</h1>
-        
+            <h1 class="text-center mb-4" style="font-weight:700;letter-spacing:1px;">Gestion du Cahier de Texte</h1>
             <!-- Bouton pour ouvrir la fenêtre modale -->
             <button class="btn btn-primary mb-4 float-end" data-bs-toggle="modal" data-bs-target="#uploadModal">
                 <i class="fas fa-plus"></i> Ajouter un Cahier de Texte
             </button>
-        </br>
-        </br>
-        </br>
-        
+            <br/><br/><br/>
+            
             <!-- Fenêtre modale pour téléverser un document -->
             <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -175,13 +286,35 @@
             @endforeach
         </div>
     </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log('Bootstrap JS chargé avec succès.');
-    });
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script>
+        // Sidebar toggle for mobile/tablet
+        const sidebar = document.getElementById('sidebarMenu');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.style.display = 'none';
+        }
+        function openSidebar() {
+            sidebar.classList.add('open');
+            sidebarOverlay.style.display = 'block';
+        }
+        sidebarToggle.addEventListener('click', function() {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+        sidebarOverlay.addEventListener('click', closeSidebar);
+        // Close sidebar on navigation (mobile)
+        document.querySelectorAll('.sidebar-item').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) closeSidebar();
+            });
+        });
+    </script>
 </body>
 </html>

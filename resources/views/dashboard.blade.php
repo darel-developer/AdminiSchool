@@ -12,6 +12,7 @@
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
+            overflow-x: hidden;
         }
         .sidebar {
             width: 250px;
@@ -130,7 +131,7 @@
             }
             .content {
                 margin-left: 0;
-                padding: 24px 6px 24px 6px;
+                padding: 18px 2vw 18px 2vw;
             }
             .sidebar-toggle {
                 display: flex;
@@ -141,21 +142,21 @@
                 margin-bottom: 18px;
             }
             .content {
-                padding: 16px 2vw 16px 2vw;
+                padding: 10px 1vw 10px 1vw;
             }
             .row {
-                margin-left: 0;
-                margin-right: 0;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
             }
-            .col-md-3, .col-md-6, .col-md-12 {
-                padding-left: 6px;
-                padding-right: 6px;
+            .col-md-3, .col-md-6, .col-md-12, .col-12 {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
             }
             .dashboard-title {
                 font-size: 1rem;
             }
             .dashboard-value {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
             .sidebar {
                 width: 180px;
@@ -180,16 +181,17 @@
                 padding: 0 2vw;
             }
         }
-        /* Overlay for sidebar on mobile */
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(44,62,80,0.25);
-            z-index: 1049;
+        /* Ajout pour forcer les cartes à passer en colonne sur mobile */
+        @media (max-width: 991.98px) {
+            .row.g-3 > [class^="col-"], .row.g-3 > [class*=" col-"] {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
         }
-        .sidebar.open ~ .sidebar-overlay {
-            display: block;
+        /* Empêche le scroll horizontal */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
         }
     </style>
 </head>
@@ -462,12 +464,12 @@
             e.preventDefault();
             const chartType = document.getElementById('chartType').value;
             const criteria = document.getElementById('displayCriteria').value;
-            const selectedData = [];
-            if (document.getElementById('dataStudents').checked) selectedData.push('students');
-            if (document.getElementById('dataPaiements').checked) selectedData.push('paiements');
-            if (document.getElementById('dataAbsences').checked) selectedData.push('absences');
+            const types = [];
+            if (document.getElementById('dataStudents').checked) types.push('students');
+            if (document.getElementById('dataPaiements').checked) types.push('paiements');
+            if (document.getElementById('dataAbsences').checked) types.push('absences');
 
-            // Appel AJAX pour récupérer les données personnalisées
+            // Correction ici : envoyer types au lieu de selectedData
             fetch("{{ route('dashboard.customChartData') }}", {
                 method: "POST",
                 headers: {
@@ -477,7 +479,7 @@
                 body: JSON.stringify({
                     chartType: chartType,
                     criteria: criteria,
-                    selectedData: selectedData
+                    types: types
                 })
             })
             .then(response => response.json())
@@ -496,7 +498,24 @@
                     type: chartType,
                     data: {
                         labels: result.labels,
-                        datasets: result.datasets
+                        datasets: result.datasets.map((ds, idx) => ({
+                            ...ds,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 206, 86, 0.5)',
+                                'rgba(255, 99, 132, 0.5)',
+                                'rgba(75, 192, 192, 0.5)',
+                                'rgba(153, 102, 255, 0.5)'
+                            ][idx % 5],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ][idx % 5],
+                            borderWidth: 1
+                        }))
                     },
                     options: {
                         responsive: true,

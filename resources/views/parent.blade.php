@@ -10,27 +10,32 @@
     <meta name="theme-color" content="#2c3e50">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #f8f9fa;
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         .sidebar {
             width: 250px;
-            background: #2c3e50;
+            background: linear-gradient(135deg, #22304f 0%, #34495e 100%);
             color: #fff;
-            padding: 20px;
+            padding: 20px 0;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.08);
+            z-index: 1050;
+            transition: transform 0.3s ease;
         }
         .sidebar-title {
-            font-family: 'Lemonada', sans-serif;
-            font-weight: 600;
-            font-size: 1.2rem;
+            font-family: 'Lemonada', cursive;
+            font-weight: 700;
+            font-size: 1.4rem;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
         }
         .sidebar-separator {
             border-top: 1px solid rgba(255, 255, 255, 0.5);
@@ -39,54 +44,64 @@
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            margin: 5px 0;
+            padding: 12px 28px;
             text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
+            color: #bdc3c7;
+            font-weight: 500;
+            border-radius: 8px;
+            margin: 4px 12px;
+            transition: background 0.2s, color 0.2s;
+            font-size: 1.07rem;
         }
-        .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
         }
         .sidebar-item img {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
+            width: 26px;
+            height: 26px;
+            margin-right: 14px;
         }
         .content {
             margin-left: 250px;
             flex-grow: 1;
-            padding: 20px;
-            background: #fff;
+            padding: 32px 24px 24px 24px;
+            background: #f4f7fb;
+            min-height: 100vh;
+            transition: margin-left 0.3s;
         }
-        .content h1 {
-            color: #333;
+        .container {
+            max-width: 900px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
+            padding: 32px 24px;
         }
         .section-header {
             background-color: #007bff;
             color: #fff;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 8px;
             margin-bottom: 20px;
         }
         .section-content {
             background-color: #fff;
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
         }
         .table {
             margin-top: 20px;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
         }
         .notification-icon {
             position: fixed;
             top: 20px;
             right: 20px;
             cursor: pointer;
+            z-index: 2000;
         }
         .notification-icon img {
             width: 30px;
@@ -95,6 +110,108 @@
         .notification-icon .notification-new img {
             animation: bell-shake 0.7s cubic-bezier(.36,.07,.19,.97) both;
         }
+        .btn-group .btn {
+            border-radius: 8px !important;
+            font-weight: 500;
+        }
+        .modal-content {
+            border-radius: 14px;
+        }
+        .alert {
+            border-radius: 8px;
+        }
+        /* Responsive styles */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                width: 180px;
+                z-index: 1050;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+                padding: 18px 2vw 18px 2vw;
+            }
+            .sidebar-toggle {
+                display: flex;
+            }
+            .container {
+                padding: 18px 2vw;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .sidebar {
+                width: 100vw;
+                height: 60px;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0;
+                border-right: none;
+                border-top: 1px solid #ddd;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                top: auto;
+                z-index: 1000;
+            }
+            .sidebar-title, .sidebar-separator, .sidebar-item span {
+                display: none;
+            }
+            .sidebar-item {
+                flex-direction: column;
+                align-items: center;
+                padding: 5px;
+                font-size: 0.7rem;
+                text-align: center;
+                margin: 0 2px;
+            }
+            .sidebar-item img {
+                margin: 0;
+                width: 24px;
+                height: 24px;
+            }
+            .content {
+                margin-left: 0;
+                padding-bottom: 70px;
+            }
+            .container {
+                padding: 10px 1vw;
+            }
+            .notification-icon {
+                top: 10px;
+                right: 10px;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .sidebar {
+                width: 100vw;
+                padding: 8px 0;
+            }
+            .sidebar-title {
+                font-size: 1.1rem;
+            }
+            .sidebar-item {
+                font-size: 0.98rem;
+                padding: 6px 10px;
+            }
+            .content {
+                padding: 8px 2px 8px 2px;
+            }
+            .container {
+                padding: 8px 2px;
+            }
+        }
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+        /* Animation de secousse pour la cloche */
         @keyframes bell-shake {
             0% { transform: rotate(0); }
             10% { transform: rotate(-15deg); }
@@ -106,49 +223,19 @@
             70% { transform: rotate(-1deg); }
             80%, 100% { transform: rotate(0); }
         }
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 10px 0;
-                background: #2c3e50;
-                z-index: 1000;
-            }
-            .sidebar-title, .sidebar-separator, .sidebar-item span {
-                display: none; 
-            }
-            .sidebar-item {
-                flex-direction: column;
-                padding: 5px;
-                font-size: 0.7rem;
-                text-align: center;
-            }
-            .sidebar-item img {
-                margin: 0;
-                width: 24px; 
-                height: 24px;
-            }
-            .content {
-                margin-left: 0;
-                padding-bottom: 60px; 
-            }
+        .bell-animate {
+            animation: bell-shake 1s cubic-bezier(.36,.07,.19,.97) both;
         }
     </style>
 </head>
 <body>
-    <script>
+   <!-- <script>
         if (window.innerWidth < 768) {
             window.location.href = "/mobile-blocked";
         }
-    </script>
+    </script> -->
     <!-- Sidebar -->
-    <div class="sidebar d-flex flex-column">
+    <div class="sidebar d-flex flex-column" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <div class="sidebar-separator"></div>
         <a href="{{route('parent')}}" class="sidebar-item">
@@ -370,23 +457,6 @@
         });
     }
     </script>
-    <style>
-        /* Animation de secousse pour la cloche */
-        @keyframes bell-shake {
-            0% { transform: rotate(0); }
-            10% { transform: rotate(-15deg); }
-            20% { transform: rotate(10deg); }
-            30% { transform: rotate(-10deg); }
-            40% { transform: rotate(6deg); }
-            50% { transform: rotate(-4deg); }
-            60% { transform: rotate(2deg); }
-            70% { transform: rotate(-1deg); }
-            80%, 100% { transform: rotate(0); }
-        }
-        .bell-animate {
-            animation: bell-shake 1s cubic-bezier(.36,.07,.19,.97) both;
-        }
-    </style>
     <script>
         let selectedChildId = {{ $students->first()->id ?? 'null' }}; 
 
