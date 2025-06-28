@@ -132,13 +132,13 @@
         }
         .message {
             margin-bottom: 1.1rem;
-            padding: 0.8rem 1.3rem;
+            padding: 0.6rem 1.1rem; /* réduit le padding vertical */
             border-radius: 1.2rem;
             max-width: 75%;
             position: relative;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             word-break: break-word;
-            display: flex;
+            display: inline-flex; /* pour que la hauteur s'adapte au contenu */
             flex-direction: column;
             font-size: 1.04rem;
         }
@@ -149,6 +149,7 @@
             border-bottom-left-radius: 1.2rem;
             align-items: flex-end;
             align-self: flex-end;
+            /* plus de height fixe, la div s'adapte au contenu */
         }
         .message.sent::after {
             content: "";
