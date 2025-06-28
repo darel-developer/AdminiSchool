@@ -224,10 +224,10 @@
         <!-- Zone de messagerie -->
         <div class="container mt-4">
             <div class="row">
-                
                 <div class="col-md-8">
-                    <div class="card chat-container">
-                        <div class="card-header" id="chatHeader">
+                    <!-- Suppression de la div .card, on met chat-container directement -->
+                    <div class="chat-container" style="background: #007bff; border-radius:14px; box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07); padding:0;">
+                        <div class="card-header" id="chatHeader" style="background: #007bff; color: #fff; border-top-left-radius: 14px; border-top-right-radius: 14px;">
                             Sélectionnez un parent pour commencer la conversation
                         </div>
                         <div class="chat-messages" id="chatMessages">
@@ -240,7 +240,7 @@
                                 <span class="visually-hidden">Chargement...</span>
                             </div>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer" style="background: #f8f9fa; border-bottom-left-radius: 14px; border-bottom-right-radius: 14px;">
                             <form id="messageForm" class="d-flex flex-column gap-2">
                                 @csrf
                                 <div class="input-group">
