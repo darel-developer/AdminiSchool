@@ -131,17 +131,18 @@
             flex-direction: column;
         }
         .message {
-            margin-bottom: 1.1rem;
-            padding: 0.6rem 1.1rem; /* réduit le padding vertical */
+            margin-bottom: 0.4rem;
+            padding: 0.3rem 0.8rem;
             border-radius: 1.2rem;
             max-width: 75%;
             position: relative;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             word-break: break-word;
-            display: inline-flex; /* pour que la hauteur s'adapte au contenu */
+            display: inline-flex;
             flex-direction: column;
-            font-size: 1.04rem;
+            font-size: 0.9rem;
         }
+
         .message.sent {
             background: linear-gradient(135deg, #007bff 80%, #0056b3 100%);
             color: #fff;
