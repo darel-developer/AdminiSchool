@@ -114,40 +114,40 @@ class StudentController extends Controller
                             return response()->json(['success' => false, 'error' => 'Le dossier des bulletins est introuvable.'], 500);
                         }
 
-                        $filenameWithSpaces = $student->name . '.pdf';
-                        $filenameWithUnderscores = str_replace(' ', '_', strtolower($student->name)) . '.pdf';
-                        $pathWithSpaces = $storagePath . $filenameWithSpaces;
-                        $pathWithUnderscores = $storagePath . $filenameWithUnderscores;
+                        // Prépare les variantes de nom de fichier attendues
+                        $possibleNames = [];
+                        $possibleNames[] = strtolower($student->name) . '.pdf';
+                        $possibleNames[] = str_replace(' ', '_', strtolower($student->name)) . '.pdf';
+                        $possibleNames[] = strtolower(str_replace('_', ' ', $student->name)) . '.pdf';
+                        $possibleNames[] = strtolower($student->id) . '.pdf'; // Ajout si jamais l'id est utilisé
 
                         $foundFile = null;
                         foreach (scandir($storagePath) as $file) {
-                            if (strtolower($file) === strtolower($filenameWithSpaces)) {
-                                $foundFile = $file;
-                                break;
+                            if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) !== 'pdf') continue;
+                            $fileLower = strtolower($file);
+                            foreach ($possibleNames as $expected) {
+                                if ($fileLower === $expected) {
+                                    $foundFile = $file;
+                                    break 2;
+                                }
                             }
                         }
 
                         Log::info('[BULLETIN] Recherche du bulletin pour élève', [
                             'student_id' => $student->id,
                             'student_name' => $student->name,
-                            'test_path_with_spaces' => $pathWithSpaces,
-                            'file_exists_with_spaces' => file_exists($pathWithSpaces),
-                            'test_path_with_underscores' => $pathWithUnderscores,
-                            'file_exists_with_underscores' => file_exists($pathWithUnderscores),
+                            'possible_names' => $possibleNames,
                             'found_file' => $foundFile,
                         ]);
 
                         if ($foundFile) {
                             $url = asset('storage/bulletins/' . $foundFile);
                             $data = ['url' => $url];
-                        } elseif (file_exists($pathWithUnderscores)) {
-                            $url = asset('storage/bulletins/' . $filenameWithUnderscores);
-                            $data = ['url' => $url];
                         } else {
                             Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
                                 'student_id' => $student->id,
                                 'student_name' => $student->name,
-                                'tested_paths' => [$pathWithSpaces, $pathWithUnderscores]
+                                'tested_names' => $possibleNames
                             ]);
                             return response()->json(['success' => false, 'error' => 'Bulletin non disponible.']);
                         }

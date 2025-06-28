@@ -73,16 +73,17 @@
             transition: margin-left 0.3s;
         }
         .container {
-            max-width: 900px;
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
+            max-width: 1200px; /* Augmente la largeur max */
+            background: none; /* Supprime le fond blanc du container */
+            border-radius: 0;
+            box-shadow: none;
             padding: 32px 24px;
         }
         .card {
             border-radius: 14px;
             box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
             border: none;
+            background: #fff; /* Le fond blanc reste pour la card */
         }
         .card-header {
             font-weight: 600;
@@ -122,9 +123,10 @@
             word-break: break-word;
             display: flex;
             flex-direction: column;
+            background: none; /* Supprime tout fond blanc par défaut */
         }
         .message.sent {
-            background-color: #007bff;
+            background-color: #007bff !important;
             color: #fff;
             border-bottom-right-radius: 0.4rem;
             border-bottom-left-radius: 1.2rem;
@@ -141,7 +143,7 @@
             border-color: transparent transparent transparent #007bff;
         }
         .message.received {
-            background-color: #e9ecef;
+            background-color: #e9ecef !important;
             color: #222;
             border-bottom-left-radius: 0.4rem;
             border-bottom-right-radius: 1.2rem;

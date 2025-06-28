@@ -168,13 +168,13 @@
 </head>
 <body>
     <!-- Hamburger menu button -->
-    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
+    <!--<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
         <i class="fas fa-bars"></i>
     </button>
     <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
-        <!-- ...sidebar items if needed... -->
-    </div>
+        - ...sidebar items if needed... -
+    </div>-->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="container mt-5">
         <h1 class="mb-4 text-center" style="font-weight:700;letter-spacing:1px;">Liste des Paiements</h1>
