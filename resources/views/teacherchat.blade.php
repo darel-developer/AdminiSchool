@@ -99,7 +99,6 @@
             padding: 32px 24px 24px 24px;
             flex-grow: 1;
             min-height: 100vh;
-            background: #f4f7fb;
             transition: margin-left 0.3s;
         }
         .chat-container {
