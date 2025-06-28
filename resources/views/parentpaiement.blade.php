@@ -69,7 +69,7 @@
             min-height: 100vh;
             border-radius: 14px;
             box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
-            max-width: 600px;
+            max-width: 900px;
             margin-top: 40px;
         }
         h1 {

@@ -179,26 +179,71 @@
             border-radius: 8px;
             background: #f1f3f7;
         }
-        @media (max-width: 768px) {
-            .chat-container {
-                height: 60vh;
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                width: 180px;
+                z-index: 1050;
             }
-            .chat-message-bubble {
-                max-width: 95%;
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                display: flex;
             }
             .content {
                 margin-left: 0;
-                padding: 8px;
+                padding: 18px 2vw 18px 2vw;
             }
+        }
+        @media (max-width: 767.98px) {
             .sidebar {
-                display: none;
+                width: 140px;
             }
+            .sidebar-toggle {
+                display: flex;
+            }
+            .content {
+                margin-left: 0;
+                padding: 10px 1vw 10px 1vw;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .sidebar {
+                width: 100vw;
+                padding: 8px 0;
+            }
+            .sidebar-title {
+                font-size: 1.1rem;
+            }
+            .sidebar-item {
+                font-size: 0.98rem;
+                padding: 10px 18px;
+            }
+            .sidebar-toggle {
+                display: flex;
+            }
+            .content {
+                padding: 8px 2px 8px 2px;
+            }
+        }
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
         }
     </style>
 </head>
 <body>
+    <!-- Hamburger menu button -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu" style="display:none;">
+        <i class="fas fa-bars"></i>
+    </button>
     <!-- Barre de navigation -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <div class="sidebar-separator"></div>
         <a href="#" class="sidebar-item">
@@ -235,7 +280,7 @@
             Help Support
         </a>
     </div>
-
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <!-- Contenu principal -->
     <div class="content">
         <h1>Messagerie Parent</h1>
@@ -285,6 +330,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -482,6 +528,48 @@
 
             // Initial badge update
             updateNotificationBadge();
+
+            // Sidebar toggle for mobile/tablet
+            const sidebar = document.getElementById('sidebarMenu');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                sidebarOverlay.style.display = 'none';
+            }
+            function openSidebar() {
+                sidebar.classList.add('open');
+                sidebarOverlay.style.display = 'block';
+            }
+            function updateSidebarToggleDisplay() {
+                if (window.innerWidth < 992) {
+                    sidebarToggle.style.display = 'flex';
+                } else {
+                    sidebarToggle.style.display = 'none';
+                    closeSidebar();
+                }
+            }
+            updateSidebarToggleDisplay();
+            window.addEventListener('resize', updateSidebarToggleDisplay);
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    if (sidebar.classList.contains('open')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                });
+            }
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', closeSidebar);
+            }
+            // Close sidebar on navigation (mobile)
+            document.querySelectorAll('.sidebar-item').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 992) closeSidebar();
+                });
+            });
         });
     </script>
 </body>

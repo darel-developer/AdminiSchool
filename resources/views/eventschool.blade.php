@@ -129,7 +129,7 @@
         /* Styles pour les petits écrans */
         @media (max-width: 768px) {
             .sidebar {
-                width: 100%;
+                width: 100vw;
                 height: 60px;
                 flex-direction: row;
                 justify-content: space-around;
@@ -139,12 +139,18 @@
                 position: fixed;
                 bottom: 0;
                 left: 0;
+                top: auto;
+                z-index: 1000;
+            }
+            .sidebar-title, .sidebar-separator, .sidebar-item span {
+                display: none;
             }
             .sidebar-item {
                 flex-direction: column;
                 align-items: center;
                 padding: 5px;
                 font-size: 12px;
+                margin: 0 2px;
             }
             .sidebar-item img {
                 margin-right: 0;
@@ -152,7 +158,7 @@
             }
             .content {
                 margin: 0;
-                padding-bottom: 80px; /* Espace pour la barre de navigation */
+                padding-bottom: 80px;
             }
         }
 
@@ -506,6 +512,10 @@
     </style>
 </head>
 <body>
+    <!-- Hamburger menu button -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu" style="display:none;">
+        <i class="fas fa-bars"></i>
+    </button>
     <!-- Loader -->
     <div id="loader" class="loader" style="display: none;">
         <div class="loader__bar"></div>
@@ -515,9 +525,8 @@
         <div class="loader__bar"></div>
         <div class="loader__ball"></div>
     </div>
-
     <!-- Barre de navigation -->
-   <div class="sidebar">
+    <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
@@ -562,8 +571,8 @@
             Help Support
         </a>
     </div>
-
-       <div class="content">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="content">
         <h1 id="main-title">Ajouter un événement</h1>
         <ul class="nav nav-tabs mb-4" id="eventTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -678,16 +687,48 @@
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Sidebar toggle for mobile/tablet
+        const sidebar = document.getElementById('sidebarMenu');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.style.display = 'none';
+        }
+        function openSidebar() {
+            sidebar.classList.add('open');
+            sidebarOverlay.style.display = 'block';
+        }
+        if (sidebarToggle) {
+            sidebarToggle.style.display = 'flex';
+            sidebarToggle.addEventListener('click', function() {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+        }
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeSidebar);
+        }
+        // Close sidebar on navigation (mobile)
+        document.querySelectorAll('.sidebar-item').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) closeSidebar();
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             const alert = document.querySelector('.alert');
             if (alert) {
                 setTimeout(() => {
                     alert.classList.remove('show');
-                }, 3000); // Masquer l'alerte après 3 secondes
+                }, 3000);
             }
-    
             // Show loader on form submission
            /* const form = document.getElementById('eventForm');
             form.addEventListener('submit', function(event) {
