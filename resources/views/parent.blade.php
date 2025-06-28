@@ -120,6 +120,37 @@
         .alert {
             border-radius: 8px;
         }
+        /* Hamburger menu */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 1100;
+            background: #22304f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+        }
+        .sidebar-toggle:focus {
+            outline: none;
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44,62,80,0.25);
+            z-index: 1049;
+        }
+        .sidebar.open ~ .sidebar-overlay {
+            display: block;
+        }
         /* Responsive styles */
         @media (max-width: 991.98px) {
             .sidebar {
@@ -230,7 +261,7 @@
 </head>
 <body>
     <!-- Hamburger menu button -->
-    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu" style="display:none;">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
         <i class="fas fa-bars"></i>
     </button>
     <!-- Sidebar -->
@@ -336,12 +367,13 @@
         function closeSidebar() {
             sidebar.classList.remove('open');
             sidebarOverlay.style.display = 'none';
+            document.body.style.overflow = '';
         }
         function openSidebar() {
             sidebar.classList.add('open');
             sidebarOverlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
         }
-        // Always show hamburger on mobile/tablet
         function updateSidebarToggleDisplay() {
             if (window.innerWidth < 992) {
                 sidebarToggle.style.display = 'flex';
@@ -353,18 +385,15 @@
         updateSidebarToggleDisplay();
         window.addEventListener('resize', updateSidebarToggleDisplay);
 
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function() {
-                if (sidebar.classList.contains('open')) {
-                    closeSidebar();
-                } else {
-                    openSidebar();
-                }
-            });
-        }
-        if (sidebarOverlay) {
-            sidebarOverlay.addEventListener('click', closeSidebar);
-        }
+        sidebarToggle.addEventListener('click', function() {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
         // Close sidebar on navigation (mobile)
         document.querySelectorAll('.sidebar-item').forEach(function(link) {
             link.addEventListener('click', function() {
