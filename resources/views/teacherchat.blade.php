@@ -10,15 +10,14 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden;
         }
         .sidebar {
             width: 250px;
-            background: linear-gradient(135deg, #22304f 0%, #34495e 100%);
+            background-color: #2c3e50;
             color: #ecf0f1;
             border-right: 1px solid #34495e;
             padding: 20px 0;
@@ -26,79 +25,58 @@
             top: 0;
             left: 0;
             height: 100vh;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.08);
-            z-index: 1050;
-            transition: transform 0.3s ease;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar-title {
-            font-family: 'Lemonada', cursive;
-            font-weight: 700;
-            font-size: 1.6rem;
+            font-family: 'Lemonada', sans-serif;
+            font-weight: 600;
+            font-size: 1.8rem;
             text-align: center;
             color: #ecf0f1;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
+            margin-bottom: 20px;
         }
         .sidebar-separator {
             border-top: 1px solid #34495e;
             margin: 10px 20px;
         }
+
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 12px 28px;
+            padding: 10px 20px;
             text-decoration: none;
             color: #bdc3c7;
-            font-weight: 500;
-            border-radius: 8px;
-            margin: 4px 12px;
-            transition: background 0.2s, color 0.2s;
-            font-size: 1.07rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
-        .sidebar-item:hover, .sidebar-item.active {
-            background: rgba(255,255,255,0.08);
-            color: #fff;
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ecf0f1;
         }
+
         .sidebar-item img {
-            width: 26px;
-            height: 26px;
-            margin-right: 14px;
+            width: 25px;
+            height: 25px;
+            margin-right: 15px;
+        }
+        .sidebar-item.active {
+            background-color: #1abc9c;
+            color: #ffffff;
         }
         .content {
             margin-left: 250px;
-            padding: 32px 24px 24px 24px;
+            padding: 20px;
             flex-grow: 1;
-            min-height: 100vh;
-            background: #f4f7fb;
-            transition: margin-left 0.3s;
+            background: #fff;
         }
-        .container {
-            max-width: 1200px; /* Augmente la largeur max */
-            background: none; /* Supprime le fond blanc du container */
-            border-radius: 0;
-            box-shadow: none;
-            padding: 32px 24px;
+        .content-section {
+            display: none;
         }
-        .card {
-            border-radius: 14px;
-            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
-            border: none;
-            background: #fff; /* Le fond blanc reste pour la card */
+        .content-section.active {
+            display: block;
         }
-        .card-header {
-            font-weight: 600;
-            font-size: 1.1rem;
-            background: #f4f7fb;
-            border-top-left-radius: 14px;
-            border-top-right-radius: 14px;
-        }
-        .btn-primary {
-            border-radius: 8px;
-            font-weight: 500;
-        }
-        .modal-content {
-            border-radius: 14px;
-        }
+
         .chat-container {
             height: 70vh;
             display: flex;
@@ -110,7 +88,7 @@
             padding: 1rem;
             background: #f8f9fa;
             border-radius: 0.5rem;
-            display: flex;
+                display: flex;
             flex-direction: column;
         }
         .message {
@@ -123,10 +101,9 @@
             word-break: break-word;
             display: flex;
             flex-direction: column;
-            background: none; /* Supprime tout fond blanc par défaut */
         }
         .message.sent {
-            background-color: #007bff !important;
+            background-color: #007bff;
             color: #fff;
             border-bottom-right-radius: 0.4rem;
             border-bottom-left-radius: 1.2rem;
@@ -143,7 +120,7 @@
             border-color: transparent transparent transparent #007bff;
         }
         .message.received {
-            background-color: #e9ecef !important;
+            background-color: #e9ecef;
             color: #222;
             border-bottom-left-radius: 0.4rem;
             border-bottom-right-radius: 1.2rem;
@@ -167,9 +144,6 @@
         }
         .message .content {
             font-size: 1rem;
-            background: transparent; /* assure pas de fond blanc parasite */
-            padding: 0;
-            border-radius: 0;
         }
         .message .time {
             font-size: 0.7rem;
@@ -189,41 +163,7 @@
             text-align: center;
             padding: 1rem;
         }
-        /* Responsive styles */
-        @media (max-width: 991.98px) {
-            .sidebar {
-                transform: translateX(-100%);
-                position: fixed;
-                left: 0;
-                top: 0;
-                height: 100vh;
-                width: 180px;
-                z-index: 1050;
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .content {
-                margin-left: 0;
-                padding: 18px 2vw 18px 2vw;
-            }
-            .sidebar-toggle {
-                display: flex;
-            }
-            .container {
-                padding: 18px 2vw;
-            }
-        }
-        @media (max-width: 767.98px) {
-            .content {
-                padding: 10px 1vw 10px 1vw;
-            }
-            .sidebar {
-                width: 140px;
-            }
-            .container {
-                padding: 10px 1vw;
-            }
+        @media (max-width: 768px) {
             .chat-container {
                 height: 60vh;
             }
@@ -231,37 +171,11 @@
                 max-width: 90%;
             }
         }
-        @media (max-width: 575.98px) {
-            .sidebar {
-                width: 100vw;
-                padding: 8px 0;
-            }
-            .sidebar-title {
-                font-size: 1.1rem;
-            }
-            .sidebar-item {
-                font-size: 0.98rem;
-                padding: 10px 18px;
-            }
-            .content {
-                padding: 8px 2px 8px 2px;
-            }
-            .container {
-                padding: 8px 2px;
-            }
-        }
-        html, body {
-            max-width: 100vw;
-            overflow-x: hidden;
-        }
     </style>
 </head>
 <body>
-    <!-- Hamburger menu button -->
-    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu" style="display:none;">
-        <i class="fas fa-bars"></i>
-    </button>
-    <div class="sidebar" id="sidebarMenu">
+    <!-- Barre de navigation -->
+     <div class="sidebar">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <div class="sidebar-separator"></div>
         <a href="#" class="sidebar-item">
@@ -282,7 +196,8 @@
             Settings
         </a>
     </div>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Contenu principal -->
     <div class="content">
         <h1>Messagerie Enseignant</h1>
         <button class="btn btn-primary mb-3" id="contactParentBtn" data-bs-toggle="modal" data-bs-target="#parentModal">
@@ -344,7 +259,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -445,14 +359,9 @@
                         const messageElement = document.createElement('div');
                         messageElement.className = `message ${message.sender.type === 'teacher' ? 'sent' : 'received'}`;
 
-                        // Affiche "Message vide" si le message est vide ou null
-                        let safeMessage = (typeof message.message === 'string' && message.message.trim() !== '') 
-                            ? message.message 
-                            : '<span class="text-muted fst-italic">[Message vide]</span>';
-
                         let content = `
                             <div class="sender">${message.sender.name}</div>
-                            <div class="content">${safeMessage}</div>
+                            <div class="content">${message.message || ''}</div>
                         `;
 
                         if (message.attachment) {
@@ -529,7 +438,15 @@
                     sendMessageBtn.disabled = false;
                     sendMessageBtn.textContent = 'Envoyer';
 
-                    if
+                    if (data.success) {
+                        messageInput.value = '';
+                        attachmentInput.value = '';
+                        loadMessages();
+                        // Le polling continue, pas besoin de recharger la page
+                    } else {
+                        alert(`Erreur: ${data.message}`);
+                    }
+                })
                 .catch(error => {
                     sendMessageBtn.disabled = false;
                     sendMessageBtn.textContent = 'Envoyer';
