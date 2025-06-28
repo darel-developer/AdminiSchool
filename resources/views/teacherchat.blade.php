@@ -68,7 +68,7 @@
             margin-left: 250px;
             padding: 20px;
             flex-grow: 1;
-            background: #fff;
+           
         }
         .content-section {
             display: none;
@@ -134,7 +134,7 @@
             top: 18px;
             border-width: 10px 10px 10px 0;
             border-style: solid;
-           
+            border-color: transparent #e9ecef transparent transparent;
         }
         .message .sender {
             font-size: 0.8rem;
