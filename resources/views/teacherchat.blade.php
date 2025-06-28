@@ -167,9 +167,9 @@
         }
         .message .content {
             font-size: 1rem;
-            background: transparent !important; /* Corrige tout fond blanc parasite */
-            color: inherit; /* Hérite la couleur du parent (.sent ou .received) */
-            /* Optionnel : padding: 0; */
+            background: transparent; /* assure pas de fond blanc parasite */
+            padding: 0;
+            border-radius: 0;
         }
         .message .time {
             font-size: 0.7rem;
@@ -412,7 +412,10 @@
                         `;
                         listItem.addEventListener('click', function() {
                             selectParent(parent);
-                            const parentModal
+                            const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
+                            parentModal.hide();
+                        });
+                        parentsListModal.appendChild(listItem);
                     });
                 })
                 .catch(error => {
@@ -442,9 +445,14 @@
                         const messageElement = document.createElement('div');
                         messageElement.className = `message ${message.sender.type === 'teacher' ? 'sent' : 'received'}`;
 
+                        // Affiche "Message vide" si le message est vide ou null
+                        let safeMessage = (typeof message.message === 'string' && message.message.trim() !== '') 
+                            ? message.message 
+                            : '<span class="text-muted fst-italic">[Message vide]</span>';
+
                         let content = `
                             <div class="sender">${message.sender.name}</div>
-                            <div class="content">${message.message || ''}</div>
+                            <div class="content">${safeMessage}</div>
                         `;
 
                         if (message.attachment) {
@@ -521,15 +529,7 @@
                     sendMessageBtn.disabled = false;
                     sendMessageBtn.textContent = 'Envoyer';
 
-                    if (data.success) {
-                        messageInput.value = '';
-                        attachmentInput.value = '';
-                        loadMessages();
-                        // Le polling continue, pas besoin de recharger la page
-                    } else {
-                        alert(`Erreur: ${data.message}`);
-                    }
-                })
+                    if
                 .catch(error => {
                     sendMessageBtn.disabled = false;
                     sendMessageBtn.textContent = 'Envoyer';
