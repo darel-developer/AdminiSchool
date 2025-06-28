@@ -167,6 +167,9 @@
         }
         .message .content {
             font-size: 1rem;
+            background: transparent !important; /* Corrige tout fond blanc parasite */
+            color: inherit; /* Hérite la couleur du parent (.sent ou .received) */
+            /* Optionnel : padding: 0; */
         }
         .message .time {
             font-size: 0.7rem;
@@ -409,10 +412,7 @@
                         `;
                         listItem.addEventListener('click', function() {
                             selectParent(parent);
-                            const parentModal = bootstrap.Modal.getInstance(document.getElementById('parentModal'));
-                            parentModal.hide();
-                        });
-                        parentsListModal.appendChild(listItem);
+                            const parentModal
                     });
                 })
                 .catch(error => {
