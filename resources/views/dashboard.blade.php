@@ -357,12 +357,20 @@
           <div class="modal-body">
             <form id="customChartForm">
                 <div class="mb-3">
+                    <label for="chartTitle" class="form-label">Titre du graphe</label>
+                    <input type="text" class="form-control" id="chartTitle" placeholder="Titre du graphe" maxlength="100">
+                </div>
+                <div class="mb-3">
                     <label for="chartType" class="form-label">Type de graphe</label>
                     <select class="form-select" id="chartType" required>
                         <option value="bar">Histogramme</option>
                         <option value="pie">Camembert</option>
                         <option value="line">Courbe</option>
                         <option value="doughnut">Doughnut</option>
+                        <option value="polarArea">Aire polaire</option>
+                        <option value="radar">Radar</option>
+                        <option value="scatter">Nuage de points</option>
+                        <option value="bubble">Bulles</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -460,16 +468,64 @@
         // --- Graphe personnalisé via AJAX ---
         let customChartInstance = null;
 
+        function renderCustomChart(labels, datasets, chartType, chartTitle) {
+            document.getElementById('customChartSection').style.display = 'block';
+            if (customChartInstance) {
+                customChartInstance.destroy();
+            }
+            const ctx = document.getElementById('customChart').getContext('2d');
+            customChartInstance = new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: labels,
+                    datasets: datasets.map((ds, idx) => ({
+                        ...ds,
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(153, 102, 255, 0.5)'
+                        ][idx % 5],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ][idx % 5],
+                        borderWidth: 1
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        title: {
+                            display: !!chartTitle,
+                            text: chartTitle || '',
+                            font: { size: 18 }
+                        }
+                    }
+                }
+            });
+            // Affiche le titre au-dessus du canvas si besoin
+            document.querySelector('#customChartSection h5').textContent = chartTitle || 'Graphe personnalisé';
+        }
+
         document.getElementById('customChartForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const chartType = document.getElementById('chartType').value;
             const criteria = document.getElementById('displayCriteria').value;
+            const chartTitle = document.getElementById('chartTitle').value;
             const types = [];
             if (document.getElementById('dataStudents').checked) types.push('students');
             if (document.getElementById('dataPaiements').checked) types.push('paiements');
             if (document.getElementById('dataAbsences').checked) types.push('absences');
 
-            // Correction ici : envoyer types au lieu de selectedData
             fetch("{{ route('dashboard.customChartData') }}", {
                 method: "POST",
                 headers: {
@@ -479,60 +535,29 @@
                 body: JSON.stringify({
                     chartType: chartType,
                     criteria: criteria,
-                    types: types
+                    types: types,
+                    chartTitle: chartTitle
                 })
             })
             .then(response => response.json())
             .then(result => {
-                // Afficher la section du graphe personnalisé
-                document.getElementById('customChartSection').style.display = 'block';
-
-                // Détruire l'ancien graphe si existant
-                if (customChartInstance) {
-                    customChartInstance.destroy();
-                }
-
-                // Créer le nouveau graphe avec les données reçues
-                const ctx = document.getElementById('customChart').getContext('2d');
-                customChartInstance = new Chart(ctx, {
-                    type: chartType,
-                    data: {
-                        labels: result.labels,
-                        datasets: result.datasets.map((ds, idx) => ({
-                            ...ds,
-                            backgroundColor: [
-                                'rgba(54, 162, 235, 0.5)',
-                                'rgba(255, 206, 86, 0.5)',
-                                'rgba(255, 99, 132, 0.5)',
-                                'rgba(75, 192, 192, 0.5)',
-                                'rgba(153, 102, 255, 0.5)'
-                            ][idx % 5],
-                            borderColor: [
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)'
-                            ][idx % 5],
-                            borderWidth: 1
-                        }))
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
-                            }
-                        }
-                    }
-                });
-
-                // Fermer la modale
+                renderCustomChart(result.labels, result.datasets, chartType, chartTitle);
                 var modal = bootstrap.Modal.getInstance(document.getElementById('customChartModal'));
                 modal.hide();
             });
         });
+
+        // Affiche le graphe personnalisé sauvegardé au chargement si existant
+        @if($customChart)
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCustomChart(
+                {!! $customChart->labels !!},
+                {!! $customChart->datasets !!},
+                '{{ $customChart->type }}',
+                @json($customChart->title)
+            );
+        });
+        @endif
 
         // Sidebar toggle for mobile/tablet
         const sidebar = document.getElementById('sidebarMenu');

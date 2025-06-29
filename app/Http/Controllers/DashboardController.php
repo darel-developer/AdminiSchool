@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\Paiement;
 use App\Models\Teacher;
+use App\Models\CustomChart;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;  
 
@@ -28,6 +29,9 @@ class DashboardController extends Controller
     
         $monthlyConvocations = array_replace(array_fill(1, 12, 0), $monthlyConvocations);
 
+        // Récupère le graphe personnalisé sauvegardé (s'il existe)
+        $customChart = CustomChart::latest()->first();
+
         return view('dashboard', [
             'studentCount' => $studentCount,
             'convocationCount' => $convocationCount,
@@ -36,6 +40,7 @@ class DashboardController extends Controller
             'pensionCount' => $pensionCount,
             'otherCount' => $otherCount,
             'monthlyConvocations' => array_values($monthlyConvocations),
+            'customChart' => $customChart,
         ]);
     }
 
@@ -76,6 +81,8 @@ class DashboardController extends Controller
     {
         $types = $request->input('types', []);
         $criteria = $request->input('criteria', 'count');
+        $chartType = $request->input('chartType', 'bar');
+        $chartTitle = $request->input('chartTitle', null);
         $result = [];
 
         foreach ($types as $type) {
@@ -146,6 +153,22 @@ class DashboardController extends Controller
                 return $item['label'];
             }, $result);
         }
+
+        // Sauvegarde le graphe personnalisé (titre, type, labels, datasets)
+        CustomChart::updateOrCreate(
+            ['id' => 1], // Un seul graphe personnalisé pour la plateforme
+            [
+                'title' => $chartTitle ?: 'Graphe personnalisé',
+                'type' => $chartType,
+                'labels' => json_encode($labels),
+                'datasets' => json_encode(array_map(function($item) {
+                    return [
+                        'label' => $item['label'],
+                        'data' => $item['data'],
+                    ];
+                }, $result)),
+            ]
+        );
 
         return response()->json([
             'labels' => $labels,
