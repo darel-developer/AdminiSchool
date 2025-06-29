@@ -148,6 +148,12 @@
                 margin-left: 0;
                 padding: 18px 2vw 18px 2vw;
             }
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            .tab-content {
+                padding: 0;
+            }
         }
         @media (max-width: 767.98px) {
             .sidebar {
@@ -163,6 +169,16 @@
             }
             .content {
                 padding: 8px 2px 8px 2px;
+            }
+            .nav-tabs .nav-link {
+                font-size: 0.98rem;
+                padding: 8px 10px;
+            }
+            .tab-content {
+                padding: 0;
+            }
+            form, .p-3 {
+                padding: 0.5rem !important;
             }
         }
         @media (max-width: 575.98px) {
@@ -180,36 +196,33 @@
             .content {
                 padding: 4px 1vw 4px 1vw;
             }
+            .nav-tabs .nav-link {
+                font-size: 0.93rem;
+                padding: 6px 6px;
+            }
+            .tab-content {
+                padding: 0;
+            }
+            form, .p-3 {
+                padding: 0.3rem !important;
+            }
+            .mb-3 {
+                margin-bottom: 0.7rem !important;
+            }
         }
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(44,62,80,0.25);
-            z-index: 1049;
+        /* Amélioration responsive pour les boutons et inputs */
+        .form-control, .btn, .form-label, .form-check-label {
+            font-size: 1rem;
         }
-        .sidebar.open ~ .sidebar-overlay {
-            display: block;
+        @media (max-width: 575.98px) {
+            .form-control, .btn, .form-label, .form-check-label {
+                font-size: 0.97rem;
+            }
         }
-        .sidebar-toggle {
-            display: none;
-            position: fixed;
-            top: 18px;
-            left: 18px;
-            z-index: 1100;
-            background: #22304f;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 2px 8px rgba(44,62,80,0.13);
-        }
-        .sidebar-toggle:focus {
-            outline: none;
+        /* Pour éviter le débordement horizontal */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
         }
         /* Animation pour l'alerte de succès */
         .alert {
