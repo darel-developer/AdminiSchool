@@ -180,4 +180,10 @@ class DashboardController extends Controller
             }, $result),
         ]);
     }
+
+    public function customChartDelete()
+    {
+        \App\Models\CustomChart::where('id', 1)->delete();
+        return response()->json(['success' => true]);
+    }
 }

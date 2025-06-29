@@ -9,124 +9,99 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #f8f9fa;
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         .sidebar {
             width: 250px;
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #22304f 0%, #34495e 100%);
             color: #ecf0f1;
-            border-right: 1px solid #34495e;
             padding: 20px 0;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.08);
+            z-index: 1050;
+            transition: transform 0.3s ease;
+            border-radius: 0 18px 18px 0;
         }
         .sidebar-title {
-            font-family: 'Lemonada', sans-serif;
-            font-weight: 600;
-            font-size: 1.8rem;
+            font-family: 'Lemonada', cursive;
+            font-weight: 700;
+            font-size: 1.6rem;
             text-align: center;
             color: #ecf0f1;
-            margin-bottom: 20px;
-        }
-        .sidebar-separator {
-            border-top: 1px solid #34495e;
-            margin: 10px 20px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 12px 28px;
             text-decoration: none;
             color: #bdc3c7;
             font-weight: 500;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            border-radius: 8px;
+            margin: 4px 12px;
+            transition: background 0.2s, color 0.2s;
+            font-size: 1.07rem;
         }
-        .sidebar-item:hover {
-            background-color: #34495e;
-            color: #ecf0f1;
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
         }
         .sidebar-item img {
-            width: 25px;
-            height: 25px;
-            margin-right: 15px;
-        }
-        .sidebar-item.active {
-            
-            color: #ffffff;
+            width: 26px;
+            height: 26px;
+            margin-right: 14px;
         }
         .content {
             margin-left: 250px;
-            padding: 20px;
+            padding: 32px 24px 24px 24px;
             flex-grow: 1;
-            background: #fff;
+            min-height: 100vh;
+            background: #f4f7fb;
+            transition: margin-left 0.3s;
         }
-        .content-section {
+        /* Hamburger menu */
+        .sidebar-toggle {
             display: none;
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 1100;
+            background: #22304f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+            transition: background 0.2s;
         }
-        .content-section.active {
+        .sidebar-toggle:active, .sidebar-toggle:focus {
+            outline: none;
+            background: #34495e;
+        }
+        /* Overlay for sidebar on mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44,62,80,0.25);
+            z-index: 1049;
+        }
+        .sidebar.open ~ .sidebar-overlay {
             display: block;
         }
-
-        /* Styles personnalisés */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
-            display: flex;
-            flex-direction: column;
-            background: #2c3e50; /* Couleur de fond similaire */
-            border-right: 1px solid #ddd;
-            color: #ecf0f1;
-            padding: 20px 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-        }
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 15px; /* Réduction de la taille des paddings */
-            font-size: 0.9rem; /* Taille de police similaire */
-            margin: 5px 0; /* Espacement entre les éléments */
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.2); /* Effet hover similaire */
-            transform: scale(1.05);
-        }
-        .sidebar-item img {
-            width: 20px; /* Taille des icônes similaire */
-            height: 20px;
-            margin-right: 8px; /* Espacement entre l'icône et le texte */
-        }
-        .content {
-            margin-left: 250px;
-            flex-grow: 1;
-            padding: 20px;
-            background: #fff;
-        }
-        .content h1 {
-            color: #333;
-        }
-
-        /* Styles pour les petits écrans */
+        /* Responsive styles */
         @media (max-width: 991.98px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -134,31 +109,32 @@
                 left: 0;
                 top: 0;
                 height: 100vh;
-                width: 180px;
+                width: 220px;
                 z-index: 1050;
-                transition: transform 0.3s ease;
             }
             .sidebar.open {
                 transform: translateX(0);
-            }
-            .sidebar-toggle {
-                display: flex;
             }
             .content {
                 margin-left: 0;
                 padding: 18px 2vw 18px 2vw;
             }
-            .nav-tabs {
-                flex-wrap: wrap;
-            }
-            .tab-content {
-                padding: 0;
+            .sidebar-toggle {
+                display: flex;
             }
         }
         @media (max-width: 767.98px) {
+            .content {
+                padding: 10px 1vw 10px 1vw;
+            }
+            .sidebar {
+                width: 180px;
+            }
+        }
+        @media (max-width: 575.98px) {
             .sidebar {
                 width: 100vw;
-                padding: 8px 0;
+                padding: 14px 0;
             }
             .sidebar-title {
                 font-size: 1.1rem;
@@ -167,59 +143,7 @@
                 font-size: 0.98rem;
                 padding: 10px 18px;
             }
-            .content {
-                padding: 8px 2px 8px 2px;
-            }
-            .nav-tabs .nav-link {
-                font-size: 0.98rem;
-                padding: 8px 10px;
-            }
-            .tab-content {
-                padding: 0;
-            }
-            form, .p-3 {
-                padding: 0.5rem !important;
-            }
         }
-        @media (max-width: 575.98px) {
-            .sidebar {
-                width: 100vw;
-                padding: 8px 0;
-            }
-            .sidebar-title {
-                font-size: 1.1rem;
-            }
-            .sidebar-item {
-                font-size: 0.98rem;
-                padding: 8px 10px;
-            }
-            .content {
-                padding: 4px 1vw 4px 1vw;
-            }
-            .nav-tabs .nav-link {
-                font-size: 0.93rem;
-                padding: 6px 6px;
-            }
-            .tab-content {
-                padding: 0;
-            }
-            form, .p-3 {
-                padding: 0.3rem !important;
-            }
-            .mb-3 {
-                margin-bottom: 0.7rem !important;
-            }
-        }
-        /* Amélioration responsive pour les boutons et inputs */
-        .form-control, .btn, .form-label, .form-check-label {
-            font-size: 1rem;
-        }
-        @media (max-width: 575.98px) {
-            .form-control, .btn, .form-label, .form-check-label {
-                font-size: 0.97rem;
-            }
-        }
-        /* Pour éviter le débordement horizontal */
         html, body {
             max-width: 100vw;
             overflow-x: hidden;
@@ -588,7 +512,7 @@
         <div class="loader__ball"></div>
     </div>
     <!-- Barre de navigation -->
-    <div class="sidebar d-flex flex-column" id="sidebarMenu">
+    <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
@@ -741,6 +665,82 @@
                             <select class="form-control" id="announcement_classes" name="classes[]" multiple>
                                 @foreach($classes as $classe)
                                     <option value="{{ $classe->name }}">{{ $classe->name }}</option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-muted">Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs classes.</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Publier l'annonce</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar toggle for mobile/tablet (identique à school.blade.php)
+        const sidebar = document.getElementById('sidebarMenu');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.style.display = 'none';
+        }
+        function openSidebar() {
+            sidebar.classList.add('open');
+            sidebarOverlay.style.display = 'block';
+        }
+        function updateSidebarToggleDisplay() {
+            if (window.innerWidth < 992) {
+                sidebarToggle.style.display = 'flex';
+            } else {
+                sidebarToggle.style.display = 'none';
+                closeSidebar();
+            }
+        }
+        updateSidebarToggleDisplay();
+        window.addEventListener('resize', updateSidebarToggleDisplay);
+
+        sidebarToggle.addEventListener('click', function() {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // Close sidebar on navigation (mobile)
+        document.querySelectorAll('.sidebar-item').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) closeSidebar();
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                setTimeout(() => {
+                    alert.classList.remove('show');
+                }, 3000);
+            }
+            // Show loader on form submission
+           /* const form = document.getElementById('eventForm');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent immediate form submission for demonstration
+                const loader = document.getElementById('loader');
+                loader.style.display = 'block';
+    
+                // Hide loader after 5 seconds
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    form.submit(); // Submit the form after the loader duration
+                }, 5000); // 5 seconds
+            });*/
+        });
+    </script>
+</body>
+</html>
                                 @endforeach
                             </select>
                             <small class="form-text text-muted">Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs classes.</small>

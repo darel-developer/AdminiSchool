@@ -599,6 +599,14 @@
                         customChartInstance = null;
                     }
                     section.style.display = 'none';
+                    // Suppression en base de données via AJAX
+                    fetch("{{ route('dashboard.customChartDelete') }}", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    });
                 };
                 section.querySelector('.card').appendChild(btn);
             }
