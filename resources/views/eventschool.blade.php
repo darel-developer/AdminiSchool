@@ -127,41 +127,90 @@
         }
 
         /* Styles pour les petits écrans */
-        @media (max-width: 768px) {
+        @media (max-width: 991.98px) {
             .sidebar {
-                width: 100vw;
-                height: 60px;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 0;
-                border-right: none;
-                border-top: 1px solid #ddd;
+                transform: translateX(-100%);
                 position: fixed;
-                bottom: 0;
                 left: 0;
-                top: auto;
-                z-index: 1000;
+                top: 0;
+                height: 100vh;
+                width: 180px;
+                z-index: 1050;
+                transition: transform 0.3s ease;
             }
-            .sidebar-title, .sidebar-separator, .sidebar-item span {
-                display: none;
+            .sidebar.open {
+                transform: translateX(0);
             }
-            .sidebar-item {
-                flex-direction: column;
-                align-items: center;
-                padding: 5px;
-                font-size: 12px;
-                margin: 0 2px;
-            }
-            .sidebar-item img {
-                margin-right: 0;
-                margin-bottom: 5px;
+            .sidebar-toggle {
+                display: flex;
             }
             .content {
-                margin: 0;
-                padding-bottom: 80px;
+                margin-left: 0;
+                padding: 18px 2vw 18px 2vw;
             }
         }
-
+        @media (max-width: 767.98px) {
+            .sidebar {
+                width: 100vw;
+                padding: 8px 0;
+            }
+            .sidebar-title {
+                font-size: 1.1rem;
+            }
+            .sidebar-item {
+                font-size: 0.98rem;
+                padding: 10px 18px;
+            }
+            .content {
+                padding: 8px 2px 8px 2px;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .sidebar {
+                width: 100vw;
+                padding: 8px 0;
+            }
+            .sidebar-title {
+                font-size: 1.1rem;
+            }
+            .sidebar-item {
+                font-size: 0.98rem;
+                padding: 8px 10px;
+            }
+            .content {
+                padding: 4px 1vw 4px 1vw;
+            }
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44,62,80,0.25);
+            z-index: 1049;
+        }
+        .sidebar.open ~ .sidebar-overlay {
+            display: block;
+        }
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 1100;
+            background: #22304f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+        }
+        .sidebar-toggle:focus {
+            outline: none;
+        }
         /* Animation pour l'alerte de succès */
         .alert {
             opacity: 0;
@@ -513,7 +562,7 @@
 </head>
 <body>
     <!-- Hamburger menu button -->
-    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu" style="display:none;">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
         <i class="fas fa-bars"></i>
     </button>
     <!-- Loader -->
@@ -526,7 +575,7 @@
         <div class="loader__ball"></div>
     </div>
     <!-- Barre de navigation -->
-    <div class="sidebar" id="sidebarMenu">
+    <div class="sidebar d-flex flex-column" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <a href="{{route('dashboard')}}" class="sidebar-item">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
@@ -548,7 +597,6 @@
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
             Payments
         </a>
-        
         <a href="{{route('userschool')}}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="user">
             Utilisateur
@@ -565,7 +613,10 @@
             <img src="{{ asset('images/Book.png') }}" alt="teacher">
            cahier de texte
         </a>
-        
+        <a href="#" class="sidebar-item">
+            <img src="{{ asset('images/setting.png') }}" alt="settings">
+            Paramètres
+        </a>
         <a href="{{ route('helpsupport') }}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">
             Help Support
@@ -690,7 +741,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sidebar toggle for mobile/tablet
+        // Sidebar toggle for mobile/tablet (identique à school.blade.php)
         const sidebar = document.getElementById('sidebarMenu');
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -702,19 +753,26 @@
             sidebar.classList.add('open');
             sidebarOverlay.style.display = 'block';
         }
-        if (sidebarToggle) {
-            sidebarToggle.style.display = 'flex';
-            sidebarToggle.addEventListener('click', function() {
-                if (sidebar.classList.contains('open')) {
-                    closeSidebar();
-                } else {
-                    openSidebar();
-                }
-            });
+        function updateSidebarToggleDisplay() {
+            if (window.innerWidth < 992) {
+                sidebarToggle.style.display = 'flex';
+            } else {
+                sidebarToggle.style.display = 'none';
+                closeSidebar();
+            }
         }
-        if (sidebarOverlay) {
-            sidebarOverlay.addEventListener('click', closeSidebar);
-        }
+        updateSidebarToggleDisplay();
+        window.addEventListener('resize', updateSidebarToggleDisplay);
+
+        sidebarToggle.addEventListener('click', function() {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
         // Close sidebar on navigation (mobile)
         document.querySelectorAll('.sidebar-item').forEach(function(link) {
             link.addEventListener('click', function() {
