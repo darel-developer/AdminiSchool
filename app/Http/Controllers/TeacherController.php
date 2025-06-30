@@ -206,7 +206,7 @@ class TeacherController extends Controller
     public function downloadStatisticsPdf()
     {
         // Récupère les statistiques (nom élève + matière + note)
-        $statistics = \App\Models\Grades::select('student_name', 'matiere', \DB::raw('AVG(grade) as average_grade'))
+        $statistics = \App\Models\Grades::select('student_name', 'matiere', DB::raw('AVG(grade) as average_grade'))
             ->groupBy('student_name', 'matiere')
             ->get();
 

@@ -355,31 +355,3 @@
     </script>
 </body>
 </html>
-            sidebar.classList.remove('open');
-            sidebarOverlay.style.display = 'none';
-        }
-        function openSidebar() {
-            sidebar.classList.add('open');
-            sidebarOverlay.style.display = 'block';
-        }
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function() {
-                if (sidebar.classList.contains('open')) {
-                    closeSidebar();
-                } else {
-                    openSidebar();
-                }
-            });
-        }
-        if (sidebarOverlay) {
-            sidebarOverlay.addEventListener('click', closeSidebar);
-        }
-        // Close sidebar on navigation (mobile)
-        document.querySelectorAll('.sidebar-item').forEach(function(link) {
-            link.addEventListener('click', function() {
-                if (window.innerWidth < 992) closeSidebar();
-            });
-        });
-    </script>
-</body>
-</html>
