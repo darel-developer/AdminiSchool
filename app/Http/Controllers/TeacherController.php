@@ -205,15 +205,15 @@ class TeacherController extends Controller
     // Téléchargement PDF des statistiques (à compléter selon besoin)
     public function downloadStatisticsPdf()
     {
-        // Récupère les statistiques (nom élève + matière)
-        $statistics = Grades::select('student_name', 'matiere')
+        // Récupère les statistiques (nom élève + matière + note)
+        $statistics = \App\Models\Grades::select('student_name', 'matiere', \DB::raw('AVG(grade) as average_grade'))
             ->groupBy('student_name', 'matiere')
             ->get();
 
-        // Génère le PDF à partir d'une vue dédiée minimaliste
+        // Génère le PDF à partir d'une vue dédiée qui affiche les notes
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.statistics-simple', compact('statistics'));
 
-        return $pdf->download('liste_eleves_matieres.pdf');
+        return $pdf->download('liste_eleves_matieres_notes.pdf');
     }
 
     // Affichage de l'emploi du temps de l'enseignant (à compléter selon besoin)

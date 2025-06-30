@@ -249,13 +249,10 @@
     
             <!-- Graphiques -->
             <div class="mt-5">
-                <h3 class="text-center">Graphiques des Performances</h3>
-                <div class="row">
-                    <div class="col-md-6">
-                        <canvas id="averageGradeChart"></canvas>
-                    </div>
-                    <div class="col-md-6">
-                        <canvas id="subjectPerformanceChart"></canvas>
+                <h3 class="text-center">Distribution des Notes des Élèves</h3>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <canvas id="gradeDistributionChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -266,38 +263,47 @@
     <!-- Inclusion de Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Préparation des données pour les graphiques
+        // Préparation des données pour le graphique
         const statistics = @json($statistics);
 
-        // Pour le graphique barres : chaque élève avec sa moyenne
-        const studentNames = statistics.map(stat => stat.student_name);
-        const averageGrades = statistics.map(stat => stat.average_grade);
+        // Récupérer toutes les notes (moyennes) des élèves
+        const allGrades = statistics.map(stat => parseFloat(stat.average_grade));
 
-        // Pour le graphique circulaire : matières uniques et moyenne par matière
-        const subjectMap = {};
-        statistics.forEach(stat => {
-            if (!subjectMap[stat.matiere]) {
-                subjectMap[stat.matiere] = { total: 0, count: 0 };
+        // Regrouper les notes par tranches (par exemple, 0-2, 2-4, ..., 18-20)
+        function getGradeBins(grades, step = 2) {
+            const bins = {};
+            for (let i = 0; i <= 20; i += step) {
+                const label = `${i}-${i+step}`;
+                bins[label] = 0;
             }
-            subjectMap[stat.matiere].total += parseFloat(stat.average_grade);
-            subjectMap[stat.matiere].count += 1;
-        });
-        const uniqueSubjects = Object.keys(subjectMap);
-        const subjectAverages = uniqueSubjects.map(subject => 
-            (subjectMap[subject].total / subjectMap[subject].count).toFixed(2)
-        );
+            grades.forEach(grade => {
+                let bin = Math.floor(grade / step) * step;
+                if (bin > 18) bin = 18; // dernière tranche 18-20
+                const label = `${bin}-${bin+step}`;
+                bins[label]++;
+            });
+            return bins;
+        }
 
-        // Graphique des moyennes par élève
-        const ctx1 = document.getElementById('averageGradeChart').getContext('2d');
-        new Chart(ctx1, {
+        const bins = getGradeBins(allGrades, 2);
+        const labels = Object.keys(bins);
+        const data = Object.values(bins);
+
+        // Couleur harmonisée
+        const mainColor = 'rgba(54, 162, 235, 0.7)';
+        const borderColor = 'rgba(54, 162, 235, 1)';
+
+        // Graphique de distribution des notes
+        const ctx = document.getElementById('gradeDistributionChart').getContext('2d');
+        new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: studentNames,
+                labels: labels,
                 datasets: [{
-                    label: 'Moyenne des Notes',
-                    data: averageGrades,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    label: "Nombre d'élèves",
+                    data: data,
+                    backgroundColor: mainColor,
+                    borderColor: borderColor,
                     borderWidth: 1
                 }]
             },
@@ -308,42 +314,8 @@
                     tooltip: { enabled: true }
                 },
                 scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-
-        // Graphique des performances par matière (matières uniques)
-        const ctx2 = document.getElementById('subjectPerformanceChart').getContext('2d');
-        new Chart(ctx2, {
-            type: 'pie',
-            data: {
-                labels: uniqueSubjects,
-                datasets: [{
-                    label: 'Performances par Matière',
-                    data: subjectAverages,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(153, 102, 255, 0.6)',
-                        'rgba(255, 159, 64, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: true },
-                    tooltip: { enabled: true }
+                    y: { beginAtZero: true, title: { display: true, text: "Nombre d'élèves" } },
+                    x: { title: { display: true, text: "Tranches de notes" } }
                 }
             }
         });
@@ -355,6 +327,34 @@
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.style.display = 'none';
+        }
+        function openSidebar() {
+            sidebar.classList.add('open');
+            sidebarOverlay.style.display = 'block';
+        }
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+        }
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeSidebar);
+        }
+        // Close sidebar on navigation (mobile)
+        document.querySelectorAll('.sidebar-item').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) closeSidebar();
+            });
+        });
+    </script>
+</body>
+</html>
             sidebar.classList.remove('open');
             sidebarOverlay.style.display = 'none';
         }
