@@ -62,25 +62,49 @@
             min-height: 100vh;
             background: #f4f7fb;
             transition: margin-left 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .container {
-            max-width: 900px;
+            max-width: 1200px;
+            min-width: 320px;
+            width: 100%;
             background: #fff;
             border-radius: 14px;
             box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
-            padding: 32px 24px;
+            padding: 40px 32px;
+            min-height: 600px;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
         }
         .table {
             background: #fff;
             border-radius: 10px;
             overflow: hidden;
+            min-width: 700px;
+            margin-bottom: 0;
         }
         .btn-info, .btn-success {
             border-radius: 8px;
             font-weight: 500;
+            min-width: 110px;
+            margin-right: 8px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+        }
+        .btn-success:last-child {
+            margin-right: 0;
         }
         .alert {
             border-radius: 8px;
+        }
+        .actions-cell {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         /* Hamburger menu */
         .sidebar-toggle {
@@ -112,6 +136,15 @@
             display: block;
         }
         /* Responsive styles */
+        @media (max-width: 1199.98px) {
+            .container {
+                max-width: 1000px;
+                padding: 28px 10px;
+            }
+            .table {
+                min-width: 600px;
+            }
+        }
         @media (max-width: 991.98px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -133,7 +166,11 @@
                 display: flex;
             }
             .container {
+                max-width: 98vw;
                 padding: 18px 2vw;
+            }
+            .table {
+                min-width: 500px;
             }
         }
         @media (max-width: 767.98px) {
@@ -145,10 +182,15 @@
             }
             .container {
                 padding: 10px 1vw;
+                max-width: 100vw;
             }
-            .table th, .table td {
-                font-size: 0.95rem;
-                padding: 0.5rem;
+            .table {
+                min-width: 420px;
+            }
+            .actions-cell {
+                flex-direction: column;
+                gap: 6px;
+                align-items: flex-start;
             }
         }
         @media (max-width: 575.98px) {
@@ -168,10 +210,19 @@
             }
             .container {
                 padding: 8px 2px;
+                max-width: 100vw;
+            }
+            .table {
+                min-width: 350px;
             }
             .table th, .table td {
                 font-size: 0.89rem;
                 padding: 0.35rem;
+            }
+            .actions-cell {
+                flex-direction: column;
+                gap: 4px;
+                align-items: flex-start;
             }
         }
         html, body {
@@ -245,7 +296,8 @@
                     Aucun document disponible pour le moment.
                 </div>
             @else
-                <table class="table table-bordered">
+                <div class="table-responsive">
+                <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
                             <th>Nom du Parent</th>
@@ -260,7 +312,7 @@
                                 <td>{{ $item->tuteur->nom }}</td>
                                 <td>{{ $item->file_path }}</td>
                                 <td>{{ $item->type }}</td>
-                                <td>
+                                <td class="actions-cell">
                                     <a href="{{ route('school.viewDocument', $item->id) }}" class="btn btn-info" target="_blank">Visualiser</a>
                                     <a href="{{ route('school.downloadDocument', $item->id) }}" class="btn btn-success">Télécharger</a>
                                 </td>
@@ -268,6 +320,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
             @endif
         </div>
     </div>
