@@ -157,6 +157,9 @@
       border: 2px solid black;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(40px) scale(0.97);
+      transition: opacity 0.7s, transform 0.7s cubic-bezier(.39,.58,.57,1);
     }
 
     .feature-box img {
@@ -176,45 +179,73 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
 
+    .feature-box.visible {
+      opacity: 1;
+      transform: none;
+    }
+
     @media only screen and (max-width: 750px) {
       .feature-box {
         width: 80%;
       }
     }
 
- /* Témoignages Section */
-.testimonial-card {
-  width: 45%;
-  min-height: 300px;
-  border: none;
-  border-radius: 20px;
-  background-color: #fff;
-  display: flex;
-  border: 2px solid black;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    /* Témoignages Section */
+    .testimonial-card {
+      width: 45%;
+      min-height: 300px;
+      border: none;
+      border-radius: 20px;
+      background-color: #fff;
+      display: flex;
+      border: 2px solid black;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(40px) scale(0.97);
+      transition: opacity 0.7s, transform 0.7s cubic-bezier(.39,.58,.57,1);
+    }
 
-.testimonial-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
 
-.circle img {
-  border: 3px solid #ddd;
-  padding: 3px;
-  background: white;
-}
+    .testimonial-card.visible {
+      opacity: 1;
+      transform: none;
+    }
 
-/* Responsiveness */
-@media (max-width: 768px) {
-  .testimonial-card {
-    width: 100%;
-  }
-}
+    .circle img {
+      border: 3px solid #ddd;
+      padding: 3px;
+      background: white;
+    }
 
+    /* Animations progressives */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.39,.58,.57,1);
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .slide-up {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 0.8s, transform 0.8s cubic-bezier(.39,.58,.57,1);
+    }
+
+    .slide-up.visible {
+      opacity: 1;
+      transform: none;
+    }
 
   </style>
 </head>
@@ -264,7 +295,7 @@
 
 
   <!-- Image avec Texte -->
-  <div class="image-section">
+  <div class="image-section fade-in">
     <img src="{{ asset('images/background.png') }}" alt="Image" class="img-fluid">
     <div class="text-overlay">
       <p>ADMINISCHOOL</p>
@@ -273,13 +304,13 @@
 
   <!-- Section "About" -->
   <div class="container-fluid">
-    <section class="about">
+    <section class="about fade-in">
       <h3>QUI SOMMES NOUS ?</h3>
       <section class="propos">
-        <div class="right">
+        <div class="right slide-up">
           <img src="{{ asset('images/image-prpors.png') }}" alt="image" />
         </div>
-        <div class="left">
+        <div class="left slide-up">
           <p class="texte">
             AdminiSchool est une  structure camerounaise conçue pour renforcer la communication interactive entre l’administration scolaire et les parents . Elle offre une plateforme qui permet aux parents de suivre de près le comportement, les performances académiques et la discipline de leurs enfants en temps réel. Ce système vise à améliorer la transparence, à faciliter l’échange d’informations et à engager davantage les parents dans le suivi de l’éducation de leurs enfants
           </p>
@@ -289,57 +320,37 @@
   </div>
 
   <!-- Section Fonctionnalités -->
-  <div class="features-section">
+  <div class="features-section fade-in">
     <h3>Nos Fonctionnalités</h3>
     <div class="feature-box">
       <img src="{{ asset('images/fonc1.png') }}" alt="Fonctionnalité 1">
       <p>Suivi de l'enfant</p>
       <p>
         plateforme permettant 
-        
-        
         de savoir plus sur son 
-        
-        
         enfant</p>
     </div>
     <div class="feature-box">
       <img src="{{ asset('images/fonc2.png') }}" alt="Fonctionnalité 2">
       <p>Communication parent
-
-          
         & 
         administration
     </p>
       <p>Meilleur communication sur
-
-
-
         les informations liés à l’école
-        
-        
-        
         avec les parents</p>
     </div>
     <div class="feature-box">
       <img src="{{ asset('images/fonc3.png') }}" alt="Fonctionnalité 3">
       <p>Sécurité & fiabilité</p>
       <p>Les données que nous
-
-
-
         utilisons sont fortement 
-        
-        
-        
         protégés </p>
     </div>
-
-    
   </div>
 
   <!-- Section Témoignages -->
-<div class="container my-5">
+  <div class="container my-5 fade-in">
     <h3 class="text-center mb-4 fw-bold">Témoignages</h3>
     <div class="d-flex flex-wrap justify-content-center gap-4">
       <!-- Témoignage 1 -->
@@ -380,14 +391,24 @@
       </div>
     </div>
   </div>
-  
-    
-  </div>
-  
 
   <!-- Script Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+  <script>
+    // Animation progressive lors du scroll
+    function animateOnScroll() {
+      const fadeEls = document.querySelectorAll('.fade-in, .slide-up, .feature-box, .testimonial-card');
+      fadeEls.forEach((el, i) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 60) {
+          setTimeout(() => {
+            el.classList.add('visible');
+          }, i * 120); // effet progressif
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll);
+  </script>
 </body>
-
 </html>
