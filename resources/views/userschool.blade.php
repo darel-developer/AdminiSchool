@@ -141,6 +141,9 @@
             .container {
                 padding: 18px 2vw;
             }
+            .table-responsive {
+                overflow-x: auto;
+            }
         }
         @media (max-width: 767.98px) {
             .content {
@@ -152,9 +155,11 @@
             .container {
                 padding: 10px 1vw;
             }
-            .table th, .table td {
+            .table {
                 font-size: 0.95rem;
-                padding: 0.5rem;
+            }
+            .table-responsive {
+                overflow-x: auto;
             }
         }
         @media (max-width: 575.98px) {
@@ -175,14 +180,23 @@
             .container {
                 padding: 8px 2px;
             }
-            .table th, .table td {
+            .table {
                 font-size: 0.89rem;
-                padding: 0.35rem;
+            }
+            .table-responsive {
+                overflow-x: auto;
             }
         }
         html, body {
             max-width: 100vw;
             overflow-x: hidden;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .table th, .table td {
+            white-space: nowrap;
         }
     </style>
 </head>
