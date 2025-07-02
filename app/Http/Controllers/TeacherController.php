@@ -21,6 +21,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\TeacherCreatedMail;
 
 class TeacherController extends Controller
 {
@@ -57,43 +58,19 @@ class TeacherController extends Controller
 
             Log::info('Enseignant enregistré en base', ['teacher_id' => $teacher->id]);
 
-            // Prépare les données pour la vue du mail
-            $mailData = [
-                'name' => $teacher->first_name . ' ' . $teacher->last_name,
-                'email' => $teacher->email,
-                'password' => $request->password,
-                'platformLink' => 'https://adminischool-virtual-academy-master-vtuvm7.laravel.cloud/',
-            ];
-
-            // Génère le contenu HTML du mail à partir de la vue Blade
-            $html = view('emails.teacher-login', $mailData)->render();
-
-            // Utilisation de Symfony Mailer
+            // Envoi de l'email avec la classe Mailable
             try {
-                Log::info('Tentative d\'envoi de mail via Symfony Mailer', ['email' => $teacher->email]);
-                // Construction correcte du DSN avec tous les paramètres requis
-                $dsn = sprintf(
-                    'smtp://%s:%s@%s:%s?encryption=%s',
-                    urlencode(env('MAIL_USERNAME')),
-                    urlencode(env('MAIL_PASSWORD')),
-                    env('MAIL_HOST'),
-                    env('MAIL_PORT'),
-                    env('MAIL_ENCRYPTION', 'tls')
+                Mail::to($teacher->email)->send(
+                    new \App\Mail\TeacherCreatedMail(
+                        $teacher->first_name,
+                        $teacher->last_name,
+                        $teacher->email,
+                        $request->password
+                    )
                 );
-                Log::info('DSN utilisé pour Symfony Mailer', ['dsn' => $dsn]);
-                $transport = Transport::fromDsn($dsn);
-                $mailer = new Mailer($transport);
-
-                $email = (new Email())
-                    ->from(new \Symfony\Component\Mime\Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME', 'Equipe AdminiSchool')))
-                    ->to($teacher->email)
-                    ->subject('Vos accès à la plateforme AdminiSchool')
-                    ->html($html);
-
-                $mailer->send($email);
-                Log::info('Mail envoyé avec succès via Symfony Mailer', ['email' => $teacher->email]);
+                Log::info('Mail envoyé avec succès via Laravel Mailable', ['email' => $teacher->email]);
             } catch (\Exception $e) {
-                Log::error('Erreur lors de l\'envoi du mail via Symfony Mailer', ['error' => $e->getMessage()]);
+                Log::error('Erreur lors de l\'envoi du mail', ['error' => $e->getMessage()]);
                 return redirect()->route('userschool')->with('error', 'Enseignant créé mais erreur lors de l\'envoi du mail : ' . $e->getMessage());
             }
 

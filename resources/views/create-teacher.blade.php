@@ -258,7 +258,7 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" name="password" id="password" class="form-control" required>
                 </div>
-                <button type="submit" class="btn btn-primary" onclick="sendEmail(event)">Create Teacher</button>
+                <button type="submit" class="btn btn-primary">Create Teacher</button>
             </form>
         </div>
     </div>
@@ -290,35 +290,6 @@
                 if (window.innerWidth < 992) closeSidebar();
             });
         });
-
-        function sendEmail(event) {
-            event.preventDefault(); // Prevent form submission
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const firstName = document.getElementById('first_name').value;
-            const lastName = document.getElementById('last_name').value;
-            const platformLink = "{{ url('/login') }}"; // Lien vers la plateforme AdminiSchool
-
-            const emailBody = `
-                Bonjour ${firstName} ${lastName},\n\n
-                Votre compte a été créé avec succès sur la plateforme AdminiSchool.\n\n
-                Voici vos informations de connexion :\n
-                Email : ${email}\n
-                Mot de passe : ${password}\n\n
-                Vous pouvez vous connecter en cliquant sur le lien suivant : ${platformLink}\n\n
-                Cordialement,\n
-                L'équipe AdminiSchool
-            `;
-
-            console.log("Sending email to:", email);
-            console.log("Email body:", emailBody);
-
-            alert("Un email contenant les informations de connexion a été envoyé à " + email);
-
-            // Envoi du mail
-            document.getElementById('createTeacherForm').submit();
-        }
     </script>
 </body>
 </html>
