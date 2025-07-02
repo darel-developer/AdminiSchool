@@ -68,7 +68,7 @@ class TeacherController extends Controller
                         $request->password
                     )
                 );
-                Log::info('Mail envoyé avec succès via Laravel Mailable', ['email' => $teacher->email]);
+                Log::info('Mail envoyé avec succès', ['email' => $teacher->email]);
             } catch (\Exception $e) {
                 Log::error('Erreur lors de l\'envoi du mail', ['error' => $e->getMessage()]);
                 return redirect()->route('userschool')->with('error', 'Enseignant créé mais erreur lors de l\'envoi du mail : ' . $e->getMessage());
