@@ -294,11 +294,7 @@
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Messagerie
         </a>
-        <a href="{{ route('notifications.page') }}" class="sidebar-item">
-            <img src="{{ asset('images/notification.png') }}" alt="notification">
-            <span>Notification</span>
-            <span id="notificationBadge" class="badge bg-danger ms-2" style="display: none;">0</span>
-        </a>
+       
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="help support">
             Ajouter Enfant

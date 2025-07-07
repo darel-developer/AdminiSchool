@@ -213,10 +213,6 @@
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Messagerie
         </a>
-        <a href="{{ route('notifications.page') }}" class="sidebar-item">
-            <img src="{{ asset('images/notification.png') }}" alt="notification">
-            Notification
-        </a>
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
             Ajouter Enfant

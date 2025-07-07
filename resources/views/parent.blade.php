@@ -241,10 +241,6 @@
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             <span>Messagerie</span>
         </a>
-        <a href="#" class="sidebar-item" onclick="openNotificationModal()">
-            <img src="{{ asset('images/notification.png') }}" alt="notification">
-            <span>Notification</span>
-        </a>
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
             <span>Ajouter Enfant</span>
@@ -369,6 +365,7 @@
                 .then(data => {
                     const badge = document.getElementById('notificationBadge');
                     const bell = document.getElementById('notificationBell');
+                    // Correction : forcer l'affichage du badge si le nombre > 0
                     if (data.unreadNotificationsCount > 0) {
                         badge.textContent = data.unreadNotificationsCount;
                         badge.style.display = 'inline-block';

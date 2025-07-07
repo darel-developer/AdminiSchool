@@ -176,7 +176,7 @@
         <div class="sidebar-title">ADMINISCHOOL</div>
         <div class="sidebar-separator"></div>
         <!-- ...existing sidebar items... -->
-        <a href="{{route('parent')}}" target="_blank" class="sidebar-item">
+        <a href="{{route('parent')}}"  class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
@@ -192,10 +192,7 @@
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             messagerie
         </a>
-        <a href="{{ route('notifications.page') }}" class="sidebar-item">
-            <img src="{{ asset('images/notification.png') }}" alt="notification">
-            Notification
-        </a>
+       
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="enfant">
             Ajouter enfant

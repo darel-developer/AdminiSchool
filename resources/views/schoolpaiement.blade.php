@@ -201,7 +201,7 @@
         </a>
         <a href="{{ route('schoolpaiement') }}" class="sidebar-item">
             <img src="{{ asset('images/paiement.png') }}" alt="payment">
-            Payments
+            Paiements
         </a>
         
         <a href="{{route('userschool')}}" class="sidebar-item">
@@ -219,10 +219,6 @@
         <a href="{{ route('cahiertexte') }}" class="sidebar-item">
             <img src="{{ asset('images/Book.png') }}" alt="teacher">
            cahier de texte
-        </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Paramètres
         </a>
         <a href="{{ route('helpsupport') }}" class="sidebar-item">
             <img src="{{ asset('images/chatbot.png') }}" alt="help support">

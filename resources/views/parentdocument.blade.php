@@ -68,7 +68,7 @@
             min-height: 100vh;
             border-radius: 14px;
             box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
-            max-width: 900px;
+            max-width: 1200px;
             margin-top: 40px;
         }
         h1 {
@@ -193,10 +193,7 @@
             <img src="{{ asset('images/chat.png') }}" alt="chat">
             Messagerie
         </a>
-        <a href="{{ route('notifications.page') }}" class="sidebar-item">
-            <img src="{{ asset('images/notification.png') }}" alt="help support">
-            notification
-        </a>
+      
         <a href="{{route('parentchild')}}" class="sidebar-item">
             <img src="{{ asset('images/Add_User.png') }}" alt="help support">
             Ajouter Enfant

@@ -202,7 +202,7 @@
     </button>
     <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
-        <a href="#" class="sidebar-item active">
+        <a href="{{route('dashboard')}}" class="sidebar-item active">
             <img src="{{ asset('images/Statistics.png') }}" alt="dashboard">
             Dashboard
         </a>
