@@ -403,6 +403,8 @@
 
         // Fonction appelée quand on ouvre la modal de notifications
         function openNotificationModal() {
+            // Masquer immédiatement le badge pour une meilleure UX
+            document.getElementById('notificationBadge').style.display = 'none';
             fetch('{{ route("notifications.page") }}')
                 .then(response => response.json())
                 .then(data => {

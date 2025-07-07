@@ -215,7 +215,7 @@
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="content">
-        <h1 id="main-title" class="mb-4" style="font-weight:700;letter-spacing:1px;">Ajouter un événement</h1>
+        <h1 id="main-title" class="mb-4" style="font-weight:700;letter-spacing:1px;">Ajouter une transaction</h1>
         <div class="mt-4">
            <!-- filepath: /c:/xampp/htdocs/Adminischool/resources/views/parentpaiement.blade.php -->
 <form id="paiementForm" method="POST" action="{{ route('paiement.store') }}" enctype="multipart/form-data">

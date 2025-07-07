@@ -63,6 +63,7 @@ class NotificationController extends Controller
                 Notification::create([
                     'tuteur_id' => $parent->id,
                     'message' => $message,
+                    'is_read' => false, // Important: notification non lue à la création
                 ]);
             } else {
                 Log::warning("Aucun tuteur trouvé pour l'élève {$eleve->name}");

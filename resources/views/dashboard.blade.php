@@ -246,7 +246,7 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="content">
         <div class="container-fluid mt-3 mt-md-5">
-            <h1 class="text-center mb-4" style="font-weight:700;letter-spacing:1px;">Dashboard</h1>
+            <h1 class="text-center mb-4" style="font-weight:700;letter-spacing:1px;">Tableau de Bord</h1>
             <div class="row g-3">
                 <div class="col-12 col-sm-6 col-md-3">
                     <a href="{{ route('students.details') }}" class="text-decoration-none">
