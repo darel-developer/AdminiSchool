@@ -130,6 +130,6 @@ class BulletinController extends Controller
             abort(404, 'Bulletin non disponible');
         }
 
-        return Storage::download($relativePath, 'bulletin_' . $student->name . '.pdf');
+        return Storage::download($relativePath, 'bulletin_' . $student->id . '.pdf');
     }
 }
