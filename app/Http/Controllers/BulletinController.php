@@ -71,7 +71,7 @@ class BulletinController extends Controller
             if ($student->tuteur_id && !in_array($student->tuteur_id, $parentsNotified)) {
                 \App\Models\Notification::create([
                     'tuteur_id' => $student->tuteur_id,
-                    'message' => 'Le bulletin de notes de votre enfant ' . $student->name . ' est disponible.',
+                    'message' => 'Le bulletin de notes de votre enfant ' . $student->name . ' est déjà disponible.',
                 ]);
                 Log::info('Notification envoyée au tuteur (sans PDF)', ['tuteur_id' => $student->tuteur_id]);
                 $parentsNotified[] = $student->tuteur_id;
