@@ -13,6 +13,7 @@ use App\Imports\AbsencesImport;
 use App\Imports\ConvocationsImport;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {   
@@ -105,35 +106,28 @@ class StudentController extends Controller
                         break;
 
                     case 'bulletins':
-                    $storagePath = storage_path('app/public/bulletins/');
-
-                    if (!is_dir($storagePath)) {
-                        Log::error('[BULLETIN] Le dossier bulletins/ est introuvable', [
-                            'expected_path' => $storagePath
-                        ]);
-                        return response()->json(['success' => false, 'error' => 'Le dossier des bulletins est introuvable.'], 500);
-                    }
-
-                    $bulletinFilename = $student->id . '.pdf';
-                    $bulletinPath = $storagePath . $bulletinFilename;
-
-                    if (file_exists($bulletinPath)) {
-                        $url = asset('storage/bulletins/' . $bulletinFilename);
-                        Log::info('[BULLETIN] Bulletin trouvé pour élève', [
-                            'student_id' => $student->id,
-                            'student_name' => $student->name,
-                            'file' => $bulletinFilename
-                        ]);
-                        $data = ['url' => $url];
-                    } else {
-                        Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
-                            'student_id' => $student->id,
-                            'student_name' => $student->name,
-                            'expected_file' => $bulletinFilename
-                        ]);
-                        return response()->json(['success' => false, 'error' => 'Bulletin non disponible.']);
-                    }
-                    break;
+                        $bulletinRelativePath = 'public/bulletins/' . $student->id . '.pdf';
+                        
+                        if (Storage::exists($bulletinRelativePath)) {
+                            $url = asset('storage/bulletins/' . $student->id . '.pdf');
+                            Log::info('[BULLETIN] Bulletin trouvé pour élève', [
+                                'student_id' => $student->id,
+                                'student_name' => $student->name,
+                                'url' => $url,
+                            ]);
+                            $data = ['url' => $url];
+                        } else {
+                            Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
+                                'student_id' => $student->id,
+                                'student_name' => $student->name,
+                                'expected_path' => $bulletinRelativePath
+                            ]);
+                            return response()->json([
+                                'success' => false,
+                                'error' => 'Bulletin non disponible.'
+                            ]);
+                        }
+                        break;
                     default:
                         return response()->json(['success' => false, 'error' => 'La section demandée est inconnue ou invalide.']);
                 }

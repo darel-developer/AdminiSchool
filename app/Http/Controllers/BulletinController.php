@@ -21,55 +21,78 @@ class BulletinController extends Controller
             'classes' => 'required|array|min:1',
         ]);
 
-        // Récupère les noms des classes à partir des IDs
+        // Récupérer les classes sélectionnées
         $classIds = $request->input('classes');
-        $classNames = \App\Models\Classe::whereIn('id', $classIds)->pluck('name')->toArray();
+        $classNames = Classe::whereIn('id', $classIds)->pluck('name')->toArray();
+
         Log::info('Classes sélectionnées pour upload bulletin', ['classIds' => $classIds, 'classNames' => $classNames]);
-        $students = \App\Models\Student::whereIn('class', $classNames)->get();
+
+        // Étudiants concernés
+        $students = Student::whereIn('class', $classNames)->get();
+
         Log::info('Étudiants trouvés pour ces classes', ['students' => $students->pluck('id', 'name')->toArray()]);
 
-        // Liste des parents à notifier (évite les doublons)
+        // Liste des parents déjà notifiés
         $parentsNotified = [];
 
-        // Associer chaque PDF à l'élève par nom de fichier (nom + classe)
+        // S'assurer que le dossier existe
+        $directoryPath = storage_path('app/public/bulletins');
+        if (!is_dir($directoryPath)) {
+            mkdir($directoryPath, 0755, true);
+        }
+
+        // Traitement des fichiers uploadés
         $uploadedFiles = $request->file('bulletins');
         $found = 0;
+
         foreach ($uploadedFiles as $file) {
             $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             Log::info('Traitement du fichier bulletin', ['filename' => $filename]);
-            $student = $students->first(function($stu) use ($filename) {
+
+            // Tentative de correspondance avec un élève
+            $student = $students->first(function ($stu) use ($filename) {
                 $expected1 = str_replace(' ', '_', strtolower($stu->name));
-                $expected2 = $expected1 . '_' . (str_replace(' ', '_', strtolower($stu->class)));
-                $expected3 = strtolower($stu->name); // nom avec espaces
+                $expected2 = $expected1 . '' . str_replace(' ', '', strtolower($stu->class));
+                $expected3 = strtolower($stu->name); // nom brut
+
                 $filenameLower = strtolower($filename);
+
                 return $filenameLower === $expected1 || $filenameLower === $expected2 || $filenameLower === $expected3;
             });
+
             if ($student) {
-                Log::info('Match trouvé pour le fichier bulletin', ['student_id' => $student->id, 'student_name' => $student->name]);
-                // Stocke le PDF dans storage/app/public/bulletins/{nom_élève}.pdf (avec espaces)
+                Log::info('Match trouvé pour le fichier bulletin', [
+                    'student_id' => $student->id,
+                    'student_name' => $student->name,
+                ]);
+
                 $pdfName = $student->id . '.pdf';
-                // Utilise la méthode putFileAs pour garantir le bon dossier
                 $file->storeAs('public/bulletins', $pdfName);
-                Log::info('Bulletin stocké', ['path' => storage_path('app/public/bulletins/' . $pdfName)]);
-                // Notifie le parent (tuteur)
+
+                Log::info('Bulletin stocké', [
+                    'path' => storage_path('app/public/bulletins/' . $pdfName)
+                ]);
+
+                // Notification du tuteur
                 if ($student->tuteur_id && !in_array($student->tuteur_id, $parentsNotified)) {
-                    \App\Models\Notification::create([
+                    Notification::create([
                         'tuteur_id' => $student->tuteur_id,
                         'message' => 'Le bulletin de notes de votre enfant ' . $student->name . ' est disponible.',
                     ]);
                     Log::info('Notification envoyée au tuteur', ['tuteur_id' => $student->tuteur_id]);
                     $parentsNotified[] = $student->tuteur_id;
                 }
+
                 $found++;
             } else {
                 Log::warning('Aucun étudiant trouvé pour le fichier bulletin', ['filename' => $filename]);
             }
         }
 
-        // Notifier tous les parents de la classe même si le PDF n'a pas été trouvé pour leur enfant
+        // Notifier les tuteurs restants même sans fichier
         foreach ($students as $student) {
             if ($student->tuteur_id && !in_array($student->tuteur_id, $parentsNotified)) {
-                \App\Models\Notification::create([
+                Notification::create([
                     'tuteur_id' => $student->tuteur_id,
                     'message' => 'Le bulletin de notes de votre enfant ' . $student->name . ' est déjà disponible.',
                 ]);
@@ -79,26 +102,34 @@ class BulletinController extends Controller
         }
 
         Log::info('Upload bulletins terminé', ['found' => $found, 'total_students' => count($students)]);
+
         return back()->with('success', "$found bulletins associés et notifications envoyées.");
     }
 
-    // Interface parent : liste des bulletins disponibles pour ses enfants
+    // Interface parent : liste des bulletins disponibles
     public function parentBulletins()
     {
         $parent = auth('tuteur')->user();
         $students = Student::where('parent_id', $parent->id)->get();
+
         return view('parent.bulletins', compact('students'));
     }
 
-    // Téléchargement d'un bulletin par le parent
+    // Téléchargement d’un bulletin
     public function download($studentId)
     {
         $parent = auth('tuteur')->user();
-        $student = Student::where('id', $studentId)->where('parent_id', $parent->id)->firstOrFail();
-        $path = storage_path('app/public/bulletins/' . $student->id . '.pdf');
-        if (!file_exists($path)) {
+
+        $student = Student::where('id', $studentId)
+            ->where('parent_id', $parent->id)
+            ->firstOrFail();
+
+        $relativePath = 'public/bulletins/' . $student->id . '.pdf';
+
+        if (!Storage::exists($relativePath)) {
             abort(404, 'Bulletin non disponible');
         }
-        return response()->download($path, 'bulletin_' . $student->name . '.pdf');
+
+        return Storage::download($relativePath, 'bulletin_' . $student->name . '.pdf');
     }
 }
