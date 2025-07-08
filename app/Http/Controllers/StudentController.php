@@ -105,54 +105,35 @@ class StudentController extends Controller
                         break;
 
                     case 'bulletins':
-                        // S'assure que le dossier existe avant de scanner
-                        $storagePath = storage_path('app/public/bulletins/');
-                        if (!is_dir($storagePath)) {
-                            Log::error('[BULLETIN] Le dossier bulletins/ est introuvable', [
-                                'expected_path' => $storagePath
-                            ]);
-                            return response()->json(['success' => false, 'error' => 'Le dossier des bulletins est introuvable.'], 500);
-                        }
+                    $storagePath = storage_path('app/public/bulletins/');
 
-                        // Prépare les variantes de nom de fichier attendues
-                        $possibleNames = [];
-                        $possibleNames[] = strtolower($student->name) . '.pdf';
-                        $possibleNames[] = str_replace(' ', '_', strtolower($student->name)) . '.pdf';
-                        $possibleNames[] = strtolower(str_replace('_', ' ', $student->name)) . '.pdf';
-                        $possibleNames[] = strtolower($student->id) . '.pdf'; // Ajout si jamais l'id est utilisé
+                    if (!is_dir($storagePath)) {
+                        Log::error('[BULLETIN] Le dossier bulletins/ est introuvable', [
+                            'expected_path' => $storagePath
+                        ]);
+                        return response()->json(['success' => false, 'error' => 'Le dossier des bulletins est introuvable.'], 500);
+                    }
 
-                        $foundFile = null;
-                        foreach (scandir($storagePath) as $file) {
-                            if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) !== 'pdf') continue;
-                            $fileLower = strtolower($file);
-                            foreach ($possibleNames as $expected) {
-                                if ($fileLower === $expected) {
-                                    $foundFile = $file;
-                                    break 2;
-                                }
-                            }
-                        }
+                    $bulletinFilename = $student->id . '.pdf';
+                    $bulletinPath = $storagePath . $bulletinFilename;
 
-                        Log::info('[BULLETIN] Recherche du bulletin pour élève', [
+                    if (file_exists($bulletinPath)) {
+                        $url = asset('storage/bulletins/' . $bulletinFilename);
+                        Log::info('[BULLETIN] Bulletin trouvé pour élève', [
                             'student_id' => $student->id,
                             'student_name' => $student->name,
-                            'possible_names' => $possibleNames,
-                            'found_file' => $foundFile,
+                            'file' => $bulletinFilename
                         ]);
-
-                        if ($foundFile) {
-                            $url = asset('storage/bulletins/' . $foundFile);
-                            $data = ['url' => $url];
-                        } else {
-                            Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
-                                'student_id' => $student->id,
-                                'student_name' => $student->name,
-                                'tested_names' => $possibleNames
-                            ]);
-                            return response()->json(['success' => false, 'error' => 'Bulletin non disponible.']);
-                        }
-                        break;
-
+                        $data = ['url' => $url];
+                    } else {
+                        Log::warning('[BULLETIN] Bulletin non trouvé pour élève', [
+                            'student_id' => $student->id,
+                            'student_name' => $student->name,
+                            'expected_file' => $bulletinFilename
+                        ]);
+                        return response()->json(['success' => false, 'error' => 'Bulletin non disponible.']);
+                    }
+                    break;
                     default:
                         return response()->json(['success' => false, 'error' => 'La section demandée est inconnue ou invalide.']);
                 }

@@ -278,7 +278,7 @@
     <div class="sidebar d-flex flex-column" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <div class="sidebar-separator"></div>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('parent')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>

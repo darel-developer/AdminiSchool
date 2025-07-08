@@ -204,10 +204,7 @@
             <img src="{{ asset('images/statistics.png') }}" alt="statistics">
             Statistiques
         </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
-        </a>
+      
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="content">

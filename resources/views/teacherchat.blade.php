@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Chat Enseignant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ asset('images/logo_title.png') }}" type="image/x-icon" />
     <style>
         body {
             margin: 0;
@@ -322,7 +323,7 @@
     <div class="sidebar d-flex flex-column" id="sidebarMenu">
         <div class="sidebar-title">ADMINISCHOOL</div>
         <div class="sidebar-separator"></div>
-        <a href="#" class="sidebar-item">
+        <a href="{{route('teacher')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
@@ -334,10 +335,7 @@
             <img src="{{ asset('images/statistics.png') }}" alt="statistics">
             Statistiques
         </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
-        </a>
+      
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="content">

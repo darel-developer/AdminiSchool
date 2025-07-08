@@ -193,7 +193,7 @@
         <div class="sidebar-title">ADMINISCHOOL</div>
         <div class="sidebar-separator"></div>
         <!-- ...existing sidebar items... -->
-        <a href="#" class="sidebar-item">
+        <a href="{{route('teacher')}}" class="sidebar-item">
             <img src="{{ asset('images/dashboard.png') }}" alt="dashboard">
             Dashboard
         </a>
@@ -205,10 +205,7 @@
             <img src="{{ asset('images/statistics.png') }}" alt="statistics">
             Statistiques
         </a>
-        <a href="#" class="sidebar-item">
-            <img src="{{ asset('images/setting.png') }}" alt="settings">
-            Settings
-        </a>
+        
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="content">
