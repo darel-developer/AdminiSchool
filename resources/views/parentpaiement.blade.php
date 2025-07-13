@@ -221,8 +221,8 @@
     <div class="row mb-4" id="nameFields">
         <div class="col">
             <div class="form-outline">
-                <input type="text" id="firstName" name="nom" class="form-control" placeholder="First Name" value="{{ old('nom') }}" required />
-                <label class="form-label" for="firstName">First Name</label>
+                <input type="text" id="firstName" name="nom" class="form-control" placeholder="Nom" value="{{ old('nom') }}" required />
+                <label class="form-label" for="firstName">Nom</label>
                 @error('nom')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -230,8 +230,8 @@
         </div>
         <div class="col">
             <div class="form-outline">
-                <input type="text" id="secondName" name="prenom" class="form-control" placeholder="Second Name" value="{{ old('prenom') }}" required />
-                <label class="form-label" for="secondName">Second Name</label>
+                <input type="text" id="secondName" name="prenom" class="form-control" placeholder="Prenom" value="{{ old('prenom') }}" required />
+                <label class="form-label" for="secondName">Prenom</label>
                 @error('prenom')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -240,19 +240,19 @@
     </div>
 
     <div class="mb-4">
-        <p class="mb-1">Select Payment Type:</p>
+        <p class="mb-1">Selectionnez le type de paiement :</p>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="typepaiement" id="pension" value="pension" {{ old('typepaiement') == 'pension' ? 'checked' : '' }} />
             <label class="form-check-label" for="pension">Pension</label>
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="typepaiement" id="other" value="other" {{ old('typepaiement') == 'other' ? 'checked' : '' }} />
-            <label class="form-check-label" for="other">Other</label>
+            <label class="form-check-label" for="other">Autre</label>
         </div>
     </div>
 
     <div class="form-outline mb-4">
-        <input type="number" id="montant" name="montant" class="form-control" placeholder="Enter the montant" value="{{ old('montant') }}" required/>
+        <input type="number" id="montant" name="montant" class="form-control" placeholder="Entrez le montant" value="{{ old('montant') }}" required/>
         <label class="form-label" for="montant">Montant</label>
         @error('montant')
             <div class="text-danger">{{ $message }}</div>
@@ -260,8 +260,8 @@
     </div>
 
     <div class="form-outline mb-4">
-        <input type="text" id="factureNumber" name="num_facture" class="form-control" placeholder="Enter the facture number" value="{{ old('num_facture') }}" required/>
-        <label class="form-label" for="factureNumber">Facture Number</label>
+        <input type="text" id="factureNumber" name="num_facture" class="form-control" placeholder="Entrez le numéro de facture" value="{{ old('num_facture') }}" required/>
+        <label class="form-label" for="factureNumber">Numéro de Facture</label>
         @error('num_facture')
             <div class="text-danger">{{ $message }}</div>
         @enderror

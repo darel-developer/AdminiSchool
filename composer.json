@@ -12,6 +12,7 @@
         "infobip/infobip-api-php-client": "6.2.1",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^11.31",
+        "laravel/sanctum": "^4.1",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
         "pear/http_request2": "^2.6",

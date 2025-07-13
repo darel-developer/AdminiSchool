@@ -105,7 +105,8 @@
         .chat-container {
             max-width: 700px;
             margin: 0 auto;
-            height: 72vh;
+            height: auto; /* plus de hauteur fixe */
+            max-height: 80vh; /* limite raisonnable en hauteur */
             display: flex;
             flex-direction: column;
             background: #fff;
