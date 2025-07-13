@@ -133,16 +133,16 @@
             flex-direction: column;
         }
         .message {
-            margin-bottom: 0.4rem;
-            padding: 0.3rem 0.8rem;
-            border-radius: 1.2rem;
-            max-width: 75%;
+            margin-bottom: 0.3rem;
+            padding: 0.1rem 0.4rem; /* réduit l’espace intérieur = moins haut et moins large */
+            border-radius: 0.8rem;
+            max-width: 50%; /* réduit la largeur de la bulle */
             position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
             word-break: break-word;
             display: inline-flex;
             flex-direction: column;
-            font-size: 0.9rem;
+            font-size: 0.9rem; /* inchangé */
         }
 
         .message.sent {
