@@ -133,16 +133,14 @@
             flex-direction: column;
         }
         .message {
-            margin-bottom: 0.3rem;
-            padding: 0.1rem 0.4rem; /* réduit l’espace intérieur = moins haut et moins large */
-            border-radius: 0.8rem;
-            max-width: 50%; /* réduit la largeur de la bulle */
             position: relative;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
-            word-break: break-word;
-            display: inline-flex;
-            flex-direction: column;
-            font-size: 0.9rem; /* inchangé */
+            display: inline-block;
+            max-width: 70%;
+            padding: 0.8rem 1rem;
+            margin: 0.5rem;
+            border-radius: 1rem;
+            word-wrap: break-word;
+            box-sizing: border-box;
         }
 
         .message.sent {
@@ -150,10 +148,9 @@
             color: #fff;
             border-bottom-right-radius: 0.4rem;
             border-bottom-left-radius: 1.2rem;
-            align-items: flex-end;
             align-self: flex-end;
-            /* plus de height fixe, la div s'adapte au contenu */
         }
+
         .message.sent::after {
             content: "";
             position: absolute;
@@ -163,14 +160,15 @@
             border-style: solid;
             border-color: transparent transparent transparent #007bff;
         }
+
         .message.received {
             background: linear-gradient(135deg, #e9ecef 80%, #dbe4ee 100%);
             color: #222;
             border-bottom-left-radius: 0.4rem;
             border-bottom-right-radius: 1.2rem;
-            align-items: flex-start;
             align-self: flex-start;
         }
+
         .message.received::after {
             content: "";
             position: absolute;
@@ -180,6 +178,7 @@
             border-style: solid;
             border-color: transparent #e9ecef transparent transparent;
         }
+
         .message .sender {
             font-size: 0.85rem;
             margin-bottom: 0.2rem;
