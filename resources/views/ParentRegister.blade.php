@@ -111,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 d-flex align-items-center gradient-custom-2 justify-content-center">
-                                <img src="https://images.unsplash.com/photo-1584697964403-84b4f8a3b016?auto=format&fit=crop&w=600&q=80" 
+                                <img src="https://unsplash.com/fr/photos/art-de-deux-personnes-PaeThAqaGP4" 
                                     alt="Illustration" 
                                     class="img-fluid rounded" 
                                     style="max-height: 90%; max-width: 90%;">
