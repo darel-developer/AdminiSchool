@@ -133,51 +133,60 @@
             flex-direction: column;
         }
         .message {
-            position: relative;
-            display: inline-block;
-            max-width: 70%;
-            padding: 0.8rem 1rem;
-            margin: 0.5rem;
-            border-radius: 1rem;
-            word-wrap: break-word;
-            box-sizing: border-box;
-        }
+    position: relative;
+    display: inline-block;
+    max-width: 75%;
+    padding: 14px 20px;
+    margin: 0.5rem;
+    border-radius: 22px;
+    word-break: break-word;
+    font-size: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    transition: box-shadow 0.2s, background 0.2s;
+}
 
-        .message.sent {
-            background: linear-gradient(135deg, #007bff 80%, #0056b3 100%);
-            color: #fff;
-            border-bottom-right-radius: 0.4rem;
-            border-bottom-left-radius: 1.2rem;
-            align-self: flex-end;
-        }
+.message:hover {
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.13);
+    background-color: #f1f3f7;
+}
 
-        .message.sent::after {
-            content: "";
-            position: absolute;
-            right: -10px;
-            top: 18px;
-            border-width: 10px 0 10px 10px;
-            border-style: solid;
-            border-color: transparent transparent transparent #007bff;
-        }
+.message.sent {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #007bff 80%, #0056b3 100%);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 18px;
+}
 
-        .message.received {
-            background: linear-gradient(135deg, #e9ecef 80%, #dbe4ee 100%);
-            color: #222;
-            border-bottom-left-radius: 0.4rem;
-            border-bottom-right-radius: 1.2rem;
-            align-self: flex-start;
-        }
+.message.sent::after {
+    content: "";
+    position: absolute;
+    right: -10px;
+    top: 14px;
+    border-width: 10px 0 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent #007bff;
+}
 
-        .message.received::after {
-            content: "";
-            position: absolute;
-            left: -10px;
-            top: 18px;
-            border-width: 10px 10px 10px 0;
-            border-style: solid;
-            border-color: transparent #e9ecef transparent transparent;
-        }
+.message.received {
+    align-self: flex-start;
+    background: linear-gradient(135deg, #e9ecef 80%, #dbe4ee 100%);
+    color: #333;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 18px;
+}
+
+.message.received::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 14px;
+    border-width: 10px 10px 10px 0;
+    border-style: solid;
+    border-color: transparent #e9ecef transparent transparent;
+}
+
 
         .message .sender {
             font-size: 0.85rem;

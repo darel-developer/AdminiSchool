@@ -110,12 +110,13 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
-                                <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                                    <h4 class="mb-4">We are more than just a company</h4>
-                                    <p class="small mb-0"></p>
-                                </div>
+                            <div class="col-lg-6 d-flex align-items-center gradient-custom-2 justify-content-center">
+                                <img src="https://images.unsplash.com/photo-1584697964403-84b4f8a3b016?auto=format&fit=crop&w=600&q=80" 
+                                    alt="Illustration" 
+                                    class="img-fluid rounded" 
+                                    style="max-height: 90%; max-width: 90%;">
                             </div>
+
                         </div>
                     </div>
                 </div>
