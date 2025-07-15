@@ -132,19 +132,20 @@
             display: flex;
             flex-direction: column;
         }
-        .message {
+       .message {
         position: relative;
         display: inline-block;
-        max-width: 60%; /* Réduction largeur message */
-        padding: 14px 20px;
-        margin: 0.5rem;
-        border-radius: 22px;
+        max-width: 60%;
+        padding: 8px 14px; /* réduit le padding vertical */
+        margin: 0.2rem 0;  /* réduit l'espace entre les messages */
+        border-radius: 18px;
         word-break: break-word;
-        font-size: 1rem;
+        font-size: 0.95rem;
         box-sizing: border-box;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         transition: box-shadow 0.2s, background 0.2s;
     }
+
 
 .message:hover {
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.13);
@@ -547,7 +548,7 @@
                             content += `
                                 <div class="attachment">
                                     ${isImage
-                                        ? `<img src="${message.attachment}" class="img-fluid" style="max-height: 200px;" alt="Pièce jointe">`
+                                        ? `<img src="${message.attachment}" class="img-fluid" style="max-height: 120px;" alt="Pièce jointe">`
                                         : `<a href="${message.attachment}" target="_blank">Voir la pièce jointe</a>`
                                     }
                                 </div>
