@@ -309,6 +309,19 @@
             </div>
         </div>
     </div>
+    <!-- Toast de notification Bootstrap -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 2100;">
+        <div id="toastNotification" class="toast text-white bg-primary" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+            <div class="toast-header bg-primary text-white">
+            <strong class="me-auto">Nouvelle notification</strong>
+            <small>Maintenant</small>
+            <button type="button" class="btn-close btn-close-white ms-2" data-bs-dismiss="toast" aria-label="Fermer"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+            Vous avez une nouvelle notification.
+            </div>
+        </div>
+        </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -359,40 +372,48 @@
         let notificationIsActive = false;
         let pollingInterval = null;
 
-        function updateNotificationBadge() {
-            fetch('{{ route("notifications.unread-count") }}')
-                .then(response => response.json())
-                .then(data => {
-                    const badge = document.getElementById('notificationBadge');
-                    const bell = document.getElementById('notificationBell');
-                    // Correction : forcer l'affichage du badge si le nombre > 0
-                    if (data.unreadNotificationsCount > 0) {
-                        badge.textContent = data.unreadNotificationsCount;
-                        badge.style.display = 'inline-block';
+       function updateNotificationBadge() {
+    fetch('{{ route("notifications.unread-count") }}')
+        .then(response => response.json())
+        .then(data => {
+            const badge = document.getElementById('notificationBadge');
+            const bell = document.getElementById('notificationBell');
+            // Correction : forcer l'affichage du badge si le nombre > 0
+            if (data.unreadNotificationsCount > 0) {
+                badge.textContent = data.unreadNotificationsCount;
+                badge.style.display = 'inline-block';
 
-                        // Si nouvelle notification, active l'animation et la couleur rouge
-                        if (data.unreadNotificationsCount > lastUnreadCount) {
-                            bell.classList.add('bell-animate');
-                            bell.style.filter = 'invert(16%) sepia(94%) saturate(7482%) hue-rotate(357deg) brightness(93%) contrast(119%)'; // Rouge
-                            notificationIsActive = true;
-                        } else if (!notificationIsActive) {
-                            // Si badge > 0 mais pas de nouvelle, garde la couleur rouge sans animation
-                            bell.classList.remove('bell-animate');
-                            bell.style.filter = 'invert(16%) sepia(94%) saturate(7482%) hue-rotate(357deg) brightness(93%) contrast(119%)'; // Rouge
-                        }
-                    } else {
-                        // Pas de notifications non lues : cloche noire, pas d'animation
-                        badge.style.display = 'none';
-                        bell.classList.remove('bell-animate');
-                        bell.style.filter = 'invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)'; // Noir
-                        notificationIsActive = false;
-                    }
-                    lastUnreadCount = data.unreadNotificationsCount;
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des notifications non lues :', error);
-                });
-        }
+                // Si nouvelle notification, active l'animation, couleur rouge et toast
+                if (data.unreadNotificationsCount > lastUnreadCount) {
+                    bell.classList.add('bell-animate');
+                    bell.style.filter = 'invert(16%) sepia(94%) saturate(7482%) hue-rotate(357deg) brightness(93%) contrast(119%)'; // Rouge
+                    notificationIsActive = true;
+
+                    // Affichage de la toast Bootstrap
+                    const toastEl = document.getElementById('toastNotification');
+                    const toastBody = document.getElementById('toastMessage');
+                    toastBody.textContent = `Vous avez ${data.unreadNotificationsCount} nouvelle(s) notification(s).`;
+                    const toast = new bootstrap.Toast(toastEl);
+                    toast.show();
+                } else if (!notificationIsActive) {
+                    // Si badge > 0 mais pas de nouvelle, garde la couleur rouge sans animation
+                    bell.classList.remove('bell-animate');
+                    bell.style.filter = 'invert(16%) sepia(94%) saturate(7482%) hue-rotate(357deg) brightness(93%) contrast(119%)'; // Rouge
+                }
+            } else {
+                // Pas de notifications non lues : cloche noire, pas d'animation
+                badge.style.display = 'none';
+                bell.classList.remove('bell-animate');
+                bell.style.filter = 'invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)'; // Noir
+                notificationIsActive = false;
+            }
+            lastUnreadCount = data.unreadNotificationsCount;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des notifications non lues :', error);
+        });
+}
+
 
         pollingInterval = setInterval(updateNotificationBadge, 2000);
         updateNotificationBadge();
