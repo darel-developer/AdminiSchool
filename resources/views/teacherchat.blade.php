@@ -125,13 +125,12 @@
             letter-spacing: 0.5px;
         }
         .chat-messages {
-            flex-grow: 1;
+            height: 300px; /* Fixe une hauteur normale */
             overflow-y: auto;
             padding: 1.2rem 1.5rem;
             background: #f8f9fa;
             display: flex;
             flex-direction: column;
-            max-height: 350px; /* Limite la hauteur visible */
         }
         .message {
         position: relative;
