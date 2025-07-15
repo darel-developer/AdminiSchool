@@ -260,7 +260,7 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script>
-        // Sidebar toggle for mobile/tablet
+        
         const sidebar = document.getElementById('sidebarMenu');
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -280,7 +280,7 @@
             }
         });
         sidebarOverlay.addEventListener('click', closeSidebar);
-        // Close sidebar on navigation (mobile)
+        
         document.querySelectorAll('.sidebar-item').forEach(function(link) {
             link.addEventListener('click', function() {
                 if (window.innerWidth < 992) closeSidebar();

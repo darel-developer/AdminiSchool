@@ -289,7 +289,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script>
-        // Sidebar toggle for mobile/tablet
+        // menu hamburger pour la format mobile
         const sidebar = document.getElementById('sidebarMenu');
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -309,7 +309,7 @@
             }
         });
         sidebarOverlay.addEventListener('click', closeSidebar);
-        // Close sidebar on navigation (mobile)
+       // fermeture du menu hamburger
         document.querySelectorAll('.sidebar-item').forEach(function(link) {
             link.addEventListener('click', function() {
                 if (window.innerWidth < 992) closeSidebar();

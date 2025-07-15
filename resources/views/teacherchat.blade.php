@@ -131,20 +131,21 @@
             background: #f8f9fa;
             display: flex;
             flex-direction: column;
+            max-height: 350px; /* Limite la hauteur visible */
         }
         .message {
-    position: relative;
-    display: inline-block;
-    max-width: 75%;
-    padding: 14px 20px;
-    margin: 0.5rem;
-    border-radius: 22px;
-    word-break: break-word;
-    font-size: 1rem;
-    box-sizing: border-box;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
-    transition: box-shadow 0.2s, background 0.2s;
-}
+        position: relative;
+        display: inline-block;
+        max-width: 60%; /* Réduction largeur message */
+        padding: 14px 20px;
+        margin: 0.5rem;
+        border-radius: 22px;
+        word-break: break-word;
+        font-size: 1rem;
+        box-sizing: border-box;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        transition: box-shadow 0.2s, background 0.2s;
+    }
 
 .message:hover {
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.13);
@@ -399,7 +400,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sidebar toggle for mobile/tablet (identique à school.blade.php)
+        
         const sidebar = document.getElementById('sidebarMenu');
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -431,7 +432,7 @@
         });
         sidebarOverlay.addEventListener('click', closeSidebar);
 
-        // Close sidebar on navigation (mobile)
+        
         document.querySelectorAll('.sidebar-item').forEach(function(link) {
             link.addEventListener('click', function() {
                 if (window.innerWidth < 992) closeSidebar();
@@ -439,10 +440,9 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Ajouter le token CSRF à toutes les requêtes fetch
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-            // Configuration par défaut pour fetch
+           
             const fetchConfig = {
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
@@ -458,7 +458,7 @@
             const parentsListModal = document.getElementById('parentsListModal');
             let selectedParentId = null;
             let selectedParentName = '';
-            let messagePollingInterval = null; // Ajout du polling
+            let messagePollingInterval = null; // polling
 
             // Sélectionner un parent et démarrer la discussion
             function selectParent(parent) {
@@ -473,7 +473,7 @@
                 startMessagePolling(); // Démarrer le polling
             }
 
-            // Charger la liste de tous les parents dans le modal (sans spinner)
+            // Charger la liste de tous les parents dans le modal 
             function loadParentsModal() {
                 parentsListModal.innerHTML = '';
                 fetch('{{ url("teacher/all-parents") }}', {
@@ -619,7 +619,6 @@
                         messageInput.value = '';
                         attachmentInput.value = '';
                         loadMessages();
-                        // Le polling continue, pas besoin de recharger la page
                     } else {
                         alert(`Erreur: ${data.message}`);
                     }

@@ -387,7 +387,7 @@
                         <input class="form-check-input" type="checkbox" id="dataAbsences" value="absences">
                         <label class="form-check-label" for="dataAbsences">Absences</label>
                     </div>
-                    <!-- Ajouter d'autres données si besoin -->
+                   
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Critères d'affichage</label>
@@ -395,7 +395,7 @@
                         <option value="sum">Somme</option>
                         <option value="count">Nombre</option>
                         <option value="top5">Top 5</option>
-                        <!-- Ajouter d'autres critères si besoin -->
+                        
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Générer le graphe</button>
@@ -465,7 +465,7 @@
             }
         });
 
-        // --- Graphe personnalisé via AJAX ---
+        // Gestion des graphes personnalisés
         let customChartInstance = null;
 
         function renderCustomChart(labels, datasets, chartType, chartTitle) {
@@ -512,7 +512,7 @@
                     }
                 }
             });
-            // Affiche le titre au-dessus du canvas si besoin
+            // Affiche le titre au-dessus du canvas 
             document.querySelector('#customChartSection h5').textContent = chartTitle || 'Graphe personnalisé';
         }
 
@@ -547,7 +547,7 @@
             });
         });
 
-        // Affiche le graphe personnalisé sauvegardé au chargement si existant
+        // Affiche le graphe personnalisé sauvegardé au chargement 
         @if($customChart)
         document.addEventListener('DOMContentLoaded', function() {
             renderCustomChart(
@@ -559,7 +559,7 @@
         });
         @endif
 
-        // Sidebar toggle for mobile/tablet
+       
         const sidebar = document.getElementById('sidebarMenu');
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -579,7 +579,6 @@
             }
         });
         sidebarOverlay.addEventListener('click', closeSidebar);
-        // Close sidebar on navigation (mobile)
         document.querySelectorAll('.sidebar-item').forEach(function(link) {
             link.addEventListener('click', function() {
                 if (window.innerWidth < 992) closeSidebar();
